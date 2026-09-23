@@ -24,6 +24,13 @@ a { text-underline-offset:4px; }
 .reader-table { overflow:auto; }
 .reader-table table { border-collapse:collapse; width:100%; }
 .reader-table td { border:1px solid #515b4b; padding:10px; white-space:pre-wrap; }
+.drive-canvas { display:block; width:100%; height:auto; border:1px solid #596451; border-radius:12px; background:#a9d3e7; }
+.driving-simulator { overflow:hidden; }
+.drive-actions { margin-top:18px; }
+.drive-controls { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-top:20px; }
+.drive-controls > div { display:flex; gap:10px; flex-wrap:wrap; }
+.drive-control { min-width:100px; min-height:58px; padding:12px 16px; border:1px solid #667b58; border-radius:12px; background:#293925; color:#f2f4ed; font-size:16px; font-weight:700; touch-action:none; user-select:none; }
+.drive-control:active { background:#c6ee90; color:#15210e; }
 @media print { .note-reading-area { max-height:none; overflow:visible; border:0; } }
 .nav-wrap { max-width:1360px; margin:auto; padding:20px 28px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
 .brand { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; letter-spacing:1px; flex-shrink:0; text-decoration:none; }
