@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import Shell from "@/components/shell";
 import { noteResources, syllabusResources } from "@/data/notes";
 import { departments } from "@/data/courses";
@@ -23,7 +24,7 @@ export default function NotesPage() {
       <p className="small muted" role="status">Showing {notes.length} guide{notes.length === 1 ? "" : "s"}. If you are not taking a subject, you do not need to study that section.</p>
     </section>
 
-    <section className="grid-cards section-gap">{notes.map((note) => <a className="lab-card" href={note.file} download key={note.id}><div className="card-top"><span className="card-icon" aria-hidden="true">▧</span><span>DOCX</span></div><h2>{note.label}</h2><p>{note.semesters}</p><span className="card-link">Download guide ↗</span></a>)}</section>
+    <section className="grid-cards section-gap">{notes.map((note) => <article className="lab-card" key={note.id}><div className="card-top"><span className="card-icon" aria-hidden="true">▧</span><span>STUDY GUIDE</span></div><h2>{note.label}</h2><p>{note.semesters}</p><div className="row section-gap"><Link className="btn" href={`/notes/${note.id}`}>Read online</Link><a className="btn secondary" href={note.file} download>Download</a></div></article>)}</section>
     {notes.length === 0 && <section className="panel section-gap"><h2>No guide found</h2><p className="muted">Try another subject or search term.</p></section>}
 
     <section className="panel section-gap"><div className="row between"><div><p className="eyebrow">Reference documents</p><h2>Official syllabuses</h2></div><span className="small muted">{syllabusResources.length} PDFs</span></div><p className="muted">Use these when checking course codes, semester placement and examination coverage. Notes are study aids and do not replace the official syllabus.</p><div className="row">{syllabusResources.map((syllabus) => <a className="btn secondary" href={syllabus.file} target="_blank" rel="noreferrer" key={syllabus.department}>{syllabus.label} ↗</a>)}</div><p className="notice section-gap">An official Economics syllabus PDF was not among the supplied files. Economics notes are included from the earlier project; confirm the current Economics syllabus with the department.</p></section>

@@ -9,6 +9,22 @@ button,a,input,textarea,select,summary { outline-offset:5px; }
 button,summary { cursor:pointer; } button:disabled { opacity:.45; cursor:not-allowed; }
 a { text-underline-offset:4px; }
 .site-header { border-bottom:1px solid #30372f; background:#101211; }
+.college-masthead { display:flex; flex-direction:column; align-items:center; gap:16px; padding:25px 20px 18px; border-bottom:1px solid #30372f; }
+.college-logo-link { display:block; max-width:600px; width:100%; background:#fafafa; border-radius:8px; overflow:hidden; }
+.college-logo { display:block; width:100%; height:auto; }
+.language-message { display:flex; flex-wrap:wrap; justify-content:center; gap:8px 14px; margin:0; text-align:center; font-size:15px; color:var(--muted); }
+.language-message strong { color:var(--accent); letter-spacing:3px; }
+.note-reading-area { max-height:68vh; overflow:auto; margin-top:22px; padding:0 20px; border:1px solid #343b31; border-radius:12px; scrollbar-gutter:stable; }
+.note-section { max-width:78ch; margin:0 auto; padding:24px 0; border-bottom:1px solid #343b31; scroll-margin-top:12px; }
+.note-section:last-child { border-bottom:0; }
+.note-paragraph { white-space:pre-wrap; overflow-wrap:anywhere; font-size:16px; line-height:1.85; }
+.reader-context { overflow-wrap:anywhere; }
+.reader-contents { display:grid; gap:10px; max-height:260px; overflow:auto; padding:18px 5px; }
+.reader-contents a { color:var(--accent); text-decoration:underline; }
+.reader-table { overflow:auto; }
+.reader-table table { border-collapse:collapse; width:100%; }
+.reader-table td { border:1px solid #515b4b; padding:10px; white-space:pre-wrap; }
+@media print { .note-reading-area { max-height:none; overflow:visible; border:0; } }
 .nav-wrap { max-width:1360px; margin:auto; padding:20px 28px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
 .brand { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; letter-spacing:1px; flex-shrink:0; text-decoration:none; }
 .brand small { display:block; font-size:10px; color:var(--muted); margin-top:4px; letter-spacing:2px; }
