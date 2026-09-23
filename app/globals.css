@@ -48,6 +48,19 @@ a { text-underline-offset:4px; }
 .guitar-volume { display:flex; align-items:center; gap:12px; margin:0; min-width:210px; }
 .guitar-volume input { max-width:160px; }
 .guitar-volume span { font-size:12px; min-width:35px; }
+.appliance-workshop { overflow:hidden; }
+.appliance-layout { align-items:start; }
+.appliance-scene { position:relative; display:grid; place-items:center; min-height:270px; padding:10px; border:1px solid #4a6050; border-radius:16px; background:radial-gradient(circle at 50% 45%,#314741,#142520 75%); }
+.appliance-scene svg { display:block; max-width:480px; width:100%; height:auto; }
+.appliance-status { position:absolute; bottom:14px; right:14px; padding:7px 10px; background:#1c2b24; border:1px solid #607867; border-radius:7px; color:#d7e4d5; font-size:11px; font-weight:800; letter-spacing:1px; }
+.appliance-scene.is-working .appliance-status { color:#c6ee90; border-color:#c6ee90; }
+.appliance-scene.is-working .appliance-blades { animation:appliance-spin .22s linear infinite; }
+.appliance-options { display:flex; flex-wrap:wrap; gap:9px; }
+.appliance-options .btn { text-align:center; }
+.appliance-clues { gap:8px; margin-top:12px; }
+.appliance-clues p { margin:0; }
+@keyframes appliance-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .appliance-scene.is-working .appliance-blades { animation:none; } }
 @media(max-width:640px) { .guitar-neck { padding:12px 6px; border-width:6px; } .guitar-string-row { grid-template-columns:37px minmax(0,1fr) 81px; gap:5px; } .guitar-string-label { font-size:11px; } .guitar-fret-label { font-size:0; } .guitar-fret-label select { min-width:68px; font-size:13px; } }
 @media print { .note-reading-area { max-height:none; overflow:visible; border:0; } }
 .nav-wrap { max-width:1360px; margin:auto; padding:20px 28px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
