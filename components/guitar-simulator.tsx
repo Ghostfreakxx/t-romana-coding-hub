@@ -80,7 +80,7 @@ export default function GuitarSimulator() {
     }
   }, []);
 
-  const strum = useCallback(() => {
+  const strum = useCallback((up = false) => {
     try {
       audio.current ??= new AudioContext();
       if (audio.current.state === "suspended") void audio.current.resume();
@@ -90,7 +90,7 @@ export default function GuitarSimulator() {
     }
     fretsRef.current.forEach((fret, index) => {
       if (fret === null) return;
-      const id = window.setTimeout(() => pluck(index, fret), index * 60);
+      const id = window.setTimeout(() => pluck(index, fret), (up ? 5 - index : index) * 60);
       timeoutIds.current.push(id);
     });
   }, [pluck]);
@@ -121,14 +121,15 @@ export default function GuitarSimulator() {
         const fret = frets[index];
         return <div className="guitar-string-row" key={string.name}>
           <span className="guitar-string-label">{string.note}</span>
-          <button type="button" className={`guitar-string ${active === index ? "is-plucked" : ""}`} style={{ "--string-width": `${Math.max(2, 6 - index * 0.7)}px` } as React.CSSProperties} aria-label={`Pluck ${string.name} string, ${fret === null ? "muted" : `fret ${fret}, note ${noteName(string.midi + fret)}`}`} disabled={fret === null} onPointerDown={() => pluck(index, fret)}>
+          <button type="button" className={`guitar-string ${active === index ? "is-plucked" : ""}`} style={{ "--string-width": `${Math.max(2, 6 - index * 0.7)}px` } as React.CSSProperties} aria-label={`Pluck ${string.name} string, ${fret === null ? "muted" : `fret ${fret}, note ${noteName(string.midi + fret)}`}`} disabled={fret === null} onPointerDown={e => { e.preventDefault(); pluck(index, fret); }} onClick={e=>{if(e.detail===0)pluck(index,fret);}}>
             <span className="guitar-fret-dot">{fret === null ? "×" : fret === 0 ? "○" : fret}</span>
           </button>
           <label className="guitar-fret-label">Fret <select aria-label={`${string.name} string fret`} value={fret === null ? "x" : fret} onChange={event => { const next = [...frets]; next[index] = event.target.value === "x" ? null : Number(event.target.value); setFrets(next); setSelectedChord(""); }}><option value="x">Mute</option>{Array.from({ length: 13 }, (_, fretNumber) => <option value={fretNumber} key={fretNumber}>{fretNumber}</option>)}</select></label>
         </div>;
       })}
     </div>
-    <div className="row guitar-actions"><button type="button" className="btn" onPointerDown={strum}>Strum ↓</button><label className="guitar-volume">Volume <input type="range" min="0" max="100" value={volume} onChange={event => setVolume(Number(event.target.value))} aria-label="Guitar volume"/><span>{volume}%</span></label></div>
+    <div className="row guitar-actions"><button type="button" className="btn" onClick={()=>strum()}>Strum ↓</button><button type="button" className="btn secondary" onClick={()=>strum(true)}>Strum ↑</button><label className="guitar-volume">Volume <input type="range" min="0" max="100" value={volume} onChange={event => setVolume(Number(event.target.value))} aria-label="Guitar volume"/><span>{volume}%</span></label></div>
+    <p className="guitar-note-strip">{selectedChord || "Custom shape"} · {frets.map((fret,index)=>fret===null?"×":noteName(STRINGS[index].midi+fret)).join(" · ")}</p>
     <p className="small muted">Keyboard: 1–6 plucks the strings from low E to high E; Space strums. The sound is synthesized guitar practice audio.</p>
     {audioError && <p role="alert" className="notice error">{audioError}</p>}
   </section>;
