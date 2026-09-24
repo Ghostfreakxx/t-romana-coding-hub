@@ -36,3 +36,12 @@ Notes, syllabus PDFs and progress files are study resources. Students should con
 The college masthead image is copied unchanged from https://trcollege.edu.in/images/logo.png, linked from the official college homepage (retrieved 23 September 2026). Its original proportions and wording are retained. The Mizo language message below it belongs to this learning hub.
 
 Online note JSON is extracted from the existing DOCX guides; it does not introduce new study content. After changing a guide or its entry in `data/notes.ts`, regenerate the reader files with `python scripts/build-note-readers.py`. The extraction preserves paragraph text, heading context and tables.
+
+## Interactive labs
+
+- Driving: a 1.2 km simulated route, moving traffic, smooth steering, brake priority, day/rain/night scenes, high-density canvas, full-view mobile controls, route score and automatic pause when the tab is hidden. This is an arcade teaching model, not vehicle training.
+- Music in Basic Skills: guitar with up/down strums, piano, synthesized drum pads, adjustable metronome and beginner lessons. Sound starts after a user gesture. No microphone or recording is used.
+- Electrical: nine battery-appliance cases, an interactive component view, simulated diagnostics, evidence-based virtual repairs and locally saved completion. It does not teach mains repair.
+- PDF decoder: PDF.js extracts searchable text locally. The decoder selects key source sentences, finds terms in context and builds cloze recall cards with page numbers. Outputs can be added to existing notebooks or downloaded as text. It is extractive summarization, not generative AI, and does not perform OCR. Limits: 25 MB, 250 pages, 2 million extracted characters.
+
+`predev` and `prebuild` copy PDF.js worker, character maps and font assets from the installed package to `public/pdfjs`. These generated assets are ignored by Git and ESLint and must be regenerated when the dependency changes. Run the npm scripts rather than invoking `next build` directly.
