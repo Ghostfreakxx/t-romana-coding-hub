@@ -4,7 +4,7 @@ T. Romana Skills Hub is a browser-first learning site for Govt. T. Romana Colleg
 
 ## What is included
 
-- Coding Lab with HTML, CSS and JavaScript starter projects, sandboxed live preview, local saving and project export/import.
+- Coding Studio with seven starters, a CodeMirror editor, up to 16 locally saved projects, responsive preview sizes, a console, image embedding, project backups and HTML exports. Previous Coding Lab drafts remain recoverable.
 - College Hub with the supplied MZU course catalogue for Political Science, Sociology, Public Administration, History, English, Education, Economics and Value Added Courses.
 - Notes Library with the prepared TRC Batch 1, Batch 2, Batch 3 and VAC DOCX guides.
 - Read all 24 guides inside the College Hub or on individual guide pages, with topic search, short/long note filters and optional downloads.
@@ -26,6 +26,7 @@ Before committing changes, run:
 
 ```bash
 npm run lint
+npm run test:labs
 npm run build
 ```
 
@@ -39,9 +40,17 @@ Online note JSON is extracted from the existing DOCX guides; it does not introdu
 
 ## Interactive labs
 
-- Driving: a 1.2 km simulated route, moving traffic, smooth steering, brake priority, day/rain/night scenes, high-density canvas, full-view mobile controls, route score and automatic pause when the tab is hidden. This is an arcade teaching model, not vehicle training.
-- Music in Basic Skills: guitar with up/down strums, piano, synthesized drum pads, adjustable metronome and beginner lessons. Sound starts after a user gesture. No microphone or recording is used.
-- Electrical: nine battery-appliance cases, an interactive component view, simulated diagnostics, evidence-based virtual repairs and locally saved completion. It does not teach mains repair.
+- Driving: three 1.2 km courses rendered with Three.js/WebGL2, moving cars, trees, buildings, curved roads, optional shadows, chase/driver cameras and day/rain/night lighting. Touch wheel, direction buttons and pedals support multiple pointers. Stop/speed checkpoints, braking distance, score feedback and saved best results give practice a purpose. A 2D canvas view is available when 3D initialization fails. This is an arcade model, not realistic vehicle training. Balanced graphics limits pixel density; detailed mode adds shadows. Physical phone testing is still needed across devices.
+- Basic Skills: guitar, piano and drum pads with lessons; a four-track, 16-step beat sequencer with pattern import/export; typing practice; a small spreadsheet with safe formula evaluation; and email rehearsal that never sends mail. Sound starts after a user gesture and stops when its workspace is unmounted. No microphone is used.
+- Electrical: an interactive series/parallel circuit workbench, virtual voltage probes, branch readings, three experiments with verification and downloadable observations. Nine battery-appliance cases retain simulated diagnostics and locally saved completion. It does not teach mains repair.
 - PDF decoder: PDF.js extracts searchable text locally. The decoder selects key source sentences, finds terms in context and builds cloze recall cards with page numbers. Outputs can be added to existing notebooks or downloaded as text. It is extractive summarization, not generative AI, and does not perform OCR. Limits: 25 MB, 250 pages, 2 million extracted characters.
 
 `predev` and `prebuild` copy PDF.js worker, character maps and font assets from the installed package to `public/pdfjs`. These generated assets are ignored by Git and ESLint and must be regenerated when the dependency changes. Run the npm scripts rather than invoking `next build` directly.
+
+## Using a student's own AI
+
+The Coding Studio provides a prompt builder and a reviewed code-import workflow. A student copies a brief to their own ChatGPT, Gemini or other AI chat, then pastes the response back. There is no built-in model, paid API requirement, credential collection, automatic transmission or promise of unlimited AI. Current-code inclusion is opt-in. The interface links to ChatGPT and Gemini; their accounts and limits apply. Official references checked September 2026: https://help.openai.com/en/articles/9275245-chatgpt-free-tier-faq and https://support.google.com/gemini/answer/16275805.
+
+The studio runs plain HTML/CSS/JavaScript front-end projects, not npm, Python, databases, payments or backend services. Preview uses an opaque-origin `sandbox="allow-scripts"` iframe plus restrictive CSP. Network resources and browser storage are unavailable there. Console messages are bounded and accepted only from the active preview window/channel. Imported code is staged for review, never automatically executed. Downloaded HTML runs outside the hub's sandbox. Student projects are not automatically published.
+
+`test:labs` verifies calculation correctness, checkpoint transitions, project validation and AI-response parsing. It is not a browser/device compatibility test.

@@ -1,12 +1,12 @@
 import Link from "next/link";
 const labs = [
-  ["01", "</>", "Coding Lab", "Build a website, calculator or quiz. Edit your code, run it and keep a copy.", "/coding", "5 starter projects"],
+  ["01", "</>", "Coding Studio", "Build your own websites and browser apps. Bring code from your AI, edit, preview and export.", "/coding", "7 starters + your own projects"],
   ["02", "▤", "College Hub", "Find your department and semester. Follow your syllabus and keep study notes.", "/college", "7 subjects + VAC"],
-  ["03", "▧", "PDF Study Lab", "Read your own PDF beside your notes. Turn key ideas into revision cards.", "/study", "Your own study space"],
+  ["03", "▧", "PDF Study Lab", "Extract PDF text, create summaries with page references, and keep notes and revision cards.", "/study", "PDF decoder + notebooks"],
   ["04", "◇", "Reasoning Lab", "Find patterns, follow clues and test your reasoning with clear explanations.", "/reasoning", "Practice + test mode"],
-  ["05", "↗", "Driving Lab", "Understand vehicle controls, road awareness and safer decisions before practical lessons.", "/driving", "Learn the basics"],
-  ["06", "⌘", "Basic Skills", "Get comfortable with files, email, spreadsheets, online safety and job applications.", "/skills", "Everyday confidence"],
-  ["07", "ϟ", "Electrical Basics", "Understand circuits, power and household safety. Explore a simple virtual circuit.", "/electrical", "Learn safely"],
+  ["05", "↗", "Driving Lab", "Explore three 3D practice courses with traffic, weather, touch controls and checkpoints.", "/driving", "Drive + reflect"],
+  ["06", "⌘", "Basic Skills", "Play instruments, compose beats, practise typing and learn spreadsheet and email skills.", "/skills", "Music + digital workshops"],
+  ["07", "ϟ", "Electrical Workshop", "Build virtual series and parallel circuits, read a simulated meter and solve appliance faults.", "/electrical", "Build, measure, repair"],
 ];
 export default function Home() { return <main id="main-content" className="page">
   <section className="hero"><div><p className="eyebrow">Made for curious minds</p><h1>Learn something.<br/><span className="accent">Make it yours.</span></h1><p className="intro">Practical skills, college learning and room to experiment. Start small. Understand what you do. Build from there.</p><div className="row section-gap"><a href="#labs" className="btn">Explore the labs ↗</a><Link href="/progress" className="btn secondary">My progress</Link></div><p className="small muted section-gap">Free to use. No account. At your own pace.</p></div><div className="hero-art" aria-label="Learn, try, understand, build"><p className="eyebrow">The way we learn</p><div className="big">LEARN.<br/>TRY.<br/>BUILD.</div><p>You do not have to know everything.<br/>Start with one thing you want to understand.</p><div className="row between"><span className="tag">T. ROMANA</span><span className="accent">↗</span></div></div></section>
