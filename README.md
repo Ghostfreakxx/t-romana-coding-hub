@@ -27,6 +27,7 @@ Before committing changes, run:
 ```bash
 npm run lint
 npm run test:labs
+npm run test:pwa
 npm run build
 ```
 
@@ -54,3 +55,17 @@ The Coding Studio provides a prompt builder and a reviewed code-import workflow.
 The studio runs plain HTML/CSS/JavaScript front-end projects, not npm, Python, databases, payments or backend services. Preview uses an opaque-origin `sandbox="allow-scripts"` iframe plus restrictive CSP. Network resources and browser storage are unavailable there. Console messages are bounded and accepted only from the active preview window/channel. Imported code is staged for review, never automatically executed. Downloaded HTML runs outside the hub's sandbox. Student projects are not automatically published.
 
 `test:labs` verifies calculation correctness, checkpoint transitions, project validation and AI-response parsing. It is not a browser/device compatibility test.
+
+## Installable app and offline behaviour
+
+Open `/install` for iPhone/iPad, Android and desktop installation instructions. The web manifest uses standalone display, stable app identity and launch shortcuts. PNG icons (192, 512, Apple 180 and a padded maskable icon) reuse the college crest from the existing official masthead. `prepare-pwa.mjs` creates these assets and a versioned worker during predev/prebuild; do not edit the generated files.
+
+The worker registers in production only. It keeps the home shell, recently opened HTML pages, loaded Next static assets, branding and online note JSON. It never caches POST, cross-origin requests, API responses or Next RSC responses as documents. PDF/DOCX downloads and external AI are not offline bundles. Availability depends on prior loading and browser storage; this is not a guarantee that every feature works offline.
+
+Online document navigation checks the network first and falls back to saved HTML or the offline guide. Hashed JS/CSS are cache-first. Page/asset/note caches are bounded. A content hash rotates cache names between releases. Updates wait for the student's **Reload to update** action and do not force a reload. Existing local study data is separate from these caches.
+
+`test:pwa` exercises offline navigation, uncached fallbacks, asset reuse with deployment query strings, RSC/API/cross-origin exclusions, server-error recovery, cache cleanup, explicit activation and icon dimensions. `npm ci --dry-run --offline` checks package-lock consistency.
+
+Visual refinements include instanced road scenery to reduce GPU draw calls, procedural asphalt, rounded car bodies, rotating wheels, roadside lamps, route thumbnails, a route map and speed dial. The compatibility canvas follows the selected course and shows checkpoints. Context loss pauses driving and selects the compatibility view. Music gains an acoustic guitar illustration, layered piano keys, drum skins/cymbal surfaces and simultaneous note highlights. Guitar timers are cleaned up, shortcuts respect editing controls, and music suspends when hidden. The electrical bench has clickable and keyboard-operable probe points, resistor colour bands matching the chosen values, a meter face and drawn appliance parts.
+
+Device checks still needed: real iPhone/Android install flow, storage eviction, touch combinations and GPU rendering/performance. The cloud test browser disables WebGL; the compatibility view can be verified there. PWA implementation references: https://nextjs.org/docs/app/guides/progressive-web-apps and https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable.

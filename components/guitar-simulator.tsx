@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { GuitarArt } from "./lab-art";
 
 type Fret = number | null;
 type Chord = { name: string; frets: Fret[] };
@@ -33,7 +34,12 @@ export default function GuitarSimulator() {
   const [active, setActive] = useState<number | null>(null);
   const [audioError, setAudioError] = useState("");
   const audio = useRef<AudioContext | null>(null);
-  const timeoutIds = useRef<number[]>([]);
+  const timeoutIds = useRef(new Set<number>());
+  const noteTimer = useRef<number | null>(null);
+  const schedule = useCallback((fn: () => void, delay: number) => {
+    const id = window.setTimeout(() => { timeoutIds.current.delete(id); fn(); }, delay);
+    timeoutIds.current.add(id);
+  }, []);
   const volumeRef = useRef(volume);
   const fretsRef = useRef(frets);
   useEffect(() => { volumeRef.current = volume; }, [volume]);
@@ -44,7 +50,7 @@ export default function GuitarSimulator() {
     try {
       const context = audio.current ?? new AudioContext();
       audio.current = context;
-      if (context.state === "suspended") void context.resume();
+      if (context.state === "suspended") void context.resume().catch(() => setAudioError("Tap again to enable sound in this browser."));
       const frequency = 440 * 2 ** ((STRINGS[index].midi + fret - 69) / 12);
       const start = context.currentTime;
       const gain = context.createGain();
@@ -67,13 +73,11 @@ export default function GuitarSimulator() {
         partial.connect(filter);
         oscillator.start(start);
         oscillator.stop(start + 2.55);
-        oscillator.onended = () => { oscillator.disconnect(); partial.disconnect(); };
+        oscillator.onended = () => { oscillator.disconnect(); partial.disconnect(); if (harmonic === 3) { filter.disconnect(); gain.disconnect(); } };
       }
-      const cleanUp = window.setTimeout(() => { filter.disconnect(); gain.disconnect(); }, 2800);
-      timeoutIds.current.push(cleanUp);
       setActive(index);
-      const clearActive = window.setTimeout(() => setActive(current => current === index ? null : current), 180);
-      timeoutIds.current.push(clearActive);
+      if (noteTimer.current !== null) window.clearTimeout(noteTimer.current);
+      noteTimer.current = window.setTimeout(() => setActive(null), 250);
       setAudioError("");
     } catch {
       setAudioError("Sound is unavailable in this browser. Try a recent browser and check that audio is enabled.");
@@ -83,21 +87,22 @@ export default function GuitarSimulator() {
   const strum = useCallback((up = false) => {
     try {
       audio.current ??= new AudioContext();
-      if (audio.current.state === "suspended") void audio.current.resume();
+      if (audio.current.state === "suspended") void audio.current.resume().catch(() => setAudioError("Tap again to enable sound in this browser."));
     } catch {
       setAudioError("Sound is unavailable in this browser. Try a recent browser and check that audio is enabled.");
       return;
     }
     fretsRef.current.forEach((fret, index) => {
       if (fret === null) return;
-      const id = window.setTimeout(() => pluck(index, fret), (up ? 5 - index : index) * 60);
-      timeoutIds.current.push(id);
+      schedule(() => pluck(index, fret), (up ? 5 - index : index) * 60);
     });
-  }, [pluck]);
+  }, [pluck, schedule]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (["INPUT", "SELECT", "TEXTAREA", "BUTTON"].includes((event.target as HTMLElement).tagName) || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = event.target as HTMLElement;
+      if (["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName) || target.isContentEditable || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (target.tagName === "BUTTON" && event.code === "Space") return;
       const index = Number(event.key) - 1;
       if (index >= 0 && index < 6) pluck(index, fretsRef.current[index]);
       if (event.code === "Space") { event.preventDefault(); strum(); }
@@ -106,13 +111,22 @@ export default function GuitarSimulator() {
     return () => window.removeEventListener("keydown", onKey);
   }, [pluck, strum]);
 
-  useEffect(() => () => {
-    timeoutIds.current.forEach(window.clearTimeout);
-    if (audio.current) void audio.current.close();
+  useEffect(() => {
+    const pending = timeoutIds.current;
+    const pause = () => { if (document.hidden) { pending.forEach(window.clearTimeout); pending.clear(); setActive(null); void audio.current?.suspend().catch(() => {}); } };
+    document.addEventListener("visibilitychange", pause);
+    return () => {
+      document.removeEventListener("visibilitychange", pause);
+      pending.forEach(window.clearTimeout); pending.clear();
+      if (noteTimer.current !== null) window.clearTimeout(noteTimer.current);
+      const context = audio.current; audio.current = null;
+      if (context && context.state !== "closed") void context.close();
+    };
   }, []);
 
   return <section className="panel guitar-simulator" aria-label="Live guitar simulator">
     <div className="row between"><div><h2>Play the guitar</h2><p className="muted small">Tap a string to pluck it. Pick a chord and strum, or set your own frets.</p></div><span className="tag">LIVE IN YOUR BROWSER</span></div>
+    <GuitarArt active={active} chord={selectedChord}/>
     <div className="row guitar-chords" role="group" aria-label="Choose a guitar chord">
       {CHORDS.map(chord => <button key={chord.name} type="button" className="btn secondary" aria-pressed={selectedChord === chord.name} onClick={() => { setFrets([...chord.frets]); setSelectedChord(chord.name); }}>{chord.name}</button>)}
     </div>

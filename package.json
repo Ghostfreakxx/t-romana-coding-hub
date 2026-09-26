@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/prepare-pdf-assets.mjs",
-    "prebuild": "node scripts/prepare-pdf-assets.mjs",
+    "predev": "node scripts/prepare-pdf-assets.mjs && node scripts/prepare-pwa.mjs",
+    "prebuild": "node scripts/prepare-pdf-assets.mjs && node scripts/prepare-pwa.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:labs": "node scripts/test-labs.mjs"
+    "test:labs": "node scripts/test-labs.mjs",
+    "test:pwa": "node scripts/prepare-pwa.mjs && node scripts/test-pwa.mjs"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
@@ -21,7 +22,8 @@
     "pdfjs-dist": "^6.3.289",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "three": "^0.186.1"
+    "three": "^0.186.1",
+    "sharp": "0.35.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
