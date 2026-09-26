@@ -1,0 +1,91 @@
+/* Tactile instrument surfaces, drawn locally and sized for touch. */
+.route-art { display:block;width:calc(100% + 36px);max-width:none;height:94px;object-fit:cover;margin:-18px -18px 15px; }
+.drive-route-select button { overflow:hidden;transition:border-color .15s,background .15s; }
+.driving-v3 .drive-stage { box-shadow:0 24px 50px #07191e60,inset 0 0 0 1px #ffffff20;border-color:#73908d; }
+.drive-stage::after { content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 -70px 75px -65px #061219; }
+.driving-v3 .drive-hud { align-items:start; }
+.driving-v3 .drive-hud .speed-dial { width:95px;height:95px;min-width:0;border-radius:50%;padding:23px 0 0;border:5px solid #203941;background:radial-gradient(closest-side,#13252b 85%,transparent 87%),conic-gradient(from 220deg,#cfee9e var(--speed),#597077 0);box-shadow:0 5px 20px #0005; }
+.driving-v3 .speed-dial strong { font:700 29px/1 monospace; }.driving-v3 .speed-dial small { font-size:9px; }
+.route-mini { position:absolute;right:17px;top:112px;width:64px;border:1px solid #8da39b60;border-radius:14px;background:#13282de8;pointer-events:none; }
+.route-mini svg { width:100%;height:125px;display:block; }.route-mini small { display:block;text-align:center;font:11px monospace;color:#cfe5c0;padding:0 0 8px; }
+.driving-v3 .drive-nav { max-width:calc(100% - 110px);top:122px; }
+.driving-v3 .drive-overlay { background:linear-gradient(#0b242666,#092026da);backdrop-filter:blur(2px); }
+.driving-v3 .drive-overlay p { font-size:15px;line-height:1.7;color:#d2e4df; }.driving-v3 .drive-overlay .btn { padding:16px 28px;box-shadow:0 9px 28px #041f1b; }
+.driving-v3 .drive-wheel { background:radial-gradient(circle at 30% 20%,#657175,#202a30 50%,#0c161e);border:4px solid #0a1821;box-shadow:0 0 0 1px #91a4a1,0 8px 20px #0006,inset 0 2px 6px #ffffff3b; }
+.driving-v3 .drive-wheel svg { stroke:#b6c6c5;stroke-width:9;filter:drop-shadow(0 2px 1px #020c12); }
+.driving-v3 .drive-pedal { background:repeating-linear-gradient(0deg,#71848a 0,#85999e 4px,#1c3039 6px,#1c3039 12px);text-shadow:0 1px 4px #000,0 1px 4px #000;border:3px solid #a1b2b2; }
+.driving-v3 .drive-pedal.accelerate { border-color:#bddb94; }.driving-v3 .drive-pedal.brake { border-color:#db9c8b; }
+.driving-v3 .drive-coach { border-left:3px solid #c1db9b; }
+.music-studio .studio-header { position:relative;overflow:hidden;background:radial-gradient(ellipse at 95% -20%,#8d634b80,transparent 55%),linear-gradient(120deg,#272e32,#202532);border-color:#625e62; }
+.music-studio .studio-header h2 { font-size:clamp(30px,4vw,47px);letter-spacing:-1.4px; }
+.music-studio .studio-header .eyebrow { color:#e0ba8a; }
+.music-studio .tabs button[aria-pressed=true] { background:#e5cc9f;color:#2a2824;border-color:#efd7b6; }
+.music-studio .guitar-simulator,.music-studio .instrument-panel { background:linear-gradient(135deg,#252d31,#171f26);border-color:#625e62; }
+.guitar-showcase { margin:20px 0;border:1px solid #665547;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse at 35% 40%,#403729,#141d23 68%); }
+.guitar-showcase svg { display:block;width:100%;height:auto; }.guitar-showcase p { margin:0;padding:10px 16px 15px;font-size:12px;color:#b7b9b0;text-align:center; }
+.guitar-showcase .vibrating { animation:art-vibrate .08s linear infinite;filter:drop-shadow(0 0 3px #d4eeac); }
+@keyframes art-vibrate { 50% { transform:translateY(2px); } }
+.music-studio .guitar-neck { border-width:5px;border-radius:12px;padding:14px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(16.66% - 2px),#a99572 calc(16.66% - 2px),#e1d6ba 16.66%),repeating-linear-gradient(1deg,#37271e 0,#4c3223 3px,#573725 5px); }
+.music-studio .guitar-string-label { color:#e7cca0;font:12px monospace; }.music-studio .guitar-string-row { min-height:53px; }
+.music-studio .guitar-fret-dot { width:26px;height:26px;font-size:12px;background:#ede6cf;border:1px solid #bc956a;box-shadow:0 2px 4px #0007; }
+.music-studio .guitar-note-strip { background:#182627;border-color:#536254;color:#e0d5af; }
+.piano-deck,.drum-kit { padding:22px;border:1px solid #4b5863;border-radius:18px;margin:18px 0 25px;background:linear-gradient(165deg,#35434c,#18212b 55%);box-shadow:0 14px 25px #0004,inset 0 1px #b6c2c34d; }
+.instrument-readout { display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;font:10px monospace;color:#bfcbd2;letter-spacing:1.5px; }
+.instrument-readout strong { min-width:150px;padding:12px 18px;border:3px solid #101b20;border-radius:5px;background:linear-gradient(#b6c5a2,#d0d8b5);color:#263d33;font:16px monospace;letter-spacing:0;box-shadow:inset 0 2px 5px #0005; }
+.music-studio .piano-scroll { padding:20px 0 10px; }
+.music-studio .piano-keys { height:255px;min-width:510px;padding:7px;border-top:9px solid #6c4349;background:#101b20; }
+.music-studio .piano-key.white { background:linear-gradient(#cacbc1 0,#f7f4e5 14%,#fffff8 92%,#d0d6d2);border:1px solid #7a888c;box-shadow:inset 0 -7px 0 #e1e2da,0 5px 0 #718080; }
+.music-studio .piano-key.black { background:linear-gradient(100deg,#101820,#37414a 80%,#0c141c);box-shadow:inset 0 -7px 0 #0b131c,0 6px 6px #0006; }
+.music-studio .piano-key.playing { background:linear-gradient(#9fba92,#d4eab5);box-shadow:inset 0 3px 8px #506448,0 2px 0 #51694f; }
+.music-studio .drum-pads { grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;padding:35px 0 12px; }
+.music-studio .drum-pad { min-height:0;aspect-ratio:1;border-radius:50%;padding:14px;border:7px solid #87929b;background:radial-gradient(circle at 37% 32%,#dddcd1,#a9b4b4 65%,#72858d);box-shadow:0 10px 0 #304455,0 12px 0 #83929a,0 20px 24px #0008,inset 0 0 12px #3b4b5380;color:#22353d;text-shadow:0 1px #ffffff88; }
+.music-studio .drum-ring { inset:8px;border:1px solid #5d7478;border-radius:50%;box-shadow:0 0 0 3px #e0e1d050; }
+.music-studio .drum-hardware { position:absolute;inset:-10px;border-radius:50%;background:repeating-conic-gradient(#d0d9d9 0deg 5deg,transparent 5deg 45deg);mask:radial-gradient(transparent 64%,#000 65%); }
+.music-studio .drum-0 { background:radial-gradient(circle at 35% 35%,#3d5c63,#18323e 70%);color:#ebf0e3;text-shadow:none; }
+.music-studio .drum-2 { border-color:#bc9550;background:repeating-radial-gradient(circle at 50% 50%,#b38c41 0,#d2b273 2px,#ccb071 4px);box-shadow:0 7px 0 #7c693e,0 18px 25px #0007; }.music-studio .drum-2 .drum-ring { border-color:#ad8843; }
+.music-studio .drum-3 { border-color:#697e8c;background:radial-gradient(circle at 30% 30%,#a2bed1,#638699); }
+.music-studio .drum-pad.playing { transform:translateY(5px) scale(.98);filter:brightness(1.18);box-shadow:0 3px 0 #304455,0 6px 18px #d4eeac55; }
+.music-studio .drum-pad strong { font-size:clamp(13px,2vw,20px); }.music-studio .drum-pad small { font-size:11px; }
+.skill-paths button { background:radial-gradient(ellipse at top right,#71858230,transparent 60%),#1a2b30;box-shadow:0 8px 18px #0002; }.skill-paths button:nth-child(2) { background-color:#282739; }.skill-paths button:nth-child(3) { background-color:#223331; }
+.panel.beat-maker { border:1px solid #685b72;background:radial-gradient(ellipse at 100% 0,#73587466,transparent 65%),linear-gradient(125deg,#222c36,#17252d);box-shadow:0 20px 40px #0003; }
+.beat-maker .sequencer-scroll { padding:24px 14px;background:#101d25;border:1px solid #5a6472;border-radius:14px;margin:24px 0;box-shadow:inset 0 3px 10px #0007; }
+.beat-maker .sequence-step { height:46px;border-radius:7px;background:linear-gradient(#3d4d5a,#273642);box-shadow:0 3px 0 #0a141c; }.beat-maker .sequence-step.on { background:linear-gradient(#e0b797,#b97772);border-color:#edc7a2;box-shadow:0 3px 0 #5b3a3a,0 0 12px #f2c59330; }
+.beat-maker .sequence-step.current { outline-color:#d3f0ae; }.beat-maker .sequence-row:nth-child(2n) .sequence-step.on { background:linear-gradient(#a6d6c5,#668eae);border-color:#afdacc; }
+.circuit-workbench.panel { background:radial-gradient(ellipse at top right,#55796740,transparent 70%),#1a292b;border-color:#597367; }
+.circuit-workbench .bench-board { background:linear-gradient(140deg,#173e37,#0f2929);border:5px solid #354b47;box-shadow:0 0 0 1px #83938b,inset 0 0 40px #071b1955,0 18px 28px #0004;position:relative; }
+.circuit-workbench .bench-board::before,.circuit-workbench .bench-board::after { content:"+";position:absolute;bottom:8px;width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#bdcbc1,#496558);color:#273b35;text-align:center;font:bold 12px/14px monospace; }.circuit-workbench .bench-board::before { left:8px; }.circuit-workbench .bench-board::after { right:8px; }
+.circuit-workbench .bench-board > svg { filter:drop-shadow(0 3px 2px #0005); }
+.circuit-workbench .circuit-wire { stroke-width:5;stroke:#7d9381; }.circuit-workbench .circuit-live .circuit-wire { stroke:#c6e7a2;filter:drop-shadow(0 0 2px #aac98760); }
+.circuit-node { cursor:crosshair;outline:none; }.circuit-node:focus-visible circle:last-of-type { stroke:#fff;stroke-width:7; }.circuit-node:hover circle:last-of-type { fill:#527058; }
+.bench-controls .bench-meter { border:7px solid #c5a15d;border-radius:27px 27px 38px 38px;background:linear-gradient(140deg,#45514c,#263531 65%);padding:17px;box-shadow:0 5px 0 #745e32,0 16px 25px #0005; }
+.bench-meter .meter-screen { padding:16px;background:linear-gradient(#afba93,#d1d6af);border:5px solid #1d2c28;border-radius:9px;color:#263d2e;box-shadow:inset 0 4px 7px #304c3b60; }
+.bench-meter .meter-screen > span { color:#304736;font:9px monospace;letter-spacing:.5px; }.bench-meter .meter-screen strong { display:block;font:clamp(29px,4vw,43px)/1.3 monospace;color:#24372b;margin:10px 0;letter-spacing:-1px; }.bench-meter .meter-screen p { color:#304736;font-size:11px;line-height:1.45;min-height:32px;margin:0; }
+.meter-dial { position:relative;margin:20px auto 12px;width:112px;height:112px;border:2px dashed #aab5a4;border-radius:50%;background:radial-gradient(#46564c 42%,#172b24 43%,#46564c 60%,transparent 62%); }
+.meter-dial i { position:absolute;inset:29px 43px;transform:rotate(35deg);background:linear-gradient(90deg,#46554f,#82938a,#26362f);border-radius:6px;box-shadow:2px 3px 5px #0008; }.meter-dial i::before { content:"";display:block;margin:3px auto;width:3px;height:13px;background:#eff3cd; }.meter-dial span,.meter-dial strong { position:absolute;top:-5px;font:10px monospace;color:#dfe9bd;background:#30443b;padding:2px; }.meter-dial span { left:10px; }.meter-dial strong { right:2px;color:#f1d4a0; }
+.meter-ports { display:flex;gap:38px;justify-content:center; }.meter-ports span { color:#c1caba;font:10px monospace;display:grid;gap:6px;text-align:center; }.meter-ports i { width:23px;height:23px;display:block;border-radius:50%;background:#080f12;border:5px solid #171e20;box-shadow:0 0 0 1px #83958a; }.meter-ports span:last-child i { border-color:#b9584a; }
+.circuit-workbench .bench-readings > div { background:#203a33;border-color:#536d58; }.circuit-workbench .bench-readings strong { font-size:15px; }
+.appliance-workshop.panel { background:linear-gradient(130deg,#223738,#19262e);border-color:#597367; }
+.appliance-workshop .appliance-scene { border-color:#657b79;background:linear-gradient(0deg,#52666344,transparent 45%),radial-gradient(ellipse at 50% 25%,#526b6a,#142b35 72%);box-shadow:inset 0 -25px 45px #061a2340;min-height:320px; }
+.appliance-workshop .appliance-scene::before { content:"";position:absolute;left:0;right:0;bottom:0;height:65px;background:repeating-linear-gradient(90deg,transparent 0 38px,#9aada716 39px 40px),linear-gradient(#536e6c50,#213b4350);border-top:1px solid #b4c5bc33; }
+.appliance-workshop .appliance-scene svg { filter:drop-shadow(5px 8px 5px #00151d66);z-index:1; }.appliance-workshop .appliance-status { z-index:2; }
+.part-art { display:block;width:85px;height:62px;filter:drop-shadow(0 4px 2px #06191480); }.appliance-workshop .repair-part { background:linear-gradient(130deg,#385f52,#163f39);box-shadow:0 6px 0 #0b231e,0 10px 14px #0004; }
+.appliance-workshop .repair-part.selected { background:linear-gradient(130deg,#557058,#284b3a);box-shadow:0 0 0 2px #cfd991,0 5px 0 #10281d; }
+.pwa-bar { max-width:1184px;margin:0 auto 28px;padding:18px 22px;border:1px solid #3c5b4d;border-radius:16px;background:#192c27;display:flex;align-items:center;flex-wrap:wrap;gap:13px;font-size:13px; }
+.pwa-bar p { margin:0;flex:1;min-width:160px;color:#d3dfcd; }.connection-dot { width:8px;height:8px;border-radius:50%;background:#b9d590;box-shadow:0 0 12px #b9d59055; }.connection-dot.offline { background:#e4b777; }
+.install-guide { max-width:960px; }.install-identity { display:flex;gap:25px;align-items:center;margin-bottom:30px; }.install-identity img { border-radius:24px;box-shadow:0 8px 24px #0004; }.install-identity h2 { margin:0;font-size:clamp(23px,4vw,35px); }.install-identity p { color:#b2c4b8;line-height:1.6; }
+.install-steps { display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:30px 0; }.install-steps article { padding:25px;border:1px solid #4a675b;border-radius:17px;background:linear-gradient(130deg,#254238,#1b302d); }.install-steps article > span { font:11px monospace;letter-spacing:1px;color:#bdcca6; }.install-steps h3 { font-size:23px;margin:16px 0; }.install-steps ol { padding-left:21px;color:#c9d6c9;line-height:1.8; }.install-steps li { padding:5px; }.install-offline { padding:24px;border-radius:15px;background:#1b2c34;border:1px solid #4e6263; }.install-offline p { color:#b8ccc4;line-height:1.75; }.install-offline [role=status] { color:#d6e9b6; }
+@media(max-width:1000px) { .bench-controls .bench-meter { max-width:390px;width:100%;justify-self:center; }.driving-v3 .drive-stage { height:570px; } }
+@media(max-width:640px) {
+  .route-art { width:calc(100% + 18px);height:64px;margin:-13px -9px 10px; }.driving-v3 .drive-route-select strong { font-size:11px; }.driving-v3 .drive-stage { height:560px;border-radius:13px; }
+  .driving-v3 .drive-hud .speed-dial { width:78px;height:78px;padding-top:17px;border-width:4px; }.driving-v3 .drive-hud .speed-dial strong { font-size:25px; }.driving-v3 .drive-hud .speed-dial small { font-size:8px; }.driving-v3 .drive-nav { top:104px;max-width:calc(100% - 85px); }.route-mini { top:110px;right:10px;width:50px; }.route-mini svg { height:104px; }
+  .music-studio .studio-header { padding:24px 20px; }.guitar-showcase { margin:14px -8px; }.guitar-showcase svg { min-height:160px; }.guitar-showcase p { font-size:10px; }
+  .music-studio .guitar-neck { padding:12px 6px; }.music-studio .guitar-string-row { grid-template-columns:29px minmax(0,1fr) 85px;gap:7px; }.music-studio .guitar-fret-label { font-size:10px; }.music-studio .guitar-fret-label select { min-width:48px;font-size:13px; }
+  .piano-deck,.drum-kit { padding:16px 12px;margin:16px -7px; }.instrument-readout { gap:10px; }.instrument-readout small { display:none; }.instrument-readout strong { min-width:110px;font-size:13px;padding:10px; }.music-studio .piano-keys { height:215px;min-width:470px; }
+  .music-studio .drum-pads { grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 25px;padding:27px 8px 15px; }.music-studio .drum-pad { border-width:5px; }.music-studio .drum-pad strong { font-size:15px; }
+  .circuit-workbench .bench-board { padding:12px 8px;border-width:3px; }.circuit-workbench .bench-board svg { margin:12px 0;min-height:185px; }.bench-controls .bench-meter { max-width:330px; }.part-art { width:64px;height:52px; }.appliance-workshop .repair-parts { gap:12px; }.appliance-workshop .repair-part { padding:14px 4px; }.appliance-workshop .repair-part strong { font-size:11px; }
+  .appliance-workshop .appliance-scene { min-height:255px; }.pwa-bar { margin:0 18px 24px;padding:17px; }.pwa-bar .btn { font-size:12px; }
+  .install-identity { gap:15px;align-items:start; }.install-identity img { width:70px;height:70px;border-radius:18px; }.install-identity .eyebrow { font-size:9px; }.install-steps { grid-template-columns:1fr; }.install-steps article,.install-offline { padding:20px; }
+}
+@media(max-height:520px) and (orientation:landscape) { .drive-expanded .route-mini { display:none; }.driving-v3.drive-expanded .drive-nav { top:72px; }.driving-v3.drive-expanded .drive-hud .speed-dial { width:64px;height:64px;padding-top:11px;border-width:3px; }.driving-v3.drive-expanded .drive-hud .speed-dial strong { font-size:22px; } }
+@media(display-mode:standalone) { body { padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom); }.college-masthead { padding-top:18px; }.pwa-bar { margin-bottom:max(24px,env(safe-area-inset-bottom)); } }
+@media(prefers-reduced-motion:reduce) { .guitar-showcase .vibrating,.music-studio .guitar-string.is-plucked::before,.appliance-scene.is-working .appliance-blades { animation:none; } }

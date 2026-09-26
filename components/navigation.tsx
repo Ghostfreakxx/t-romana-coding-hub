@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-export const links = [["/", "Home"], ["/coding", "Coding"], ["/college", "College"], ["/notes", "Notes"], ["/study", "Study"], ["/reasoning", "Reasoning"], ["/driving", "Driving"], ["/skills", "Basic skills"], ["/electrical", "Electrical"], ["/progress", "My progress"]];
+export const links = [["/", "Home"], ["/install", "Get app"], ["/coding", "Coding"], ["/college", "College"], ["/notes", "Notes"], ["/study", "Study"], ["/reasoning", "Reasoning"], ["/driving", "Driving"], ["/skills", "Basic skills"], ["/electrical", "Electrical"], ["/progress", "My progress"]];
 export default function Navigation() {
   const path = usePathname();
   return <header className="site-header">
