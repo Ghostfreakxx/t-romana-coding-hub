@@ -1,0 +1,412 @@
+{
+  "section-4": [
+    "Sets are usually written with capital letters and their elements inside braces, e.g. A = {1, 2, 3}. Types of sets include finite and infinite sets, null (empty) set, singleton set, equal sets, subsets, universal set and power set.",
+    "Union (A U B) contains all elements in A or B; intersection (A n B) contains elements common to both; difference (A - B) contains elements in A but not in B; complement (A') contains elements of the universal set not in A. Venn diagrams are used to show these operations. In economics, sets describe consumption bundles, feasible regions and groups of consumers or firms."
+  ],
+  "section-5": [
+    "A function y = f(x) assigns exactly one value of the dependent variable y to each value of the independent variable x. A constant function (y = 5) does not change with x; a linear function (y = a + bx) has a constant slope; a quadratic or polynomial function (y = a + bx + cx^2) can show U-shaped cost curves.",
+    "A rational function is a ratio of two polynomials, e.g. average cost = TC/Q. Exponential functions (y = ae^bx) describe growth of population or compound interest, and logarithmic functions are their inverses. Economic examples include demand functions, supply functions, cost functions, consumption functions and production functions."
+  ],
+  "section-6": [
+    "An LP problem has three parts: an objective function (e.g. maximise profit Z = 30x + 20y), constraints (resources such as labour and machine hours, written as inequalities) and non-negativity conditions (x, y >= 0).",
+    "In the graphical method, constraints are drawn as lines, the feasible region (area satisfying all constraints) is identified, and the objective function is evaluated at the corner points; the optimal solution lies at one of the corners. LP is used in production planning, diet problems, transportation and resource allocation. Problems with more variables are solved by the simplex method."
+  ],
+  "section-7": [
+    "The derivative dy/dx is the limit of the ratio of change in y to change in x as the change in x tends to zero. It gives the slope of the curve at a point.",
+    "Basic rules: derivative of a constant is zero; power rule d(x^n)/dx = nx^(n-1); sum and difference rule; product rule d(uv)/dx = u dv/dx + v du/dx; quotient rule; chain rule for a function of a function; derivatives of e^x (= e^x) and log x (= 1/x). In economics, the derivative of total cost gives marginal cost and the derivative of total revenue gives marginal revenue."
+  ],
+  "section-8": [
+    "For a function y = f(x), the first-order condition for a maximum or minimum is dy/dx = 0. The second-order condition determines the nature: if d2y/dx2 < 0 the point is a maximum; if d2y/dx2 > 0 it is a minimum.",
+    "Example: if profit = TR - TC, profit is maximum where MR = MC (first-order condition) and the slope of MC is greater than the slope of MR (second-order condition). Similarly, average cost is minimum where its derivative is zero."
+  ],
+  "section-9": [
+    "For z = f(x, y), the partial derivative with respect to x (written dz/dx with curly d) treats y as constant. Second-order partial derivatives and cross partial derivatives can also be found.",
+    "Economic uses: marginal product of labour and capital from a production function Q = f(L, K); marginal utility of each good from a utility function; partial elasticities of demand with respect to price, income and the price of related goods. Partial derivatives are also used for maxima and minima of functions with two variables."
+  ],
+  "section-10": [
+    "Applications: (1) Marginal cost = d(TC)/dQ and marginal revenue = d(TR)/dQ; (2) profit maximisation where MR = MC; (3) elasticity of demand e = (dQ/dP) x (P/Q); (4) relationship between AR, MR and elasticity: MR = AR(1 - 1/e); (5) minimum average cost where MC = AC.",
+    "Differentiation is also used to find the optimal tax, optimal inventory, the marginal propensity to consume from the consumption function, and growth rates using logarithmic derivatives."
+  ],
+  "section-11": [
+    "If F'(x) = f(x), then the integral of f(x) dx = F(x) + C, where C is the constant of integration. Basic rules: the integral of x^n = x^(n+1)/(n+1) + C (n not equal to -1), the integral of 1/x = log x + C, and the integral of e^x = e^x + C.",
+    "Economic uses: total cost from marginal cost (the constant of integration equals fixed cost), total revenue from marginal revenue, consumption function from MPC, and capital stock from investment flow."
+  ],
+  "section-12": [
+    "The definite integral from a to b of f(x) dx = F(b) - F(a). Geometrically, it gives the area under the curve y = f(x) between x = a and x = b.",
+    "Properties: reversing the limits changes the sign; the integral can be split over intervals; the integral of a sum is the sum of integrals. It is used to measure total quantities over an interval, such as total cost of increasing output from 10 to 20 units."
+  ],
+  "section-13": [
+    "Consumer surplus = integral from 0 to Q0 of the demand function D(Q) dQ - P0 x Q0, i.e. the area under the demand curve above the price. Producer surplus = P0 x Q0 - integral from 0 to Q0 of the supply function S(Q) dQ.",
+    "Other applications: total revenue from MR, total cost from MC, capital formation from the rate of investment, present value of a continuous income stream, and Lorenz curve/Gini coefficient computations of inequality."
+  ],
+  "section-14": [
+    "A matrix of order m x n has m rows and n columns. Types include row matrix, column matrix, square matrix, diagonal matrix, scalar matrix, identity (unit) matrix, null (zero) matrix, symmetric matrix and triangular matrix.",
+    "Matrices are used in input-output analysis (Leontief), solving simultaneous equations of market equilibrium, national income models, linear programming and econometrics."
+  ],
+  "section-15": [
+    "Addition and subtraction are possible only for matrices of the same order. Multiplication AB is possible when the number of columns of A equals the number of rows of B; matrix multiplication is generally not commutative (AB is not equal to BA).",
+    "The transpose A' is obtained by interchanging rows and columns. The inverse A^-1 = adj A / |A| exists only if |A| is not zero (non-singular matrix), and AA^-1 = I. The rank of a matrix is the order of its largest non-zero minor and indicates the number of independent equations."
+  ],
+  "section-16": [
+    "For a 2 x 2 matrix [a b; c d], the determinant is ad - bc. For a 3 x 3 matrix, it is found by expansion using minors and cofactors along any row or column.",
+    "Properties: interchanging two rows changes the sign; if two rows are identical, the determinant is zero; multiplying a row by k multiplies the determinant by k. A matrix with zero determinant is singular and has no inverse. Determinants are used in Cramer's rule and in checking second-order conditions (Hessian determinant)."
+  ],
+  "section-17": [
+    "For a system AX = B, each unknown is found as xi = |Ai| / |A|, where Ai is the matrix obtained by replacing the i-th column of A with the constant column B. The rule applies only when |A| is not zero.",
+    "Example: For 2x + y = 5 and x + 3y = 10, |A| = 5, |A1| = 5, |A2| = 15, so x = 1 and y = 3. Cramer's rule is used to solve market equilibrium models and national income models with several equations."
+  ],
+  "section-18": [
+    "If AX = B and A is non-singular, then X = A^-1 B. Steps: find |A|, find the matrix of cofactors, take its transpose to obtain the adjoint, compute A^-1 = adj A / |A|, then multiply by B.",
+    "This method is efficient for solving many equations and is the basis of computer solutions. In Leontief's input-output model, the total output needed to meet final demand is X = (I - A)^-1 D, where (I - A)^-1 is the Leontief inverse."
+  ],
+  "section-20": [
+    "Sets in economics: Sets provide a precise language for describing groups such as consumption possibilities, feasible production plans and the set of all prices. Operations like union, intersection, difference and complement, along with Venn diagrams, help in logical reasoning and probability theory.",
+    "Functions: A function shows how a dependent variable responds to an independent variable. Constant, linear, quadratic and higher polynomial functions model demand, supply and cost curves; rational functions model average cost; exponential and logarithmic functions model growth, compound interest and elasticities.",
+    "Linear programming: LP finds the best (maximum profit or minimum cost) solution under linear constraints. The graphical method plots constraints, identifies the feasible region and evaluates the objective at corner points. It assumes linearity, divisibility, certainty and non-negativity.",
+    "Differential calculus: The derivative measures the rate of change and is used to derive marginal concepts. Together these tools allow economists to state relationships precisely, test consistency of theories and find optimal solutions."
+  ],
+  "section-21": [
+    "Optimisation: Economic agents try to maximise (profit, utility) or minimise (cost). The first-order condition requires the first derivative to be zero, and the second-order condition (negative for maximum, positive for minimum) confirms the nature of the turning point.",
+    "Partial derivatives: For functions of several variables, partial derivatives measure the effect of one variable while holding others constant, giving marginal products of labour and capital and marginal utilities of goods. Conditions for maxima of two-variable functions involve both first- and second-order partial derivatives.",
+    "Applications: Differentiation gives MC from TC and MR from TR, determines profit-maximising output (MR = MC with MC rising), computes elasticity, relates MR to price and elasticity, and finds the minimum AC. Integration reverses these, deriving total cost and revenue from marginal functions.",
+    "These methods make economic analysis precise and form the basis of modern microeconomics and macroeconomics."
+  ],
+  "section-22": [
+    "Definite integral: It measures the area under a curve between two limits, F(b) - F(a). It is used when we know a marginal or rate function and need the total change over an interval.",
+    "Applications: consumer surplus (area under the demand curve above price), producer surplus (area above the supply curve below price), total revenue and total cost from marginal functions, capital accumulation from investment flows and present value of income streams.",
+    "Matrices: A matrix is a rectangular arrangement of numbers that allows systems of equations to be written compactly as AX = B. Types include square, diagonal, identity, zero and symmetric matrices. Matrix algebra includes addition, multiplication, transpose, inverse and rank.",
+    "Uses: Matrix methods are essential in input-output analysis, linear programming, general equilibrium models and econometrics, where many variables interact simultaneously."
+  ],
+  "section-23": [
+    "Determinants: A determinant is a scalar associated with a square matrix. For a 2 x 2 matrix it is ad - bc; for larger matrices it is calculated using minors and cofactors. A zero determinant means the system has no unique solution.",
+    "Cramer's rule: Each variable is the ratio of two determinants: xi = |Ai| / |A|. It is convenient for small systems such as two- or three-market equilibrium models or simple national income models (Y = C + I + G, C = a + bY).",
+    "Matrix inversion method: X = A^-1 B, where A^-1 = adj A / |A|. It is efficient for larger systems and is used in Leontief's input-output model where X = (I - A)^-1 D.",
+    "Together, these methods give economists powerful tools for solving simultaneous equations that describe interdependent markets and sectors of the economy."
+  ],
+  "section-26": [
+    "Agriculture contributes to GDP (about 18 per cent in India) and employs around 45 per cent of the workforce. It provides food security, raw materials for industries like textiles, sugar and jute, and earns foreign exchange through exports of rice, spices, tea and marine products.",
+    "It also creates market demand for industrial goods such as fertilisers, tractors and consumer goods, supplies labour to industry, and generates savings for capital formation. In Mizoram, agriculture and allied activities employ a majority of the rural population."
+  ],
+  "section-27": [
+    "Backward linkages: agriculture depends on industry for fertilisers, pesticides, machinery, fuel and power. Forward linkages: agriculture supplies raw materials to agro-based industries such as food processing, textiles and sugar mills.",
+    "Agriculture also generates demand for services like transport, storage, banking and insurance. Strong linkages help agricultural growth spread to the whole economy. Weak linkages, as in many north-eastern states, limit the benefits of farm growth."
+  ],
+  "section-28": [
+    "The farm economy includes crop production, animal husbandry, dairy, poultry, fisheries and forestry. The non-farm economy includes rural manufacturing (handlooms, handicrafts, food processing), construction, trade, transport, repair services and government jobs.",
+    "The share of non-farm income in rural households has been increasing. Non-farm activities reduce seasonal unemployment, absorb surplus labour, reduce poverty and diversify risk. Government schemes like PMEGP and DAY-NRLM promote rural non-farm employment."
+  ],
+  "section-29": [
+    "Fisheries provide protein and income; India is one of the largest fish producers in the world. Horticulture includes fruits, vegetables, spices and plantation crops; Mizoram produces ginger, turmeric, oranges, passion fruit and anthurium flowers. Floriculture is a high-value activity with export potential. Forestry provides timber, bamboo, fuelwood and non-timber forest products.",
+    "These activities give higher returns per unit of land, generate employment for women and landless households, and reduce dependence on cereals. Missions such as the Mission for Integrated Development of Horticulture (MIDH) and the Blue Revolution support them."
+  ],
+  "section-30": [
+    "Agro-based industries include rice mills, flour mills, sugar factories, dairy processing, fruit and vegetable processing, oil mills, bamboo and cane products and handlooms. They reduce post-harvest losses, add value, create jobs near villages and raise farmers' incomes.",
+    "Policies include the Pradhan Mantri Kisan SAMPADA Yojana, mega food parks, PMFME (for micro food processing enterprises) and Khadi and Village Industries Commission programmes. Constraints include poor infrastructure, limited credit and weak marketing."
+  ],
+  "section-31": [
+    "Agrarian relations include landlord-tenant relations, owner-cultivator systems, sharecropping, agricultural labour and relations between farmers and moneylenders or traders. Under British rule, the zamindari, ryotwari and mahalwari systems shaped agrarian relations, often leading to exploitation of cultivators.",
+    "Unequal agrarian relations reduce incentives to invest and increase poverty. In tribal areas such as Mizoram, land was traditionally owned by the community and allocated by village chiefs, which differs from the plains system."
+  ],
+  "section-32": [
+    "Components of land reforms in India: (1) abolition of intermediaries such as zamindars; (2) tenancy reforms - regulation of rent, security of tenure and ownership rights to tenants; (3) ceiling on landholdings and distribution of surplus land to the landless; (4) consolidation of fragmented holdings; (5) updating of land records.",
+    "Abolition of zamindari was largely successful, but ceiling and tenancy reforms were weak due to loopholes, benami transfers and lack of political will. States like West Bengal (Operation Barga) and Kerala achieved better results. Digital land records (DILRMP) are a recent reform."
+  ],
+  "section-33": [
+    "Land utilisation categories include forest area, land not available for cultivation, permanent pastures, cultivable waste, fallow land and net sown area. In India, about 43 per cent of the geographical area is net sown area.",
+    "Cropping pattern depends on climate, soil, irrigation, prices, technology, government policy and farm size. In India, food grains dominate, but the share of commercial crops, fruits and vegetables is increasing. Crop diversification improves income and sustainability. In hilly Mizoram, jhum (shifting) cultivation and horticulture are important."
+  ],
+  "section-34": [
+    "Sources of irrigation in India include canals, tanks, wells and tube wells (now the largest source), and others. Irrigation projects may be major (above 10,000 hectares), medium or minor.",
+    "Benefits: allows multiple cropping, increases yields, enables use of HYV seeds and fertilisers, and reduces risk of drought. Problems include waterlogging, salinity, groundwater depletion and regional inequality. Programmes like Pradhan Mantri Krishi Sinchayee Yojana promote 'Har Khet Ko Pani' and 'More Crop Per Drop' through drip and sprinkler irrigation."
+  ],
+  "section-35": [
+    "Productivity is measured as output per hectare (land productivity) or output per worker (labour productivity). Total factor productivity measures output relative to all inputs combined.",
+    "Indian yields of rice and wheat are lower than in China and developed countries. Regions with irrigation and modern technology such as Punjab and Haryana have high productivity, while rainfed and hilly areas such as the North-East have lower productivity."
+  ],
+  "section-36": [
+    "Technological change in agriculture includes biological technology (HYV seeds, hybrids, biotechnology), chemical technology (fertilisers, pesticides), mechanical technology (tractors, harvesters, pumps) and new information technology (weather forecasts, apps, precision farming).",
+    "Technology may be land-saving (raises yields) or labour-saving (replaces labour). It increases output and income but may also increase inequality if only large farmers adopt it. Extension services, research institutions (ICAR, state agricultural universities) and Krishi Vigyan Kendras spread new technology."
+  ],
+  "section-37": [
+    "The Green Revolution began in India in the mid-1960s under the leadership of M.S. Swaminathan and C. Subramaniam, with HYV seeds of wheat developed by Norman Borlaug. It was first concentrated in Punjab, Haryana and western Uttar Pradesh.",
+    "Achievements: food self-sufficiency, large increase in wheat and rice production, higher incomes and growth of agro-industries. Problems: regional and inter-personal inequality, neglect of pulses and oilseeds, over-use of chemicals and groundwater, soil degradation and health hazards. A second 'evergreen revolution' focusing on sustainability is now advocated."
+  ],
+  "section-38": [
+    "Dry land areas receive less than 750 mm of rainfall and depend wholly on rain. They account for a large part of India's cultivated area and produce most pulses, oilseeds and coarse cereals.",
+    "Techniques include contour bunding, mulching, water harvesting, farm ponds, drought-resistant crop varieties, intercropping, minimum tillage and watershed development. Improving dryland farming is necessary for food security and the welfare of poor farmers in rainfed regions."
+  ],
+  "section-39": [
+    "Biotechnology includes tissue culture, genetic engineering, marker-assisted breeding and bio-fertilisers. Genetically modified (GM) crops such as Bt cotton, approved in India in 2002, are resistant to certain pests.",
+    "Benefits: higher yields, pest and disease resistance, drought tolerance, better nutrition (bio-fortified crops) and reduced pesticide use. Concerns: biosafety, effects on biodiversity, dependence on multinational seed companies and high seed prices. GM crops are regulated by the Genetic Engineering Appraisal Committee (GEAC)."
+  ],
+  "section-40": [
+    "Organic farming uses compost, green manure, crop rotation, bio-fertilisers and biological pest control. It improves soil health, reduces pollution, produces healthier food and can fetch premium prices.",
+    "Sikkim became India's first fully organic state in 2016, and Mizoram and other north-eastern states have large potential because chemical use is traditionally low. Schemes include Paramparagat Krishi Vikas Yojana and Mission Organic Value Chain Development for the North Eastern Region. Challenges include lower initial yields, certification costs and marketing."
+  ],
+  "section-41": [
+    "General causes: pressure of population on land, poor rural health and education, rural social customs, and lack of non-farm employment. Institutional causes: small and fragmented holdings, defective land tenure, inadequate credit and marketing. Technological causes: low use of HYV seeds, fertilisers and machines, inadequate irrigation and poor extension services.",
+    "Remedies: land reforms and consolidation, expansion of irrigation, research and extension, better credit and insurance, market reforms, crop diversification and investment in rural infrastructure."
+  ],
+  "section-42": [
+    "Agricultural marketing involves assembling, grading, standardisation, processing, storage, transport, financing and selling of farm produce. Channels include direct sale to consumers, sale through village traders, regulated markets (APMC mandis) and co-operatives.",
+    "Defects: too many middlemen, lack of storage and transport, distress sales, malpractices in unregulated markets, lack of market information and poor grading. Reforms include regulated markets, AGMARK grading, warehousing, e-NAM (2016), Farmer Producer Organisations (FPOs) and MSP procurement."
+  ],
+  "section-43": [
+    "Under the WTO Agreement on Agriculture (1995), countries agreed to improve market access, reduce domestic support and reduce export subsidies. India's agricultural exports of rice, spices, marine products and cotton increased.",
+    "Opportunities: larger markets, better prices, new technology and investment. Challenges: competition from subsidised imports, price volatility, pressure on support prices and public stockholding, and threats to small farmers. India seeks to protect food security and the livelihood of small farmers in WTO negotiations."
+  ],
+  "section-45": [
+    "Role of agriculture: Agriculture is the backbone of the Indian economy. It contributes to national income, provides livelihood to nearly half the workforce, supplies food and raw materials, contributes to exports and provides a market for industrial goods. It also supports capital formation and economic stability.",
+    "Linkages: Agriculture has backward linkages with industry (inputs like fertilisers, machinery and power) and forward linkages (supply of raw materials to agro-industries). Growth in agriculture raises rural incomes and demand for industrial goods and services, while industry provides technology and employment.",
+    "Farm and non-farm rural economy: The rural economy includes farming and allied activities as well as non-farm activities such as manufacturing, trade, transport and services. Non-farm employment helps absorb surplus labour and diversify income.",
+    "Allied activities: Fisheries, horticulture, floriculture and forestry are high-value sectors that add income and nutrition. In states like Mizoram, horticulture, bamboo and fisheries have strong potential for rural development."
+  ],
+  "section-46": [
+    "Rural industrialisation: Agro-processing industries convert raw produce into value-added products, reduce wastage, create employment and connect farmers to wider markets. Government support includes mega food parks, PM Kisan SAMPADA Yojana and PMFME.",
+    "Agrarian relations: These are relations of land ownership, tenancy and labour. Historical systems like zamindari created exploitative relationships between landlords and cultivators, leading to low investment and productivity.",
+    "Land reforms: Reforms include abolition of intermediaries, tenancy reforms, land ceilings and redistribution, consolidation of holdings and modernisation of land records. Abolition of zamindari succeeded, but ceiling laws and tenancy reforms had limited success due to poor implementation.",
+    "Land use and cropping pattern: Land is used for forests, cultivation, pastures and non-agricultural purposes. The cropping pattern is shaped by geography, irrigation, prices and policy; diversification toward high-value crops can raise incomes while maintaining food security."
+  ],
+  "section-47": [
+    "Irrigation: Irrigation is a key input that allows multiple cropping and higher yields. Sources include canals, tanks and wells, with tube wells now dominant. Problems include over-exploitation of groundwater and waterlogging; micro-irrigation and watershed management are solutions.",
+    "Productivity: Agricultural productivity in India is low compared to other countries because of small holdings, rainfed farming, low technology, poor credit and markets. Productivity varies widely between irrigated and rainfed regions.",
+    "Technological change and Green Revolution: The adoption of HYV seeds, fertilisers, irrigation and mechanisation from the mid-1960s produced the Green Revolution, making India self-sufficient in food grains. However, it caused regional imbalance, inequality between large and small farmers and environmental damage.",
+    "Conclusion: Sustainable productivity growth requires expansion of efficient irrigation, research, extension and an 'evergreen revolution' that balances productivity with ecology."
+  ],
+  "section-48": [
+    "Dry land farming: Large areas of India depend on rainfall. Techniques such as moisture conservation, water harvesting, drought-tolerant crops, mixed cropping and watershed development improve productivity in these regions, which produce much of India's pulses and oilseeds.",
+    "Biotechnology: Modern tools like tissue culture, genetic engineering and molecular breeding can produce high-yielding, pest-resistant and nutritious crops. Bt cotton increased cotton output in India, but GM crops raise concerns about biosafety, biodiversity and seed costs.",
+    "Organic farming: Organic farming avoids synthetic chemicals and uses natural inputs. It improves soil health and environmental sustainability and has market potential, especially in the North-East.",
+    "Low productivity: Causes include small holdings, inadequate irrigation, poor technology, weak institutions and limited credit. A mix of technology, institutional reform, infrastructure and market support is needed to raise productivity."
+  ],
+  "section-49": [
+    "Agricultural marketing: Efficient marketing ensures fair prices to farmers and reasonable prices to consumers. Marketing functions include assembling, grading, storage, transport and selling. Indian agricultural marketing suffers from many intermediaries, inadequate storage, poor information and distress sales.",
+    "Reforms: Regulated markets under APMC Acts, AGMARK grading, warehousing (Central and State Warehousing Corporations), co-operative marketing, MSP and procurement, e-NAM, and Farmer Producer Organisations have improved the marketing system.",
+    "Globalisation and Indian agriculture: The WTO Agreement on Agriculture requires market access, reduced domestic support and reduced export subsidies. Globalisation has increased exports and access to technology, but also exposed farmers to international price fluctuations and competition from subsidised products of developed countries.",
+    "Conclusion: Indian agriculture must become competitive through productivity growth and quality improvement while safeguarding food security and small farmers."
+  ],
+  "section-52": [
+    "Industrialisation raises productivity because industry uses more capital and technology than agriculture. It absorbs surplus labour from agriculture, increases national income and exports, and supplies machinery and inputs to other sectors.",
+    "Historically, countries like Britain, the USA, Japan and South Korea developed through industrialisation. In India, the Mahalanobis model of the Second Five-Year Plan emphasised heavy industries. Recent initiatives include Make in India, Production Linked Incentive (PLI) schemes and Atmanirbhar Bharat."
+  ],
+  "section-53": [
+    "Agriculture provides raw materials (cotton, jute, sugarcane) and food for industrial workers and a market for industrial goods. Industry supplies agriculture with fertilisers, pesticides, machinery and processing facilities.",
+    "The services sector provides banking, transport, communication, trade and IT services to industry, while industry provides equipment for services. Hirschman's concept of backward and forward linkages emphasises investing in industries with strong linkages to stimulate overall growth."
+  ],
+  "section-54": [
+    "Industries can be classified by: (1) use of products - basic, capital goods, intermediate goods and consumer goods industries; (2) ownership - public, private, joint and co-operative; (3) size - micro, small, medium and large; (4) raw materials - agro-based, mineral-based, forest-based; (5) nature - heavy and light industries.",
+    "In India, the National Industrial Classification (NIC), based on the UN's International Standard Industrial Classification, is used for collecting statistics. The Index of Industrial Production (IIP) measures growth across sectors like mining, manufacturing and electricity."
+  ],
+  "section-55": [
+    "The public sector is owned and managed by the government (e.g. SAIL, ONGC, BHEL). The private sector is owned by individuals or companies (e.g. Tata, Reliance). The joint sector has both government and private ownership. The co-operative sector is owned by members (e.g. Amul, IFFCO).",
+    "Before 1991, India gave the public sector a dominant role through the Industrial Policy Resolutions of 1948 and 1956. After 1991, the role of the private sector increased through delicensing, privatisation and disinvestment."
+  ],
+  "section-56": [
+    "The private corporate sector includes public limited and private limited companies registered under the Companies Act 2013. It mobilises funds through shares, debentures and loans and is managed by a board of directors.",
+    "Its role expanded after 1991, contributing significantly to industrial output, exports, investment and employment in sectors like IT, automobiles, pharmaceuticals and telecom. Problems include concentration of economic power, corporate fraud and neglect of social responsibility; the Companies Act 2013 made Corporate Social Responsibility (CSR) mandatory for large companies."
+  ],
+  "section-57": [
+    "MNCs have their headquarters in one country (home country) and operations in other countries (host countries). Examples in India include Hyundai, Samsung, Unilever, Coca-Cola and Microsoft.",
+    "Advantages: inflow of foreign direct investment, advanced technology, management skills, employment and exports. Disadvantages: repatriation of profits, transfer pricing, crowding out of domestic firms, exploitation of resources and influence on government policy. Regulation through FDI policy and competition law aims to balance these effects."
+  ],
+  "section-58": [
+    "Concentration is measured by concentration ratios (share of top 4 or 8 firms) and the Herfindahl-Hirschman Index (HHI). High concentration can lead to monopoly or oligopoly, higher prices, restriction of output and reduced innovation.",
+    "In India, the Monopolies and Restrictive Trade Practices (MRTP) Act 1969 was replaced by the Competition Act 2002, which set up the Competition Commission of India (CCI) to prevent anti-competitive agreements, abuse of dominant position and harmful mergers."
+  ],
+  "section-59": [
+    "Alfred Weber's theory of industrial location (1909) argued that firms choose locations to minimise transport and labour costs; material-oriented industries (like cement and steel) locate near raw materials, while market-oriented industries (like bakeries) locate near consumers. Sargant Florence used the location quotient to measure concentration.",
+    "Factors affecting location include raw materials, power, transport, labour, market, water, capital, government policy (tax incentives, special economic zones), climate and external economies. In the North-East, poor connectivity and small markets have limited industrial location."
+  ],
+  "section-60": [
+    "Diversification may be horizontal (related products, e.g. a soap company producing shampoo), vertical (moving into supply or distribution) or conglomerate (unrelated products, e.g. a steel company producing hotels and tea).",
+    "Reasons: spreading risk, using spare capacity, utilising brand name, economies of scope and growth. Risks include loss of focus and managerial difficulties. Indian business groups like Tata and Reliance are highly diversified."
+  ],
+  "section-61": [
+    "Horizontal integration combines firms at the same stage of production (e.g. two cement companies merging). Vertical integration combines firms at different stages (e.g. a steel company acquiring iron ore mines - backward integration - or a car maker opening dealerships - forward integration). Conglomerate integration combines unrelated businesses.",
+    "Mergers occur for economies of scale, market power, synergy and tax benefits. They may reduce competition, so they are reviewed by the Competition Commission of India. Examples include the merger of public sector banks in India (2019-20)."
+  ],
+  "section-62": [
+    "Industrial dispersion aims to reduce congestion and pollution in big cities and promote development in backward regions. Policies include tax concessions, capital subsidies, industrial estates, growth centres and special packages for hilly and north-eastern states.",
+    "The North East Industrial Development Scheme (NEIDS, 2017) and its successor schemes provide incentives for industries in the North-East, including Mizoram. Dispersion helps reduce regional imbalance and create local employment."
+  ],
+  "section-63": [
+    "Causes of regional imbalance include historical factors (colonial investment in port cities), geographical factors (hilly terrain, poor connectivity), uneven infrastructure, concentration of private investment in developed areas and political factors.",
+    "In India, states like Maharashtra, Gujarat and Tamil Nadu are highly industrialised, while Bihar, Odisha and the north-eastern states lag behind. Remedies include public investment in backward regions, infrastructure development, incentives, Finance Commission transfers and special category status."
+  ],
+  "section-64": [
+    "Equity finance is raised by issuing equity shares; shareholders become owners, share profits through dividends and bear risk. There is no fixed obligation to pay dividends or repay capital. Debt finance includes debentures, bonds and loans from banks and financial institutions, which carry fixed interest and must be repaid.",
+    "A firm's mix of equity and debt is called its capital structure. Debt is cheaper (interest is tax-deductible) but increases financial risk; equity is safer but dilutes ownership. Firms try to achieve an optimal debt-equity ratio."
+  ],
+  "section-65": [
+    "Commercial banks provide working capital through cash credit, overdrafts and bill discounting, as well as term loans. Development financial institutions like IFCI, IDBI and SIDBI historically provided long-term project finance. Insurance companies (LIC) and mutual funds also invest in industry.",
+    "Other sources include capital markets (IPOs, bonds), foreign direct investment, external commercial borrowings and venture capital. Mudra loans and credit guarantee schemes help small enterprises obtain bank finance."
+  ],
+  "section-66": [
+    "Productivity can be measured as labour productivity (output per worker), capital productivity (output per unit of capital) or total factor productivity (output per unit of all inputs combined).",
+    "Factors affecting productivity include technology, skills of workers, management quality, capacity utilisation, infrastructure, research and development, and industrial relations. Higher productivity leads to lower costs, higher wages, competitiveness and economic growth."
+  ],
+  "section-67": [
+    "According to the Sick Industrial Companies Act (SICA) 1985, a company was sick if its accumulated losses equalled or exceeded its net worth. Causes may be internal (poor management, wrong technology, labour problems, financial mismanagement) or external (shortage of raw materials and power, demand recession, government policies, competition).",
+    "Effects: loss of jobs, locked-up bank funds and waste of resources. Remedies: early detection, financial restructuring, change of management, mergers and closure of unviable units. The Insolvency and Bankruptcy Code (IBC) 2016 now provides a time-bound resolution process."
+  ],
+  "section-68": [
+    "Capacity utilisation = actual output / potential output x 100. In India it is measured by the RBI's OBICUS survey.",
+    "Causes of under-utilisation include deficient demand, shortage of power and raw materials, labour unrest, lack of working capital, faulty planning and import competition. Effects include high average cost, low profits and waste of capital. Improving infrastructure, demand management and efficient management can raise capacity utilisation."
+  ],
+  "section-70": [
+    "Industry and development: Industrialisation increases productivity, national income, employment and exports, and transforms an economy from agriculture to manufacturing and services. It provides capital goods, modern technology and higher incomes.",
+    "Sectoral linkages: Industry depends on agriculture for raw materials and markets, and supplies inputs and machinery to agriculture. Services such as banking, transport and IT support industry. Strong linkages spread the benefits of growth.",
+    "Classification and ownership: Industries are classified by use (basic, capital, intermediate, consumer goods), size (micro, small, medium, large) and raw materials. Ownership may be public, private, joint or co-operative. India moved from a public sector-led model (1956 Industrial Policy) to a market-oriented model after 1991.",
+    "Conclusion: A balanced industrial structure with strong linkages and an efficient mix of public and private enterprise is essential for sustainable development."
+  ],
+  "section-71": [
+    "Private corporate sector: Companies registered under the Companies Act raise funds through shares and borrowings and are managed by boards. After liberalisation, the private corporate sector became the main driver of industrial investment, exports and innovation, though it raises concerns of concentration and governance.",
+    "Multinational corporations: MNCs bring FDI, technology, management practices and access to global markets, and create jobs. However, they may repatriate profits, use transfer pricing, dominate domestic markets and influence policy.",
+    "Industrial concentration and monopoly: Concentration measures how much of an industry's output is controlled by a few firms. High concentration can lead to monopoly power, higher prices and less innovation. India regulates this through the Competition Act 2002 and the Competition Commission of India.",
+    "Industrial location: Weber's least-cost theory and other factors - raw materials, markets, power, transport, labour and government incentives - determine where industries locate."
+  ],
+  "section-72": [
+    "Diversification: Firms diversify into new products or markets to spread risk, use spare capacity and grow. It may be horizontal, vertical or conglomerate.",
+    "Integration and mergers: Horizontal integration combines firms at the same stage; vertical integration combines different stages of production (backward or forward). Mergers achieve economies of scale and synergies but may reduce competition.",
+    "Industrial dispersion: Spreading industries to backward regions reduces congestion, pollution and regional inequality. Incentives, infrastructure and special schemes for the North-East are used to promote dispersion.",
+    "Regional imbalance: Industrial development in India is concentrated in a few states because of historical, geographical and infrastructural factors. Reducing imbalance requires public investment, better connectivity, financial transfers and policies that encourage industries in backward areas."
+  ],
+  "section-73": [
+    "Industrial finance: Firms need fixed capital (land, buildings, machinery) and working capital (raw materials, wages). Equity finance gives ownership and shares risk; debt finance must be repaid with interest. The capital structure balances cost and risk.",
+    "Institutional and bank finance: Commercial banks provide working capital and term loans; development financial institutions such as IFCI, IDBI and SIDBI provide long-term finance; capital markets, FDI and venture capital also supply funds.",
+    "Industrial productivity: Productivity depends on technology, skills, management, infrastructure and research. Improving productivity lowers costs and raises competitiveness.",
+    "Industrial sickness: Sickness arises from internal factors (poor management, wrong technology) and external factors (demand recession, input shortages). It causes job loss and bad loans. The Insolvency and Bankruptcy Code 2016 provides a modern framework for resolution."
+  ],
+  "section-74": [
+    "Meaning: Under-utilisation of capacity means that installed machinery and plants are not used fully, so actual output is below what could be produced.",
+    "Causes: Weak demand, shortages of power, raw materials and working capital, labour disputes, poor management, technological obsolescence, over-estimation of demand at the planning stage and import competition.",
+    "Effects and remedies: It raises average costs, lowers profits, wastes scarce capital and reduces employment. Remedies include improving infrastructure and power supply, ensuring adequate credit, boosting demand through policy, improving management and modernising technology. Higher capacity utilisation also encourages new investment."
+  ],
+  "section-77": [
+    "Features: (1) mixed economy with public and private sectors; (2) developing economy with relatively low per capita income; (3) large population and young workforce; (4) agriculture employs about 45 per cent of workers but contributes less than one-fifth of GDP; (5) services contribute more than half of GDP; (6) unemployment and underemployment; (7) inequality; (8) large informal sector.",
+    "India is now among the largest economies in the world in terms of GDP and is a leader in IT services, pharmaceuticals and digital payments."
+  ],
+  "section-78": [
+    "Census 2011: population about 121 crore, decadal growth 17.7 per cent, density 382 per sq km, sex ratio 940, literacy about 74 per cent, and urban population about 31 per cent. Life expectancy has increased while birth and death rates have declined.",
+    "India is in the third stage of demographic transition, with falling birth rates. A large working-age population (15-64 years) provides a demographic dividend. Mizoram has low population density and high literacy (about 91 per cent in 2011)."
+  ],
+  "section-79": [
+    "Indicators of over-population include low per capita income, unemployment, pressure on land, shortage of housing, food and water, and environmental degradation. According to the Malthusian view, population grows faster than food supply.",
+    "Causes in India: high birth rate due to illiteracy, poverty, early marriage, preference for sons and religious beliefs, combined with a fall in the death rate due to better health. However, many economists argue that population is also a resource if it is educated and productive."
+  ],
+  "section-80": [
+    "India was the first country to launch a national family planning programme in 1952. The National Population Policy 2000 aimed at meeting unmet needs for contraception, reducing infant and maternal mortality, and achieving a stable population by 2045.",
+    "Measures include family planning services, raising the age of marriage, female education, maternal and child health care, and incentives. India's total fertility rate has now fallen to around 2.0, close to the replacement level."
+  ],
+  "section-81": [
+    "Absolute poverty means inability to meet minimum needs, while relative poverty compares a person's income with others. The poverty line in India was estimated by committees such as Lakdawala, Tendulkar (2009) and Rangarajan (2014). Multidimensional poverty, measured by NITI Aayog, includes health, education and living standards.",
+    "Causes: unemployment, low productivity, rapid population growth, inequality, inflation and social factors. Anti-poverty programmes include MGNREGA, DAY-NRLM, PMAY, PDS and the National Food Security Act, PM-KISAN and Direct Benefit Transfer."
+  ],
+  "section-82": [
+    "Types: open unemployment, disguised unemployment (more workers than needed, common in agriculture), seasonal unemployment, structural unemployment (due to lack of capital or mismatch of skills), frictional unemployment, educated unemployment and underemployment.",
+    "In India, unemployment is measured by the Periodic Labour Force Survey (PLFS). Causes include rapid population growth, slow job creation, inappropriate education and dependence on agriculture. Remedies include skill development (Skill India), MSME promotion, MGNREGA and labour-intensive industries."
+  ],
+  "section-83": [
+    "In India inflation is measured by the Consumer Price Index (CPI), used by the RBI for inflation targeting, and the Wholesale Price Index (WPI). Causes include demand-pull factors (money supply, deficit financing) and cost-push factors (oil prices, food supply shocks).",
+    "The RBI targets CPI inflation of 4 per cent within a band of 2 to 6 per cent. Measures to control inflation include monetary tightening, fiscal discipline, buffer stocks, imports and supply-side improvements."
+  ],
+  "section-84": [
+    "Inequality is measured by the Lorenz curve and the Gini coefficient (0 = perfect equality, 1 = perfect inequality). In India, inequality of wealth is higher than inequality of consumption.",
+    "Causes: concentration of land and assets, unequal education and skills, regional imbalances, inheritance and unequal access to opportunities. Remedies include progressive taxation, land reforms, employment programmes, public education and health, social security and financial inclusion."
+  ],
+  "section-85": [
+    "The Planning Commission was set up in 1950 and India had twelve Five-Year Plans (1951-2017). The First Plan focused on agriculture, the Second (Mahalanobis model) on heavy industries, and later plans on growth with social justice, poverty removal and inclusive growth.",
+    "Achievements: growth of industry and infrastructure, self-sufficiency in food, expansion of education and health. Failures: unemployment, poverty, regional imbalance and inefficiency of the public sector. Planning ended with the Twelfth Plan, and the Planning Commission was replaced by NITI Aayog in 2015."
+  ],
+  "section-86": [
+    "The policy was introduced by the Narasimha Rao government with Finance Minister Manmohan Singh in July 1991 after a severe balance of payments crisis, when foreign exchange reserves could cover only about two weeks of imports.",
+    "Measures: abolition of industrial licensing for most industries, reduced reservation for the public sector, disinvestment, opening to FDI, reduction of tariffs, rupee devaluation and convertibility on current account, banking and tax reforms. The reforms raised growth and reserves but are criticised for neglect of agriculture and rising inequality."
+  ],
+  "section-87": [
+    "NITI Aayog (National Institution for Transforming India) was established on 1 January 2015. The Prime Minister is its Chairperson; it has a Vice-Chairperson, members and a Governing Council of all Chief Ministers.",
+    "It acts as a think tank, promotes cooperative and competitive federalism, prepares strategy documents and vision plans, monitors SDGs, publishes indices (SDG India Index, Export Preparedness Index) and runs programmes like the Aspirational Districts Programme and Atal Innovation Mission. Unlike the Planning Commission, it does not allocate funds."
+  ],
+  "section-88": [
+    "Main features: abolition of industrial licensing except for a few industries (now only a handful like defence and hazardous chemicals), reduction of industries reserved for the public sector, disinvestment of public sector undertakings, removal of MRTP restrictions on large firms, and automatic approval of foreign investment.",
+    "The policy encouraged competition, efficiency, technology upgradation and integration with the world economy. It led to rapid growth of private industry, but also raised concerns about job creation and the decline of some public sector units."
+  ],
+  "section-89": [
+    "Under the MSMED Act 2006 (revised in 2020), enterprises are classified by investment and turnover: micro (investment up to Rs 1 crore and turnover up to Rs 5 crore), small (up to Rs 10 crore and Rs 50 crore) and medium (up to Rs 50 crore and Rs 250 crore); limits were raised further in 2025.",
+    "MSMEs contribute about 30 per cent of GDP, a large share of exports and employ crores of people. Problems include lack of credit, outdated technology, marketing difficulties and delayed payments. Schemes include Udyam registration, MUDRA, CGTMSE, PMEGP and the TReDS platform."
+  ],
+  "section-90": [
+    "Causes include: (1) general - population pressure, poor rural infrastructure; (2) institutional - small and fragmented holdings, defective tenure, inadequate credit and marketing; (3) technical - inadequate irrigation, low use of modern inputs and mechanisation, poor seeds and weak extension.",
+    "Measures: land reforms and consolidation, irrigation, quality seeds and fertilisers, soil health cards, crop insurance (PMFBY), farm mechanisation, agricultural research and extension, better marketing (e-NAM) and investment in rural infrastructure."
+  ],
+  "section-91": [
+    "Land reforms in India include abolition of intermediaries, tenancy reforms (regulation of rent, security of tenure, ownership rights), land ceilings and redistribution of surplus land, consolidation of holdings and computerisation of land records.",
+    "Results were mixed: zamindari was abolished, but ceiling and tenancy laws were poorly implemented. Successful states include West Bengal and Kerala. In Mizoram, land is regulated under state land revenue laws and traditional community practices."
+  ],
+  "section-92": [
+    "The Green Revolution began around 1966-67 with HYV seeds of wheat and later rice, supported by irrigation, fertilisers, pesticides, credit and price support. It made India self-sufficient in food grains.",
+    "Negative effects include regional disparity (concentrated in Punjab, Haryana and western UP), benefits mainly to large farmers, soil degradation, falling water tables and health hazards from chemicals. A sustainable second Green Revolution, especially in eastern India, is being promoted."
+  ],
+  "section-93": [
+    "Institutional sources: co-operative credit societies and banks, commercial banks, Regional Rural Banks, NABARD (refinance) and micro-finance through SHGs. Non-institutional sources: moneylenders, landlords, traders and relatives, who often charge high interest.",
+    "Measures to improve agricultural finance include priority-sector lending targets (18 per cent of net bank credit for agriculture), Kisan Credit Cards, interest subvention, crop insurance and SHG-bank linkage."
+  ],
+  "section-94": [
+    "Defects in agricultural marketing include multiple intermediaries, lack of storage, inadequate transport, unregulated markets, malpractices in weighing, lack of grading and market information, and forced sales immediately after harvest.",
+    "Remedies include regulated markets (APMC), warehousing, grading (AGMARK), co-operative marketing, MSP procurement, e-NAM, Farmer Producer Organisations and improved rural roads."
+  ],
+  "section-95": [
+    "MSP is announced by the Government of India on the recommendation of the Commission for Agricultural Costs and Prices (CACP) for 22 mandated crops and sugarcane (FRP). Since 2018-19, MSP has been fixed at least 1.5 times the cost of production (A2 + FL).",
+    "Subsidies include fertiliser subsidy, power and irrigation subsidy, credit subsidy (interest subvention), crop insurance and food subsidy. Subsidies help farmers but can cause fiscal burden, overuse of inputs and inefficiency; direct benefit transfers like PM-KISAN are seen as more efficient."
+  ],
+  "section-96": [
+    "According to the FAO, food security exists when all people at all times have physical, social and economic access to sufficient, safe and nutritious food. Its dimensions are availability, access, utilisation and stability.",
+    "PDS distributes rice, wheat and other items through fair price shops. The Targeted PDS (1997) and the National Food Security Act 2013 entitle about two-thirds of the population to subsidised food grains (5 kg per person per month); Antyodaya families get 35 kg. Under PMGKAY, free grains are provided. One Nation One Ration Card allows portability. Problems include leakage and exclusion errors."
+  ],
+  "section-97": [
+    "Agriculture: Most people depend on agriculture and allied activities. Jhum (shifting) cultivation is traditional, but settled farming, terrace cultivation and horticulture (oranges, ginger, turmeric, chillies, passion fruit, anthurium) are expanding. Bamboo is an important resource. Constraints include hilly terrain, lack of irrigation and poor marketing.",
+    "Industry: Mizoram has very few large industries; the sector includes handloom, handicrafts, bamboo processing, food processing and small enterprises. Services: The service sector, especially public administration, trade and transport, contributes the largest share of the state's income. The Look East/Act East policy and border trade with Myanmar and Bangladesh offer new opportunities."
+  ],
+  "section-98": [
+    "Sources of revenue: Mizoram's own tax revenue (state GST, taxes on vehicles, stamp duties) and non-tax revenue are small. It depends heavily on central transfers: share in central taxes recommended by the Finance Commission, grants-in-aid, and funds for centrally sponsored schemes.",
+    "Expenditure: Public expenditure has grown due to salaries, pensions, interest payments, development programmes and infrastructure. Public debt: The state borrows from the market, central government and financial institutions; debt servicing is a significant burden. Improving own revenue and expenditure efficiency is a key challenge."
+  ],
+  "section-99": [
+    "Rural development in Mizoram faces challenges of hilly terrain, poor connectivity, dependence on jhum cultivation and limited non-farm employment. Programmes include MGNREGS, PMAY-G, DAY-NRLM (implemented through the Mizoram State Rural Livelihoods Mission), PMGSY roads and Jal Jeevan Mission.",
+    "The state government has implemented schemes like the New Land Use Policy (NLUP) and the Socio-Economic Development Policy (SEDP) to move farmers from jhum to settled and sustainable livelihoods. Village Councils play an important role in local governance and rural development."
+  ],
+  "section-101": [
+    "Basic features: India is a mixed, developing economy with a large and young population, predominance of agriculture in employment, a dominant services sector in GDP, a large informal sector, poverty, unemployment and inequality. Since 1991 it has become more market-oriented and globally integrated.",
+    "Demographic features: According to Census 2011, India's population was about 121 crore, with a decadal growth of 17.7 per cent, sex ratio of 940, literacy of about 74 per cent and 31 per cent urban population. India is in the later stage of demographic transition with declining fertility.",
+    "Over-population: High population growth puts pressure on resources, increases unemployment and slows per capita income growth. Causes include high birth rate due to poverty, illiteracy and social customs, combined with falling death rates.",
+    "Population policy: India's family planning programme (1952) and National Population Policy 2000 aim to stabilise population through health care, education, women's empowerment and family welfare. With fertility now near replacement level, the focus is shifting to quality of population and use of the demographic dividend."
+  ],
+  "section-102": [
+    "Poverty: Poverty is measured by poverty lines (Tendulkar, Rangarajan) and multidimensional indices. Causes include unemployment, low productivity, inequality and population pressure. Anti-poverty measures include MGNREGA, NRLM, PMAY, NFSA and DBT.",
+    "Unemployment: India faces disguised, seasonal, structural, educated and frictional unemployment. Job creation through labour-intensive industries, MSMEs, skill development and rural employment programmes is needed.",
+    "Inflation: Inflation in India is influenced by food and fuel prices as well as demand. The RBI's inflation-targeting framework (4 per cent CPI) and supply-side measures are used to control it.",
+    "Income inequality: Measured by the Gini coefficient and Lorenz curve, inequality has increased after liberalisation, especially in wealth. Progressive taxation, social spending, land reforms and inclusive growth policies help reduce it."
+  ],
+  "section-103": [
+    "Planning in India: The Planning Commission (1950) prepared twelve Five-Year Plans. Objectives included growth, self-reliance, modernisation, employment, poverty removal and social justice. Planning built heavy industries, infrastructure and institutions but failed to remove unemployment and poverty fully.",
+    "New Economic Policy 1991: Following a balance of payments crisis, India adopted LPG reforms - liberalisation (end of licence raj), privatisation (disinvestment, more private role) and globalisation (lower tariffs, FDI, currency reform). Growth accelerated, foreign reserves rose and the services sector expanded.",
+    "NITI Aayog: Replacing the Planning Commission in 2015, NITI Aayog works as a policy think tank, promotes cooperative federalism, monitors SDGs and develops strategy documents without allocating funds.",
+    "New Industrial Policy 1991: It removed industrial licensing, reduced public sector reservation, encouraged foreign investment and competition, and changed India's industrial structure toward a market-led model."
+  ],
+  "section-104": [
+    "MSMEs: Micro, small and medium enterprises are the backbone of Indian industry, providing employment, exports and regional development. They face problems of credit, technology, marketing and delayed payments; government support includes MUDRA loans, CGTMSE, Udyam registration and cluster development.",
+    "Low productivity in agriculture: Caused by small holdings, inadequate irrigation, traditional technology, poor credit and marketing, and institutional weaknesses. Remedies include irrigation, research, mechanisation and market reforms.",
+    "Land reforms: Abolition of intermediaries succeeded, but ceiling and tenancy reforms had limited success. Updating land records and consolidation are still needed.",
+    "Green Revolution: HYV seeds with irrigation and fertilisers raised wheat and rice production from the late 1960s, ensuring food self-sufficiency, but caused regional and income inequality and ecological problems. Sustainable agriculture is now the focus."
+  ],
+  "section-105": [
+    "Agricultural finance: Farmers need short-, medium- and long-term credit. Institutional sources (co-operatives, commercial banks, RRBs, NABARD) have expanded, but informal lenders remain important for small farmers. Kisan Credit Cards and priority sector lending help.",
+    "Agricultural marketing: Problems include intermediaries, lack of storage and information, and distress sales. Regulated markets, warehousing, grading, co-operative marketing, e-NAM and FPOs are measures for improvement.",
+    "MSP and subsidies: MSP, recommended by the CACP, protects farmers from price falls. Subsidies on fertilisers, power, credit and insurance reduce costs but create fiscal burden and may encourage inefficiency.",
+    "Food security and PDS: Food security means access to sufficient nutritious food at all times. The PDS and the National Food Security Act 2013 provide subsidised grains to about two-thirds of the population; reforms such as Aadhaar-linked distribution and One Nation One Ration Card aim to reduce leakages."
+  ],
+  "section-106": [
+    "Mizoram economy: Agriculture (jhum and settled cultivation, horticulture) employs most rural people, industry is small and mainly cottage-based, and services (government, trade, transport) dominate state income. Bamboo, horticulture, tourism and border trade have potential.",
+    "Mizoram public finance: The state has limited own tax and non-tax revenue and depends heavily on central transfers through Finance Commission devolution and grants. Expenditure on salaries, pensions and interest is large, and public debt has increased, requiring fiscal discipline.",
+    "Rural development in Mizoram: Village Councils and programmes like MGNREGS, PMAY-G, NRLM, PMGSY and Jal Jeevan Mission aim to improve livelihoods and infrastructure. State programmes like NLUP and SEDP try to replace jhum with settled, sustainable livelihoods. Better roads, markets and skill development are key for future growth."
+  ]
+}
