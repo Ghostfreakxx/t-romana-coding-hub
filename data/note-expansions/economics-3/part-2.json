@@ -1,0 +1,345 @@
+{
+  "section-110": [
+    "Census method: every unit of the population is studied; it is accurate and detailed but costly and time-consuming (e.g. the Population Census). Sample method: only a representative part is studied; it saves time and money. Sampling methods include random sampling (simple, stratified, systematic, cluster) and non-random sampling (purposive, quota, convenience).",
+    "Primary data are collected through direct personal investigation, interviews, questionnaires, schedules filled by enumerators and observation. Secondary data come from published sources such as Census reports, NSSO/PLFS surveys, RBI bulletins, Economic Survey and unpublished records. Secondary data must be checked for reliability, suitability and adequacy."
+  ],
+  "section-111": [
+    "Arithmetic mean = sum of observations / number of observations; for grouped data, mean = sum of fx / sum of f. The median divides the data into two equal halves; for grouped data, median = L + ((N/2 - cf) / f) x h. The mode is the value that occurs most often; for grouped data, mode = L + ((f1 - f0) / (2f1 - f0 - f2)) x h.",
+    "Empirical relation: Mode = 3 Median - 2 Mean (for moderately skewed distributions). Mean uses all values but is affected by extreme values; median is useful for income data; mode is useful for the most popular size of shoes or clothes."
+  ],
+  "section-112": [
+    "Geometric mean (GM) = nth root of the product of n observations, or antilog of (sum of log x / n). It is used for average growth rates, percentage changes and index numbers. Harmonic mean (HM) = n / sum of (1/x); it is used for averaging speeds, rates and prices when the quantity bought is fixed in money terms.",
+    "Relationship: AM >= GM >= HM, with equality only when all values are equal. For two values, GM^2 = AM x HM. GM cannot be used if any value is zero or negative."
+  ],
+  "section-113": [
+    "Range = largest value - smallest value; it is simple but depends only on extreme values. Quartile deviation = (Q3 - Q1)/2. Mean deviation = sum of |x - average| / n, usually calculated from the mean or median. Standard deviation = square root of (sum of (x - mean)^2 / n); variance is the square of standard deviation.",
+    "Standard deviation, introduced by Karl Pearson, is the most widely used measure because it uses all observations and is suitable for further algebraic treatment. Measures of dispersion show the reliability of the average and the consistency of data."
+  ],
+  "section-114": [
+    "CV = (standard deviation / mean) x 100. It is a relative measure, independent of units, so it can compare series measured in different units or with different averages.",
+    "The series with a lower CV is more consistent or stable. Example: comparing the consistency of two cricketers' scores, the stability of prices in two markets or the variability of crop yields in two districts."
+  ],
+  "section-115": [
+    "Skewness: in a symmetrical distribution, mean = median = mode. In positive skewness (long tail to the right), mean > median > mode; in negative skewness, mean < median < mode. Karl Pearson's coefficient = (Mean - Mode) / SD or 3(Mean - Median)/SD; Bowley's coefficient uses quartiles.",
+    "Kurtosis is measured by beta2 = mu4/mu2^2. If beta2 = 3 the curve is mesokurtic (normal); if beta2 > 3 it is leptokurtic (more peaked); if beta2 < 3 it is platykurtic (flatter). Income distributions are usually positively skewed."
+  ],
+  "section-116": [
+    "Classical (a priori) probability: P(A) = number of favourable outcomes / total number of equally likely outcomes; e.g. the probability of getting a head when tossing a coin is 1/2. Empirical (relative frequency) probability is based on observed frequencies from experiments. Modern (axiomatic) probability, given by Kolmogorov, is based on axioms: 0 <= P(A) <= 1, P(S) = 1, and additivity for mutually exclusive events.",
+    "Basic terms: random experiment, sample space, event, mutually exclusive events, independent events, exhaustive events and complementary events (P(A') = 1 - P(A)). Probability is the foundation of statistical inference and decision-making under uncertainty."
+  ],
+  "section-117": [
+    "Addition theorem: For mutually exclusive events, P(A or B) = P(A) + P(B). For events that are not mutually exclusive, P(A or B) = P(A) + P(B) - P(A and B).",
+    "Multiplication theorem: For independent events, P(A and B) = P(A) x P(B). For dependent events, P(A and B) = P(A) x P(B|A), where P(B|A) is the conditional probability of B given A. Example: the probability of drawing two aces from a pack without replacement is (4/52) x (3/51)."
+  ],
+  "section-118": [
+    "The binomial distribution was developed by James Bernoulli. P(X = r) = nCr p^r q^(n-r), where n is the number of trials, p is the probability of success, q = 1 - p and r = 0, 1, ..., n. Conditions: fixed number of trials, two outcomes, constant p and independent trials.",
+    "Mean = np, variance = npq and standard deviation = square root of npq. Example: the probability of getting exactly 3 heads in 5 tosses of a coin. It is used in quality control and opinion surveys."
+  ],
+  "section-119": [
+    "The Poisson distribution was developed by S.D. Poisson (1837). P(X = r) = (e^-m x m^r) / r!, where m = np is the mean. It is a limiting case of the binomial distribution when n is very large, p is very small and np is finite.",
+    "Mean = variance = m. Examples: number of printing mistakes per page, number of accidents on a road per day, number of defective items in a large batch and number of telephone calls per minute."
+  ],
+  "section-120": [
+    "The normal distribution was developed by De Moivre, Laplace and Gauss. Properties: bell-shaped, symmetrical about the mean, mean = median = mode, asymptotic to the x-axis, and the total area under the curve equals 1. About 68.27 per cent of values lie within mean +/- 1 SD, 95.45 per cent within +/- 2 SD and 99.73 per cent within +/- 3 SD.",
+    "The standard normal variable Z = (X - mean)/SD has mean 0 and SD 1. Many natural phenomena such as heights and errors of measurement follow a normal distribution, and it is the basis of sampling theory and hypothesis testing."
+  ],
+  "section-121": [
+    "Formula: r = covariance(X, Y) / (SD of X x SD of Y) = sum of xy / square root of (sum of x^2 x sum of y^2), where x and y are deviations from the means. The value of r lies between -1 and +1.",
+    "r = +1 means perfect positive correlation, r = -1 perfect negative correlation, and r = 0 no linear correlation. Correlation does not imply causation; a high correlation may be spurious. The probable error of r is used to test its significance. Example: correlation between income and consumption."
+  ],
+  "section-122": [
+    "Spearman's rank correlation coefficient: R = 1 - (6 sum of D^2) / (n(n^2 - 1)), where D is the difference between ranks. A correction factor is added when ranks are tied.",
+    "It is used for qualitative data such as beauty, intelligence or honesty, which cannot be measured numerically but can be ranked, e.g. ranking of contestants by two judges. It is simple to calculate but less precise than Pearson's coefficient for numerical data."
+  ],
+  "section-123": [
+    "Partial correlation r12.3 measures the correlation between variables 1 and 2 after removing the influence of variable 3. Example: the correlation between rainfall and crop yield after eliminating the effect of fertiliser use.",
+    "Multiple correlation R1.23 measures the combined influence of two or more independent variables (2 and 3) on a dependent variable (1). It lies between 0 and 1. These measures are useful in economic analysis where many factors act together."
+  ],
+  "section-124": [
+    "The term 'regression' was introduced by Francis Galton. In simple linear regression, Y = a + bX, where a is the intercept and b is the regression coefficient (slope). There are two regression lines: Y on X and X on Y.",
+    "Properties: the regression lines intersect at the means; the correlation coefficient is the geometric mean of the two regression coefficients (r = square root of bxy x byx); both regression coefficients have the same sign as r. Regression is used for prediction, e.g. estimating demand from price or consumption from income."
+  ],
+  "section-125": [
+    "OLS chooses the values of a and b that minimise the sum of squared differences between observed Y and predicted Y. Normal equations: sum of Y = na + b sum of X, and sum of XY = a sum of X + b sum of X^2. Thus b = sum of xy / sum of x^2 and a = mean of Y - b x mean of X.",
+    "Under the classical assumptions (linearity, zero mean of errors, constant variance, no autocorrelation, no perfect multicollinearity), OLS estimators are BLUE - Best Linear Unbiased Estimators (Gauss-Markov theorem)."
+  ],
+  "section-126": [
+    "R^2 = explained variation / total variation = 1 - (residual sum of squares / total sum of squares). In simple regression, R^2 = r^2. It lies between 0 and 1; for example, R^2 = 0.8 means 80 per cent of the variation in Y is explained by X.",
+    "A higher R^2 indicates a better fit, but adding more variables always increases R^2, so adjusted R^2 is used in multiple regression. A high R^2 does not prove causation or a correct model."
+  ],
+  "section-127": [
+    "Secular trend is the long-term movement (e.g. growth of population). Seasonal variations repeat within a year (e.g. sales during festivals). Cyclical variations are longer-term business cycle fluctuations. Irregular variations are unpredictable (e.g. floods, strikes, pandemics).",
+    "Models: additive (Y = T + S + C + I) and multiplicative (Y = T x S x C x I). Methods of measuring trend include the freehand method, semi-averages, moving averages and least squares. Time series analysis helps in forecasting and planning."
+  ],
+  "section-128": [
+    "Index numbers are called 'economic barometers'. Index = (current value / base value) x 100. Types include price index numbers (CPI, WPI), quantity index numbers (Index of Industrial Production) and value index numbers.",
+    "Uses: measuring inflation, deflating national income, adjusting wages (dearness allowance), comparing living standards and guiding policy. In India, CPI (base 2012) is published by NSO and WPI (base 2011-12) by the Office of the Economic Adviser."
+  ],
+  "section-129": [
+    "Laspeyres' index uses base-year quantities as weights: P01 = (sum of p1q0 / sum of p0q0) x 100. Paasche's index uses current-year quantities: P01 = (sum of p1q1 / sum of p0q1) x 100. Laspeyres tends to overstate and Paasche tends to understate price changes.",
+    "Fisher's ideal index = square root of (Laspeyres x Paasche) x 100. It is called 'ideal' because it satisfies both the time reversal test and the factor reversal test, and uses both base- and current-year quantities."
+  ],
+  "section-130": [
+    "Problems: defining the purpose, selecting a normal base year, choosing representative commodities, collecting reliable price data, selecting the average (arithmetic or geometric), deciding weights and choosing the formula. Changes in quality and consumption patterns make comparisons difficult over long periods.",
+    "Tests of consistency: (1) unit test - index should not be affected by units; (2) time reversal test - P01 x P10 = 1; (3) factor reversal test - P01 x Q01 = V01 (value index); (4) circular test - extension of time reversal to more than two periods. Fisher's index satisfies the time reversal and factor reversal tests."
+  ],
+  "section-132": [
+    "Collection of data: Data may be collected by census or sample method. Primary data are first-hand data collected through investigation, questionnaires and interviews; secondary data are obtained from published sources such as government reports. Good sampling - random, stratified, systematic or cluster - ensures representative results at lower cost.",
+    "Measures of central tendency: The arithmetic mean is the most common average and uses all values, but it is affected by extremes. The median is the middle value and is suitable for skewed data like income. The mode is the most frequent value and is useful in business.",
+    "Geometric and harmonic means: GM is suitable for growth rates and index numbers; HM for averaging rates such as speed. AM >= GM >= HM.",
+    "Dispersion: Range, quartile deviation, mean deviation and standard deviation measure the spread of data. Standard deviation is the most reliable measure. Together, averages and dispersion summarise data and form the basis of statistical analysis in economics."
+  ],
+  "section-133": [
+    "Coefficient of variation: CV = SD / Mean x 100 compares variability between series; lower CV means greater consistency.",
+    "Skewness and kurtosis: Skewness measures asymmetry. Positive skewness means a long right tail (mean > median > mode), negative skewness the opposite. Karl Pearson's and Bowley's coefficients measure it. Kurtosis measures peakedness - leptokurtic, mesokurtic or platykurtic.",
+    "Probability: Probability measures uncertainty. Classical, empirical and axiomatic approaches define it. Key concepts include sample space, events, mutually exclusive and independent events.",
+    "Theorems: The addition theorem gives P(A or B), and the multiplication theorem gives P(A and B), using conditional probability for dependent events. These concepts are the foundation for theoretical distributions and statistical inference used in economics."
+  ],
+  "section-134": [
+    "Binomial distribution: A discrete distribution for the number of successes in n independent trials with constant probability p. P(r) = nCr p^r q^(n-r); mean = np and variance = npq. Example: the number of defective items in a sample.",
+    "Poisson distribution: A discrete distribution for rare events where n is large and p is small; P(r) = e^-m m^r / r!; mean and variance both equal m. Example: number of accidents per day.",
+    "Normal distribution: A continuous, symmetrical, bell-shaped distribution with mean = median = mode. About 68, 95 and 99.7 per cent of observations lie within 1, 2 and 3 standard deviations of the mean. The standard normal variable Z = (X - mean)/SD is used with tables to find probabilities.",
+    "Importance: These distributions model real-world random phenomena, and the normal distribution underlies sampling distributions, confidence intervals and hypothesis testing."
+  ],
+  "section-135": [
+    "Correlation: Karl Pearson's coefficient r measures the degree and direction of linear relationship between two variables, ranging from -1 to +1. Correlation does not mean causation.",
+    "Rank correlation: Spearman's R = 1 - 6 sum D^2 / n(n^2 - 1) measures association between ranks and is used for qualitative characteristics.",
+    "Partial and multiple correlation: Partial correlation measures the relationship between two variables holding others constant; multiple correlation measures the combined relationship between one dependent variable and several independent variables.",
+    "Regression and OLS: Regression gives a functional relationship (Y = a + bX) used for prediction. OLS estimates a and b by minimising the sum of squared residuals. Regression coefficients and correlation are linked (r^2 = bxy x byx). These tools are central to empirical economic research and econometrics."
+  ],
+  "section-136": [
+    "Coefficient of determination: R^2 shows the proportion of total variation in the dependent variable explained by the regression; it ranges from 0 to 1. Adjusted R^2 corrects for the number of explanatory variables.",
+    "Time series: A time series has four components - secular trend, seasonal variation, cyclical variation and irregular variation - combined in additive or multiplicative models. Trend can be estimated by freehand, semi-averages, moving averages and least squares methods. Time series analysis is used in forecasting sales, prices and national income.",
+    "Index numbers: Index numbers measure relative change in prices, quantities or values. Price indices like CPI and WPI measure inflation; quantity indices like IIP measure production. Laspeyres, Paasche and Fisher's formulas use different weights.",
+    "Uses: Index numbers deflate nominal values into real values, adjust wages and pensions, and guide economic policy."
+  ],
+  "section-137": [
+    "Problems in construction: (1) defining the purpose of the index; (2) selecting the base year, which should be normal and not too distant; (3) choosing a representative set of commodities; (4) obtaining reliable prices from suitable markets; (5) choosing appropriate weights; (6) choosing the average and formula; (7) adjusting for changes in quality and consumption patterns.",
+    "Tests of adequacy: The unit test requires independence from units of measurement. The time reversal test requires P01 x P10 = 1. The factor reversal test requires that the product of the price index and quantity index equals the value index. The circular test extends the time reversal test to several years.",
+    "Fisher's ideal index satisfies the time reversal and factor reversal tests, but not the circular test. Despite their limitations, index numbers are indispensable tools for measuring economic change."
+  ],
+  "section-140": [
+    "International trade may involve exports, imports and re-exports of goods (visible trade) and services (invisible trade like IT, tourism, shipping). It arises because of differences in natural resources, climate, technology, skills and costs among countries.",
+    "Gains from trade include wider markets, economies of scale, availability of goods not produced at home, better use of resources, transfer of technology and competition. India's major exports include software services, petroleum products, gems and jewellery, pharmaceuticals and engineering goods."
+  ],
+  "section-141": [
+    "Classical economists gave reasons for a separate theory of international trade: (1) factor immobility between countries; (2) different currencies and exchange rates; (3) different political and legal systems; (4) trade restrictions like tariffs and quotas; (5) differences in natural resources and climate; (6) greater transport costs and risks; (7) balance of payments problems.",
+    "Thus, the labour theory of value that explains internal trade could not explain international trade, which led Ricardo to develop the theory of comparative costs."
+  ],
+  "section-142": [
+    "Adam Smith argued in 1776 that a country should specialise in producing goods in which it has an absolute advantage (it can produce with less labour than other countries) and import goods in which other countries have an absolute advantage.",
+    "Example: if India produces tea more cheaply and England produces cloth more cheaply, both gain by specialising and trading. Limitation: it cannot explain trade when one country is more efficient in producing both goods."
+  ],
+  "section-143": [
+    "David Ricardo (1817) showed that even if a country has an absolute advantage in both goods, trade is beneficial if it specialises in the good in which its comparative advantage is greater (or comparative disadvantage is smaller). In his example, Portugal specialised in wine and England in cloth.",
+    "Assumptions: two countries, two goods, labour theory of value, constant costs, perfect competition, no transport costs, full employment and factor immobility between countries. Criticism: unrealistic assumptions. Modern theories include Heckscher-Ohlin's factor endowment theory, which explains comparative advantage through differences in factor endowments."
+  ],
+  "section-144": [
+    "Net barter terms of trade = (index of export prices / index of import prices) x 100. If it rises, terms of trade are favourable, because the country gets more imports for the same exports. Other concepts include gross barter terms of trade (Taussig), income terms of trade (Dorrance) and single and double factoral terms of trade (Viner).",
+    "Factors affecting terms of trade include demand and supply conditions, elasticity, tariffs, exchange rates and technology. The Prebisch-Singer thesis argues that terms of trade of primary-goods exporting developing countries tend to decline over time."
+  ],
+  "section-145": [
+    "Free trade means no tariffs, quotas or other restrictions on imports and exports. It is based on the theory of comparative advantage and was supported by classical economists.",
+    "Advantages: efficient allocation of resources, specialisation, lower prices, wider choice, competition and innovation, and international cooperation. Disadvantages: competition may destroy infant industries, dependence on foreign countries, dumping, unemployment in some sectors and balance of payments problems. Free trade agreements such as SAFTA and India-ASEAN FTA reduce barriers among members."
+  ],
+  "section-146": [
+    "Arguments for protection: infant industry argument (Friedrich List), protection of employment, national defence, anti-dumping, improving balance of payments, diversification of industries, raising revenue and protecting key sectors like agriculture.",
+    "Methods include tariffs, quotas, subsidies to domestic producers, exchange controls, state trading and non-tariff barriers such as quality standards. Excessive protection may cause inefficiency, high prices and retaliation by other countries."
+  ],
+  "section-147": [
+    "Types: specific duty (a fixed amount per unit), ad valorem duty (a percentage of value) and compound duty (both). Tariffs may be revenue tariffs or protective tariffs; anti-dumping and countervailing duties are special tariffs.",
+    "Effects: price rises for consumers, domestic production increases (protective effect), imports fall, government earns revenue, consumption falls and there is a deadweight loss. In India, customs duties are imposed under the Customs Act 1962."
+  ],
+  "section-148": [
+    "Types: import quotas and export quotas; tariff quotas (lower tariff up to a limit); unilateral, bilateral and mixed quotas. Licences are usually issued to importers under quota systems.",
+    "Quotas are more effective than tariffs in restricting imports because the quantity is fixed. However, they do not earn revenue for the government (unless licences are auctioned), may create monopoly profits for licence holders and encourage corruption. The WTO generally prohibits quantitative restrictions."
+  ],
+  "section-149": [
+    "Balance of trade = value of exports of goods - value of imports of goods. It is favourable (surplus) if exports exceed imports and unfavourable (deficit) if imports exceed exports.",
+    "Balance of trade covers only visible items, while the balance of payments includes invisibles and capital flows. India usually has a trade deficit due to large imports of crude oil, gold and electronics, but this is partly offset by surplus in services exports and remittances."
+  ],
+  "section-150": [
+    "The BOP has two main accounts: (1) current account - trade in goods (balance of trade), services, primary income (interest, profits) and secondary income (remittances, gifts); (2) capital and financial account - foreign direct investment, portfolio investment, external loans, banking capital and changes in foreign exchange reserves.",
+    "In accounting terms the BOP always balances, but disequilibrium occurs when autonomous receipts and payments do not match. Causes include development needs, high imports, inflation, poor exports and capital flight. Corrective measures include devaluation, export promotion, import control, monetary and fiscal policy and borrowing from the IMF."
+  ],
+  "section-151": [
+    "Exchange rates may be expressed directly (Rs 83 per US dollar) or indirectly. Under a fixed exchange rate system, the rate is fixed by the government (e.g. Bretton Woods system); under a flexible (floating) system it is determined by the demand and supply of foreign exchange; under a managed float, the central bank intervenes to reduce volatility.",
+    "India follows a market-determined exchange rate system since 1993 with RBI intervention. Theories of exchange rate determination include the purchasing power parity theory (Gustav Cassel) and the balance of payments theory."
+  ],
+  "section-152": [
+    "Devaluation is a deliberate reduction in the external value of a currency by the government; India devalued the rupee in 1949, 1966 and 1991. Depreciation is a fall in the value of a currency due to market forces under a floating system. The opposite terms are revaluation and appreciation.",
+    "Effects: exports become cheaper and imports dearer, which may improve the balance of trade if the Marshall-Lerner condition is satisfied (sum of elasticities of demand for exports and imports greater than one). However, it may raise inflation and increase the burden of external debt."
+  ],
+  "section-153": [
+    "The WTO was established on 1 January 1995, replacing GATT (1947), after the Uruguay Round of negotiations. Its headquarters is in Geneva; India is a founding member.",
+    "Functions: administering trade agreements, providing a forum for negotiations, settling trade disputes, reviewing trade policies and assisting developing countries. Major agreements include the Agreement on Agriculture, TRIPS (intellectual property), TRIMS (investment measures) and GATS (services). Principles include most-favoured-nation treatment, national treatment and transparency. Concerns of developing countries include agricultural subsidies of rich nations and food security."
+  ],
+  "section-155": [
+    "Meaning and basis: International trade is exchange of goods and services between countries. It arises because of differences in natural resources, factor endowments, technology and costs. Trade allows specialisation and wider choice.",
+    "Internal versus international trade: International trade involves different currencies, factor immobility across borders, different laws and policies, tariffs and quotas, and greater risks and transport costs. These differences justify a separate theory of international trade.",
+    "Absolute and comparative advantage: Adam Smith's absolute advantage theory says countries specialise in goods they produce at lower absolute cost. Ricardo's comparative cost theory shows that trade benefits both countries even if one is more efficient in all goods, as long as comparative costs differ. Later, Heckscher and Ohlin explained comparative advantage by differences in factor endowments.",
+    "Gains from trade: Trade increases total world output, improves consumption possibilities, promotes efficiency, technology transfer and economies of scale. However, the distribution of gains depends on the terms of trade."
+  ],
+  "section-156": [
+    "Terms of trade: They measure the rate at which exports exchange for imports. Net barter, gross barter, income and factoral terms of trade are different measures. Improvement means a country gets more imports per unit of exports. The Prebisch-Singer thesis notes declining terms of trade for primary exporters.",
+    "Free trade: Free trade allows specialisation, lower prices, competition and efficiency. It is supported by comparative advantage theory, but may harm infant industries and employment in developing countries.",
+    "Protection: Arguments for protection include infant industries, employment, national security, anti-dumping, balance of payments and revenue. Methods include tariffs, quotas, subsidies and non-tariff barriers.",
+    "Tariffs: Tariffs raise import prices, protect domestic producers, earn revenue and reduce imports, but reduce consumer welfare and cause deadweight losses. A balance between free trade and selective protection is followed by most countries, including India."
+  ],
+  "section-157": [
+    "Quotas: Quotas limit the quantity of imports directly. They are more certain than tariffs in restricting imports but do not generate revenue and may lead to corruption and monopoly profits. The WTO discourages them.",
+    "Balance of trade: It records only exports and imports of goods. A deficit occurs when imports exceed exports, which is common for India because of oil and gold imports.",
+    "Balance of payments: The BOP is a systematic record of all economic transactions of a country with the rest of the world. It contains the current account (goods, services, income, transfers) and the capital and financial account (FDI, portfolio investment, loans, reserves). Disequilibrium can be cyclical, structural or fundamental.",
+    "Exchange rate: The exchange rate is the price of one currency in terms of another, determined under fixed, floating or managed systems. It influences exports, imports and the BOP. Measures to correct BOP deficits include exchange rate adjustment, export promotion, import substitution and monetary and fiscal policies."
+  ],
+  "section-158": [
+    "Devaluation and depreciation: Devaluation is an official reduction of currency value under a fixed exchange rate system; depreciation is a market-driven fall under a floating system. Both make exports cheaper and imports costlier. Their success depends on elasticities of demand (Marshall-Lerner condition), supply capacity of exporters and control of domestic inflation. India devalued the rupee in 1949, 1966 and 1991.",
+    "WTO: Established in 1995 to replace GATT, the WTO administers rules for international trade, conducts negotiations (e.g. Doha Development Round), settles disputes and reviews trade policies. It covers goods, services (GATS), intellectual property (TRIPS) and investment measures (TRIMS).",
+    "WTO and India: Membership has increased India's exports and access to markets, but has created challenges in agriculture, intellectual property (patents on medicines) and public stockholding for food security. India works with other developing countries to protect their interests in WTO negotiations."
+  ],
+  "section-161": [
+    "The word 'demography' comes from the Greek words 'demos' (people) and 'graphein' (to write); it was first used by Achille Guillard in 1855. Demography studies the size, composition, distribution and changes in population through fertility, mortality and migration.",
+    "Its scope includes formal demography (statistical analysis of population data) and population studies (relationships between population and economic, social and political factors). It is essential for planning education, health, employment and housing."
+  ],
+  "section-162": [
+    "The first census in India was conducted in 1872 (non-synchronous), and the first synchronous census in 1881. Since then a census has been held every ten years. It is conducted by the Office of the Registrar General and Census Commissioner under the Census Act 1948.",
+    "The Census collects data on population size, age, sex, literacy, occupation, religion, language, housing and amenities. Other sources of demographic data include the Civil Registration System, Sample Registration System (SRS) and National Family Health Surveys (NFHS)."
+  ],
+  "section-163": [
+    "Fertility differs from fecundity, which is the biological capacity to reproduce. Measures include the Crude Birth Rate (births per 1,000 population), General Fertility Rate (births per 1,000 women aged 15-49), Age-Specific Fertility Rate and Total Fertility Rate (TFR), the average number of children a woman would have during her lifetime.",
+    "Factors affecting fertility include age at marriage, education of women, income, urbanisation, religion, son preference, infant mortality and access to family planning. India's TFR has declined to about 2.0 (NFHS-5), close to the replacement level of 2.1."
+  ],
+  "section-164": [
+    "Measures of mortality include the Crude Death Rate (deaths per 1,000 population), Infant Mortality Rate (deaths of infants under one year per 1,000 live births), Child Mortality Rate, Maternal Mortality Ratio (maternal deaths per 1,00,000 live births) and life expectancy at birth.",
+    "Factors include nutrition, health care, sanitation, safe drinking water, education, income and epidemics. Mortality has declined sharply in India due to better health services, vaccination and control of epidemics; life expectancy is now about 70 years."
+  ],
+  "section-165": [
+    "Types: internal migration (rural-urban, rural-rural, urban-urban, urban-rural) and international migration (emigration and immigration); temporary (seasonal) and permanent migration. Rural-to-urban migration is common in developing countries.",
+    "Causes are explained by push factors (poverty, unemployment, conflict, natural disasters) and pull factors (better jobs, wages, education, health care). Lee's theory and the Harris-Todaro model explain migration decisions. Effects include remittances, urban congestion, labour supply changes and social changes."
+  ],
+  "section-166": [
+    "Population growth = (births - deaths) + (immigration - emigration). Natural growth rate = Crude Birth Rate - Crude Death Rate.",
+    "The theory of demographic transition explains population growth in stages: (1) high birth and death rates (stable population); (2) high birth rate and falling death rate (population explosion); (3) falling birth rate (slower growth); (4) low birth and death rates (stable population). Malthus's theory predicted that population grows geometrically while food grows arithmetically, leading to checks."
+  ],
+  "section-167": [
+    "Age composition is shown by an age-sex pyramid. A broad base indicates high fertility (young population), while a narrow base and wide top indicate an ageing population. The dependency ratio = (population aged 0-14 + 65 and above) / population aged 15-64 x 100.",
+    "Sex ratio in India is expressed as females per 1,000 males (940 in Census 2011; 1,020 in NFHS-5). Child sex ratio (0-6 years) was 919 in 2011. Low sex ratios reflect son preference, female foeticide and neglect of girls; schemes like Beti Bachao Beti Padhao address this. Mizoram's sex ratio is relatively high."
+  ],
+  "section-168": [
+    "Pessimistic views (Malthus, Coale-Hoover) argue that rapid population growth lowers per capita income, saving and investment and strains resources. Optimistic views (Simon Kuznets, Julian Simon, Boserup) argue that population can stimulate demand, innovation and agricultural intensification.",
+    "The demographic dividend arises when the share of working-age population is high, raising saving and output if jobs are available. Development itself reduces fertility through education, urbanisation and better health - 'development is the best contraceptive' (Bucharest Conference, 1974)."
+  ],
+  "section-170": [
+    "Demography: Demography is the scientific study of human population, including its size, composition, distribution and changes through births, deaths and migration. It includes formal demography and wider population studies.",
+    "Population census: The census is a complete enumeration of the population at a given time. India's census began in 1872 and has been held regularly every ten years since 1881. Other sources of data include vital registration, SRS and NFHS surveys.",
+    "Fertility: Fertility is actual childbearing and is measured through crude birth rate, general fertility rate, age-specific fertility rate and total fertility rate. It is influenced by age at marriage, education, income, religion, son preference and family planning.",
+    "Mortality: Mortality is measured through crude death rate, infant mortality rate, maternal mortality ratio and life expectancy. Declining mortality due to better health care has been a major cause of population growth in India. Studying these components helps governments plan for health, education and employment."
+  ],
+  "section-171": [
+    "Migration: Movement of people within and across countries is driven by push factors (poverty, unemployment) and pull factors (jobs, education). It affects the size and structure of population at both origin and destination and brings remittances, skills and social change.",
+    "Population growth: Growth results from natural increase (births minus deaths) and net migration. The demographic transition theory explains how countries move from high to low birth and death rates. India's population growth has slowed with falling fertility.",
+    "Age and sex composition: Age structure, shown by population pyramids, determines the dependency ratio and labour supply. India currently has a large working-age population, offering a demographic dividend. The sex ratio reflects social attitudes and health conditions of women.",
+    "Population and development: Population affects labour supply, saving, investment and demand for public services, while development reduces fertility and mortality. Policies must aim at a healthy, educated and productive population for sustainable development."
+  ],
+  "section-174": [
+    "The history of economic thought traces ideas from ancient thinkers (Kautilya's Arthashastra, Aristotle), through mercantilism (emphasis on gold and trade surplus) and physiocracy (Quesnay's emphasis on agriculture and 'laissez-faire'), to classical, Marxian, neo-classical, Keynesian and modern schools.",
+    "Studying it helps understand how economic theories developed in response to real problems such as industrial revolution, depressions and development, and shows the strengths and limitations of current theories."
+  ],
+  "section-175": [
+    "Classical economics dominated from Adam Smith's Wealth of Nations (1776) to J.S. Mill's Principles (1848). Major economists include Smith, Ricardo, Malthus, J.B. Say and J.S. Mill.",
+    "Main ideas: labour theory of value, laissez-faire and free trade, Say's law of markets (no general overproduction), wage-fund theory, theory of rent, capital accumulation as the source of growth and a tendency toward a stationary state."
+  ],
+  "section-176": [
+    "Adam Smith (1723-1790), a Scottish philosopher, is known as the Father of Economics. In the Wealth of Nations he explained the division of labour with the example of a pin factory, the 'invisible hand' of the market, the labour theory of value, the canons of taxation, and the benefits of free trade (absolute advantage).",
+    "He advocated limited government (defence, justice, public works) and laissez-faire. His ideas laid the foundation of classical economics and market economics."
+  ],
+  "section-177": [
+    "David Ricardo (1772-1823) wrote 'Principles of Political Economy and Taxation' (1817). His contributions include the theory of differential rent, labour theory of value, theory of comparative advantage, theory of distribution among landlords, capitalists and workers, the iron law of wages, and Ricardian equivalence (on public debt).",
+    "He argued that, as population grows, rent rises and profits fall, leading eventually to a stationary state. He supported free trade and opposed the Corn Laws."
+  ],
+  "section-178": [
+    "Thomas Robert Malthus (1766-1834) wrote 'An Essay on the Principle of Population' (1798). He argued that population tends to grow in geometric progression (1, 2, 4, 8) while food supply grows in arithmetic progression (1, 2, 3, 4). Population is checked by positive checks (famine, disease, war) and preventive checks (late marriage, moral restraint).",
+    "He also developed the theory of gluts (possibility of general overproduction due to deficient demand), which anticipated Keynes. Criticism: technological progress increased food supply and fertility declined with development."
+  ],
+  "section-179": [
+    "Karl Marx (1818-1883) wrote 'Das Kapital' (1867) and, with Engels, 'The Communist Manifesto' (1848). His ideas include historical materialism (economic structure determines society), labour theory of value, theory of surplus value (exploitation of workers by capitalists), class struggle, and the theory of capitalist crises.",
+    "He predicted that the concentration of capital, the reserve army of unemployed and crises would lead to the collapse of capitalism and the establishment of socialism. His ideas influenced socialist movements and economies around the world."
+  ],
+  "section-180": [
+    "The marginal revolution of the 1870s was led by W.S. Jevons (England), Carl Menger (Austria) and Leon Walras (Switzerland). They argued that value depends on marginal utility, not on labour cost.",
+    "Marginalism led to neo-classical economics, developed by Alfred Marshall, who combined demand (utility) and supply (cost) to explain price. Other contributions include general equilibrium analysis (Walras), marginal productivity theory of distribution (J.B. Clark) and welfare economics (Pareto, Pigou)."
+  ],
+  "section-181": [
+    "John Maynard Keynes (1883-1946) wrote 'The General Theory of Employment, Interest and Money' (1936) during the Great Depression. He rejected Say's law and argued that the economy may remain in equilibrium with involuntary unemployment because of deficient effective demand.",
+    "His key concepts include the consumption function, multiplier, marginal efficiency of capital, liquidity preference theory of interest and the role of government spending (fiscal policy) to restore full employment. His ideas founded modern macroeconomics and influenced economic policy after World War II."
+  ],
+  "section-183": [
+    "History of economic thought: It studies the evolution of economic ideas from mercantilism and physiocracy to classical, Marxian, neo-classical and Keynesian economics, showing how theories respond to the problems of their times.",
+    "Classical thought: Classical economists (Smith, Ricardo, Malthus, Say, Mill) emphasised production, capital accumulation, free markets, labour theory of value and the self-regulating market (Say's law).",
+    "Adam Smith: He explained the division of labour, the invisible hand, the benefits of free trade, canons of taxation and the role of a limited state.",
+    "David Ricardo: He developed the theory of rent, comparative advantage and distribution, showing how growth might lead to a stationary state. Together, these ideas laid the foundation of economics as a systematic science."
+  ],
+  "section-184": [
+    "Malthus: His population theory warned that population would outgrow food supply unless checked; his theory of gluts suggested that demand deficiency could cause depressions.",
+    "Karl Marx: Marx analysed capitalism as a system based on exploitation of labour through surplus value, leading to class struggle, concentration of capital and crises. He predicted the replacement of capitalism by socialism.",
+    "Marginalist thought: Jevons, Menger and Walras shifted the focus to marginal utility and individual choice, leading to neo-classical economics and Marshall's synthesis of demand and supply.",
+    "Keynes: Keynes challenged classical economics by showing that market economies could remain in underemployment equilibrium and that government intervention through fiscal policy was necessary. Each school contributed concepts that continue to shape modern economic analysis."
+  ],
+  "section-187": [
+    "Growth is usually measured by the rate of increase in real GDP or real per capita income. Kuznets defined modern economic growth as a long-term rise in the capacity to supply increasingly diverse goods to the population, based on advancing technology and institutional adjustments.",
+    "Growth is quantitative and can be shown by an outward shift of the production possibility curve. Major growth models include the Harrod-Domar model (growth depends on saving and capital-output ratio), the Solow model (capital, labour and technology) and endogenous growth models (human capital and innovation)."
+  ],
+  "section-188": [
+    "Development means improvement in the quality of life: reduction in poverty, unemployment and inequality (Dudley Seers), and improvement in health, education and freedom. Amartya Sen described development as the expansion of freedoms and capabilities.",
+    "Indicators include per capita income, Human Development Index (HDI) by UNDP (life expectancy, education and per capita income), Physical Quality of Life Index (PQLI), Multidimensional Poverty Index and Gender Development Index."
+  ],
+  "section-189": [
+    "Differences: growth is quantitative, development is qualitative; growth may occur without development if benefits go to a few; growth is measured by GDP, development by HDI and other social indicators; growth is relevant to developed countries, development to developing countries.",
+    "Growth provides resources for development, and development (education, health) supports future growth. There can be no sustained development without growth, but growth without development is possible."
+  ],
+  "section-190": [
+    "Economic determinants: capital formation, natural resources, human capital, technology, entrepreneurship, structural change and trade. Non-economic determinants: political stability, good governance, social attitudes, institutions, law and order, and property rights.",
+    "Different growth theories emphasise different factors: the classical school stressed capital and labour, Schumpeter stressed innovation, Solow stressed technology, and endogenous growth theory stressed human capital and research."
+  ],
+  "section-191": [
+    "Capital formation (investment) means adding to the stock of real capital such as machinery, buildings, roads and dams. Ragnar Nurkse said it requires three steps: increase in real saving, mobilisation of savings through financial institutions, and investment of these funds in capital goods.",
+    "Nurkse's 'vicious circle of poverty' explains low capital formation in poor countries: low income leads to low saving, low investment, low productivity and low income again. Measures to increase capital formation include promoting saving, developing financial markets, attracting foreign investment and public investment."
+  ],
+  "section-192": [
+    "The concept was developed by Theodore Schultz and Gary Becker. Investment in human capital includes education, training, health care, migration and on-the-job learning.",
+    "Human capital raises labour productivity, encourages innovation, improves adoption of technology and contributes to economic growth. Countries like Japan and South Korea grew rapidly due to heavy investment in human capital. In India, programmes like Samagra Shiksha, Skill India and Ayushman Bharat aim to build human capital."
+  ],
+  "section-193": [
+    "Technological progress includes new products, new production methods and better organisation. In Solow's growth model, long-term growth of per capita income depends on technological progress (the 'Solow residual').",
+    "Technology may be capital-intensive or labour-intensive. Developing countries can adopt technology from developed countries (technology transfer), but it must be appropriate to their factor endowments. Research and development, education and protection of intellectual property encourage innovation."
+  ],
+  "section-194": [
+    "Poverty creates a vicious circle: poor nutrition and health reduce productivity, low income reduces saving and investment in education, and lack of opportunity keeps people poor. It is measured by poverty lines, the headcount ratio, poverty gap and the Multidimensional Poverty Index.",
+    "Development strategies to reduce poverty include employment generation, rural development, provision of basic needs, social security, microfinance and empowerment of women. The first SDG is to end poverty in all its forms everywhere."
+  ],
+  "section-195": [
+    "Simon Kuznets's inverted-U hypothesis (1955) suggested that inequality first increases and then decreases as per capita income rises. Inequality is measured by the Lorenz curve and Gini coefficient.",
+    "High inequality can reduce growth by limiting human capital investment of the poor, creating social tensions and reducing demand. Measures to reduce inequality include progressive taxation, land reforms, public education and health, employment programmes and inclusive growth policies."
+  ],
+  "section-196": [
+    "The Brundtland Commission (1987) defined sustainable development as meeting the needs of the present without compromising the ability of future generations to meet their own needs. It includes economic, social and environmental dimensions.",
+    "Strategies include renewable energy, conservation of forests and water, pollution control, sustainable agriculture, recycling and climate action. The UN Sustainable Development Goals (2015-2030) provide a global framework, and India has committed to net-zero emissions by 2070."
+  ],
+  "section-198": [
+    "Economic growth: A sustained increase in real GDP or per capita income, measured by the growth rate. It depends on capital, labour, technology and productivity and can be represented by an outward shift of the production possibility curve.",
+    "Economic development: Development is broader, including structural change (from agriculture to industry and services), reduction of poverty, unemployment and inequality, and improvement in health, education and freedom. It is measured by HDI, PQLI and other indicators.",
+    "Growth versus development: Growth is quantitative and development qualitative. Growth is necessary for development, but growth may not lead to development if its benefits are unequally distributed.",
+    "Determinants: Growth and development depend on economic factors (capital, natural resources, human capital, technology, entrepreneurship) and non-economic factors (institutions, governance, social attitudes, political stability). A good development strategy combines both."
+  ],
+  "section-199": [
+    "Capital formation: Increasing the stock of physical capital through saving and investment raises productivity and output. Developing countries face a vicious circle of poverty (Nurkse) that limits capital formation; financial development, public investment and foreign capital can break it.",
+    "Human capital: Education, training and health make workers more productive and innovative. Schultz and Becker showed that investment in human capital yields high returns. East Asian countries demonstrate the role of human capital in rapid development.",
+    "Technology: Technological progress allows more output from the same inputs and is the main source of long-run growth in the Solow model. Appropriate technology and R&D are essential for developing countries.",
+    "Poverty and development: Poverty restricts access to education, health and opportunities. Development strategies must combine growth with employment, social security and basic needs to reduce poverty."
+  ],
+  "section-200": [
+    "Inequality and development: Kuznets's inverted-U hypothesis suggests inequality first rises and then falls with development, but experience varies across countries. High inequality limits opportunities for the poor and may slow growth; redistributive policies and inclusive growth are therefore important.",
+    "Sustainable development: Development must not damage the environment or the welfare of future generations. It requires renewable energy, conservation, pollution control and sustainable consumption and production.",
+    "Global framework: The Sustainable Development Goals integrate economic growth, social inclusion and environmental protection. For India, sustainable and inclusive growth means reducing poverty and inequality while adopting green technologies and protecting natural resources."
+  ]
+}
