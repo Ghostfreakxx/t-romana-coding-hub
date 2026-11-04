@@ -29,6 +29,9 @@ export function useSaved<T>(key: string, initial: T, validate: (value: unknown) 
 export const isString = (v: unknown): v is string => typeof v === "string";
 export const isStringList = (v: unknown): v is string[] => Array.isArray(v) && v.every(x => typeof x === "string");
 export const emptyList: string[] = [];
+export const isStringRecord = (v: unknown): v is Record<string, string> =>
+  !!v && typeof v === "object" && !Array.isArray(v) && Object.values(v as object).every(x => typeof x === "string");
+export const emptyRecord: Record<string, string> = {};
 export function download(name: string, content: string, type = "text/plain") {
   const url = URL.createObjectURL(new Blob([content], { type }));
   const a = document.createElement("a"); a.href = url; a.download = name; a.click();
