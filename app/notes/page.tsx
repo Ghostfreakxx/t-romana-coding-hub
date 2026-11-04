@@ -5,6 +5,7 @@ import Link from "next/link";
 import Shell from "@/components/shell";
 import { noteResources, syllabusResources } from "@/data/notes";
 import { departments } from "@/data/courses";
+import { ContinueReading, NotesSearch } from "@/components/notes-search";
 
 export default function NotesPage() {
   const [department, setDepartment] = useState("all");
@@ -19,10 +20,13 @@ export default function NotesPage() {
     <section className="panel">
       <div className="two-col">
         <div><label htmlFor="notes-department">Subject</label><select id="notes-department" value={department} onChange={(event) => setDepartment(event.target.value)}><option value="all">All subjects</option>{departments.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></div>
-        <div><label htmlFor="notes-search">Search guides</label><input id="notes-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Subject, batch or semester" /></div>
+        <div><label htmlFor="notes-search">Filter guides by name</label><input id="notes-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Subject, batch or semester" /></div>
       </div>
       <p className="small muted" role="status">Showing {notes.length} guide{notes.length === 1 ? "" : "s"}. If you are not taking a subject, you do not need to study that section.</p>
     </section>
+
+    <ContinueReading />
+    <NotesSearch department={department} />
 
     <section className="grid-cards section-gap">{notes.map((note) => <article className="lab-card" key={note.id}><div className="card-top"><span className="card-icon" aria-hidden="true">▧</span><span>STUDY GUIDE</span></div><h2>{note.label}</h2><p>{note.semesters}</p><div className="row section-gap"><Link className="btn" href={`/notes/${note.id}`}>Read online</Link><a className="btn secondary" href={note.file} download>Download</a></div></article>)}</section>
     {notes.length === 0 && <section className="panel section-gap"><h2>No guide found</h2><p className="muted">Try another subject or search term.</p></section>}

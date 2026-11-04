@@ -65,9 +65,18 @@ def extract(path):
 destination = ROOT / "public/notes/read"
 destination.mkdir(parents=True, exist_ok=True)
 resources = re.findall(r'id: "([^"]+)"[^\n]+file: "([^"]+\.docx)"', (ROOT / "data/notes.ts").read_text())
+index = []
 for resource_id, filename in resources:
     sections = extract(ROOT / "public" / filename.lstrip("/"))
     assert sections, filename
     output = {"id": resource_id, "sections": sections}
     (destination / f"{resource_id}.json").write_text(json.dumps(output, ensure_ascii=False), encoding="utf-8")
+    for section in sections:
+        if section["id"] == "section-0" or not section["blocks"]:
+            continue
+        first = next((b["text"] for b in section["blocks"] if b["type"] == "paragraph"), "")
+        index.append({"g": resource_id, "s": section["id"], "t": section["title"], "c": " · ".join(section["context"]),
+                      "k": section["kind"], "x": first[:160]})
+# A small cross-guide index (titles, context and the opening words of each section) for the Notes search.
+(destination / "index.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 print(f"Extracted {len(resources)} existing guides for the online reader.")

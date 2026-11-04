@@ -15,10 +15,21 @@ a { text-underline-offset:4px; }
 .college-logo { display:block; width:100%; height:auto; }
 .language-message { display:flex; flex-wrap:wrap; justify-content:center; gap:8px 14px; margin:0; text-align:center; font-size:15px; color:var(--muted); }
 .language-message strong { color:var(--accent); letter-spacing:3px; }
-.note-reading-area { max-height:68vh; overflow:auto; margin-top:22px; padding:0 20px; border:1px solid #343b31; border-radius:12px; scrollbar-gutter:stable; }
+.note-reading-area { margin-top:22px; padding:0 20px; border:1px solid #343b31; border-radius:12px; }
 .note-section { max-width:78ch; margin:0 auto; padding:24px 0; border-bottom:1px solid #343b31; scroll-margin-top:12px; }
 .note-section:last-child { border-bottom:0; }
-.note-paragraph { white-space:pre-wrap; overflow-wrap:anywhere; font-size:16px; line-height:1.85; }
+.note-paragraph { white-space:pre-wrap; overflow-wrap:anywhere; font-size:var(--note-size,16px); line-height:1.85; }
+.reader-progress { padding:18px; border:1px solid #343b31; border-radius:12px; background:#151915; }
+.reader-progress progress, .guide-progress progress { width:100%; height:10px; margin-top:10px; accent-color:var(--accent); }
+.reader-tools { justify-content:space-between; align-items:center; margin-top:14px; }
+.recall-box { padding:16px; border:1px dashed #4a5444; border-radius:10px; }
+.revise-toggle { margin-top:14px; }
+.note-section.is-revised h3::before { content:"✓ "; color:var(--accent); }
+.search-results { display:grid; gap:12px; margin-top:16px; }
+.search-hit { display:block; padding:14px 16px; border:1px solid #343b31; border-radius:10px; text-decoration:none; color:inherit; }
+.search-hit:hover, .search-hit:focus-visible { border-color:var(--accent); }
+.search-hit strong { color:var(--accent); }
+.continue-strip { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
 .reader-context { overflow-wrap:anywhere; }
 .reader-contents { display:grid; gap:10px; max-height:260px; overflow:auto; padding:18px 5px; }
 .reader-contents a { color:var(--accent); text-decoration:underline; }
