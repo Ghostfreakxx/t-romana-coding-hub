@@ -44,3 +44,6 @@ next-env.d.ts
 # Generated from the official college masthead and application sources
 /public/icons/
 /public/sw.js
+
+# question bank OCR cache
+/.cache/

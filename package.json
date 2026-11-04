@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:labs": "node scripts/test-labs.mjs",
-    "test:pwa": "node scripts/prepare-pwa.mjs && node scripts/test-pwa.mjs"
+    "test:pwa": "node scripts/prepare-pwa.mjs && node scripts/test-pwa.mjs",
+    "qbank": "python3 scripts/extract-question-papers.py && python3 scripts/build-question-bank.py"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
