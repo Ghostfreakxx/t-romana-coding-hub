@@ -138,4 +138,4 @@ summary { line-height:1.6; font-weight:700; } details { padding:15px 0; border-b
 .qb-section { margin-top:22px; }
 .qb-actions { align-items:flex-end; }
 @media(max-width:640px) { .qb-stats strong { font-size:22px; } }
-
+.qb-pdfs { gap:8px; align-items:center; margin-top:10px; } .qb-pdfs a.tag { text-decoration:none; }

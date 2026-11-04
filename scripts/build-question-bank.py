@@ -122,7 +122,7 @@ for dept, papers in sorted(by_dept.items()):
         groups_out.append({
             "id": group_id, "title": title[0][0] if title else "Untitled paper", "semesters": sems,
             "exams": [exam(p) for p in ps], "repeated": repeated,
-            "papers": [{"exam": exam(p), "year": p["year"], "scheme": p["scheme"], "sem": p["sem"], "code": p["code"], "paper": p["paper"],
+            "papers": [{"exam": exam(p), "year": p["year"], "scheme": p["scheme"], "sem": p["sem"], "code": p["code"], "paper": p["paper"], "pdf": p.get("pdf"),
                         "questions": [{"s": q["section"], "u": q["unit"], "n": q["n"], "t": q["text"], "o": q["options"],
                                        "c": assignment.get((pi, qi))} for qi, q in enumerate(p["questions"])]}
                        for pi, p in enumerate(ps)],

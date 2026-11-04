@@ -5,6 +5,7 @@ Usage: python3 scripts/extract-question-papers.py ["OLD QUESTION COLLEGE"]
 Reads every PDF in the folder and inside its ZIP files. Papers with a text layer are read with pdftotext;
 scanned papers are read with Tesseract OCR (apt install tesseract-ocr), cached in .cache/qbank-ocr/<md5>.txt.
 Only BA subjects covered by the hub are kept. Duplicate uploads of the same exam are merged.
+Each kept paper's original PDF is copied to public/question-papers/ for download.
 Then run scripts/build-question-bank.py.
 """
 import hashlib
@@ -12,6 +13,7 @@ import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -93,10 +95,19 @@ for name, data in pdfs():
         current["sources"].append(name)
         continue
     papers[key] = {**{k: meta[k] for k in ("dept", "subject", "scheme", "year", "sem", "code", "paper", "title")},
-                   "method": method, "sources": ([*current["sources"]] if current else []) + [name],
+                   "method": method, "sources": ([*current["sources"]] if current else []) + [name], "_data": data, "_md5": md5,
                    "questions": [{k: q[k] for k in ("section", "unit", "n", "text", "options")} for q in questions]}
 
 result = sorted(papers.values(), key=lambda p: (p["dept"], p["sem"] or 0, norm_title(p["title"]), p["year"], p["scheme"] or ""))
+# Publish the original PDF of each kept paper so students can download it from the Question Bank.
+PDF_ROOT = ROOT / "public/question-papers"
+shutil.rmtree(PDF_ROOT, ignore_errors=True)
+for paper in result:
+    slug = re.sub(r"[^a-z0-9]+", "-", f'{paper["year"]} {paper["scheme"] or ""} sem {paper["sem"] or "x"} {paper["title"] or "paper"}'.lower()).strip("-")
+    relative = f'{paper["dept"]}/{slug[:80]}-{paper.pop("_md5")[:6]}.pdf'
+    (PDF_ROOT / relative).parent.mkdir(parents=True, exist_ok=True)
+    (PDF_ROOT / relative).write_bytes(paper.pop("_data"))
+    paper["pdf"] = f"/question-papers/{relative}"
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
 print(f"{len(seen_files)} unique PDFs read; {len(result)} BA papers kept; {sum(len(p['questions']) for p in result)} questions")

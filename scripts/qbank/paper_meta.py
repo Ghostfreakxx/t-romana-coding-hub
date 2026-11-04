@@ -75,8 +75,10 @@ def read(text, filename=""):
             if t and not re.search(r"Marks|Time|Semester|CBCS|NEP|SECTION|Copy|OBJECTIVE", line, re.I):
                 meta["title"] = t.group(1).strip(); break
     if not meta["dept"] and filename:
-        for word, dept in SUBJECTS.items():
-            if word in filename.upper(): meta["dept"] = dept; meta["subject"] = meta["subject"] or word.title(); break
+        base = filename.rsplit("/", 1)[-1].upper()
+        hits = sorted((base.find(word), word) for word in SUBJECTS if word in base)
+        if hits:  # the subject named first in the file name ("ELECTIVE ENGLISH ... (History of English Literature)")
+            word = hits[0][1]; meta["dept"] = SUBJECTS[word]; meta["subject"] = meta["subject"] or word.title()
     if not meta["sem"] and filename:
         s = re.search(r"\b([1-8])\s*(?:st|nd|rd|th)\s*Sem", filename, re.I) or re.search(r"[A-Z]{2,5}\s?(\d)\d{2}", filename)
         if s: meta["sem"] = int(s.group(1))

@@ -6,7 +6,7 @@ import { download } from "@/lib/storage";
 type GroupSummary = { id: string; title: string; semesters: number[]; exams: string[]; repeated: number };
 type DeptSummary = { dept: string; name: string; papers: number; groups: GroupSummary[] };
 type Question = { s: string; u: string | null; n: number; t: string; o: string[]; c: string | null };
-type Paper = { exam: string; year: number; scheme: string | null; sem: number | null; code: string | null; paper: string | null; questions: Question[] };
+type Paper = { exam: string; year: number; scheme: string | null; sem: number | null; code: string | null; paper: string | null; pdf?: string | null; questions: Question[] };
 type Repeat = { id: string; kind: "written" | "objective"; text: string; times: number; exams: string[]; sections: string[]; unit: string | null; variants: string[] };
 type Group = GroupSummary & { repeated: Repeat[]; papers: Paper[] };
 type Dept = { dept: string; name: string; groups: Group[] };
@@ -106,6 +106,7 @@ export default function QuestionBank() {
     {group && paper && <section className="panel section-gap" id="qb-detail" aria-label={group.title}>
       <p className="eyebrow">{dept?.name} · Semester {group.semesters.join(" / ")}</p><h2>{group.title}</h2>
       <p className="small muted">Papers in the bank: {group.exams.map(label).join(", ")}</p>
+      {group.papers.some(p => p.pdf) && <div className="row qb-pdfs" aria-label="Download original papers"><span className="small muted">Original papers (PDF):</span>{group.papers.map((p, i) => p.pdf && <a key={i} className="tag" href={p.pdf} download target="_blank" rel="noreferrer">⬇ {label(p.exam)}{p.sem ? ` · Sem ${p.sem}` : ""}</a>)}</div>}
       <div className="row section-gap" role="tablist" aria-label="View">
         <button role="tab" aria-selected={view === "repeated"} className={`btn ${view === "repeated" ? "" : "secondary"}`} onClick={() => setView("repeated")}>Repeated questions &amp; topics ({group.repeated.filter(r => r.kind === "written").length})</button>
         <button role="tab" aria-selected={view === "papers"} className={`btn ${view === "papers" ? "" : "secondary"}`} onClick={() => setView("papers")}>Full papers ({group.papers.length})</button>
@@ -124,7 +125,7 @@ export default function QuestionBank() {
 
       {view === "papers" && <div className="section-gap">
         <div className="two-col"><div><label htmlFor="qb-exam">Exam</label><select id="qb-exam" value={Math.min(examIndex, group.papers.length - 1)} onChange={e => setExamIndex(Number(e.target.value))}>{group.papers.map((p, i) => <option key={i} value={i}>{label(p.exam)}{p.sem ? ` · Semester ${p.sem}` : ""}{p.code ? ` · ${p.code}` : ""}</option>)}</select></div>
-          <div className="row qb-actions"><button className="btn secondary" onClick={() => download(`${group.title.replace(/[^a-z0-9]+/gi, "-")}-${paper.exam.replace(/\s+/g, "-")}.txt`, paperText(group, paper))}>Download this paper (.txt)</button></div></div>
+          <div className="row qb-actions">{paper.pdf && <a className="btn" href={paper.pdf} download target="_blank" rel="noreferrer">Download original paper (PDF)</a>}<button className="btn secondary" onClick={() => download(`${group.title.replace(/[^a-z0-9]+/gi, "-")}-${paper.exam.replace(/\s+/g, "-")}.txt`, paperText(group, paper))}>Download questions (.txt)</button></div></div>
         {(["A", "B", "C"] as const).map(s => {
           const qs = paper.questions.filter(q => q.s === s);
           if (!qs.length) return null;
