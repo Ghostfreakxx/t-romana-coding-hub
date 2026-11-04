@@ -103,36 +103,129 @@ def cluster(group_id, papers):
                     "sections": sorted({i["section"] for i in c["items"]}), "unit": latest["unit"],
                     "variants": sorted({i["text"] for i in c["items"]} - {latest["text"]})[:4]})
     out.sort(key=lambda c: (-c["times"], c["kind"] != "written", c["text"]))
-    return out, assignment
+    return out, assignment, clusters
 
 
-OUT.mkdir(parents=True, exist_ok=True)
-index = []
-by_dept = defaultdict(list)
-for paper in PAPERS:
-    by_dept[paper["dept"]].append(paper)
-for dept, papers in sorted(by_dept.items()):
-    groups_out = []
-    for g_index, group in enumerate(group_papers(papers)):
-        group_id = f"{dept}-{g_index}"
-        ps = sorted(group["papers"], key=lambda p: (p["year"], p["scheme"] or ""))
-        repeated, assignment = cluster(group_id, ps)
-        title = Counter(p["title"] for p in ps if p["title"]).most_common(1)
-        sems = sorted({p["sem"] for p in ps if p["sem"]})
-        groups_out.append({
-            "id": group_id, "title": title[0][0] if title else "Untitled paper", "semesters": sems,
-            "exams": [exam(p) for p in ps], "repeated": repeated,
-            "papers": [{"exam": exam(p), "year": p["year"], "scheme": p["scheme"], "sem": p["sem"], "code": p["code"], "paper": p["paper"], "pdf": p.get("pdf"),
-                        "questions": [{"s": q["section"], "u": q["unit"], "n": q["n"], "t": q["text"], "o": q["options"],
-                                       "c": assignment.get((pi, qi))} for qi, q in enumerate(p["questions"])]}
-                       for pi, p in enumerate(ps)],
-        })
-    groups_out.sort(key=lambda g: (g["semesters"][0] if g["semesters"] else 9, g["title"]))
-    (OUT / f"{dept}.json").write_text(json.dumps({"dept": dept, "name": NAMES.get(dept, dept), "groups": groups_out},
-                                                  ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    index.append({"dept": dept, "name": NAMES.get(dept, dept), "papers": len(papers),
-                  "groups": [{"id": g["id"], "title": g["title"], "semesters": g["semesters"], "exams": g["exams"],
-                              "repeated": len([c for c in g["repeated"] if c["kind"] == "written"])} for g in groups_out]})
-(OUT / "index.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-total = sum(g["repeated"] for d in index for g in d["groups"])
-print(f"{len(PAPERS)} papers in {sum(len(d['groups']) for d in index)} paper groups; {total} written questions repeated across exams")
+ROMAN_ORDER = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6}
+
+
+def candidate(c, exams_allowed=None):
+    """Features of one question cluster (optionally using only some exams), for ranking guesses."""
+    items = [i for i in c["items"] if exams_allowed is None or i["exam"] in exams_allowed]
+    if not items or c["kind"] != "written":
+        return None
+    exams = sorted({i["exam"] for i in items}, key=lambda e: (int(e[:4]), e))
+    sections = {i["section"] for i in items}
+    latest = max(items, key=lambda i: (i["year"], i["section"] == "C", len(i["text"])))
+    times = len(exams)
+    # Weights chosen by back-testing on past exams (see backtest()): frequency matters most, then long answers.
+    score = times + 0.3 * ("C" in sections) + 0.3 * (len(sections) > 1) + 0.1 * len(items)
+    return {"text": latest["text"], "unit": latest["unit"], "long": "C" in sections, "times": times, "exams": exams,
+            "last": latest["year"], "score": round(score, 2), "items": items}
+
+
+def likelihood(cand):
+    """Calibrated on the back-test: repeated long answers are the strong signal; repeated short answers are not."""
+    if cand["long"] and cand["times"] >= 3:
+        return "high"
+    if cand["long"] and cand["times"] == 2:
+        return "medium"
+    return "low"
+
+
+def public(cand):
+    return {"t": cand["text"], "u": cand["unit"], "long": cand["long"], "times": cand["times"], "exams": cand["exams"],
+            "level": likelihood(cand)}
+
+
+def forecast(raw):
+    """A guess paper for the next exam: per unit, two long and two short questions (MZU papers give an OR choice)."""
+    cands = [x for x in (candidate(c) for c in raw) if x]
+    cands.sort(key=lambda x: (-x["score"], -x["last"], x["text"]))
+    units = sorted({x["unit"] for x in cands if x["unit"]}, key=lambda u: ROMAN_ORDER.get(u, 9))
+    chosen, out_units = [], []
+
+    def fresh(x):
+        """Skip a guess that overlaps an already chosen one (Kautilya's Arthashastra vs the book Arthashastra)."""
+        tx = tokens(x["text"])
+        return all(len(tx & tokens(y["text"])) / (min(len(tx), len(tokens(y["text"]))) or 1) < 0.5
+                   for y in chosen if y["long"] == x["long"])
+
+    slots = {(unit, kind): [] for unit in units or [None] for kind in (True, False)}
+    for x in cands:  # strongest guesses first, so a weaker near-duplicate never pushes them out
+        slot = slots.get((x["unit"] if units else None, x["long"]))
+        if slot is not None and len(slot) < 2 and fresh(x):
+            slot.append(x); chosen.append(x)
+    for unit in units or [None]:
+        out_units.append({"unit": unit, "long": [public(x) for x in slots[(unit, True)]], "short": [public(x) for x in slots[(unit, False)]]})
+    return {"top": [public(x) for x in cands[:5]], "units": out_units}
+
+
+def backtest(groups):
+    """Hide each paper's latest exam, guess it from the earlier ones, and count how many top-5 guesses came."""
+    hits, random_rate, tests = [], [], 0
+    by_level = {"high": [0, 0], "medium": [0, 0], "low": [0, 0]}
+    for raw, ps in groups:
+        occasions = sorted({exam(p) for p in ps}, key=lambda e: (int(e[:4]), e))
+        if len({int(o[:4]) for o in occasions}) < 2:
+            continue
+        held = occasions[-1]
+        train = {o for o in occasions if int(o[:4]) < int(held[:4])}
+        cands = []
+        for c in raw:
+            x = candidate(c, train)
+            if x:
+                x["hit"] = any(i["exam"] == held for i in c["items"])
+                cands.append(x)
+                by_level[likelihood(x)][0] += x["hit"]; by_level[likelihood(x)][1] += 1
+        if len(cands) < 12:
+            continue
+        tests += 1
+        cands.sort(key=lambda x: (-x["score"], -x["last"]))
+        hits.append(sum(x["hit"] for x in cands[:5]) / 5)
+        random_rate.append(sum(x["hit"] for x in cands) / len(cands))
+    if not tests:
+        return None
+    return {"tests": tests, "top5": round(sum(hits) / tests, 3), "random": round(sum(random_rate) / tests, 3),
+            "levels": {k: round(h / n, 2) if n else None for k, (h, n) in by_level.items()}}
+
+
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    index = []
+    tested = []
+    by_dept = defaultdict(list)
+    for paper in PAPERS:
+        by_dept[paper["dept"]].append(paper)
+    for dept, papers in sorted(by_dept.items()):
+        groups_out = []
+        for g_index, group in enumerate(group_papers(papers)):
+            group_id = f"{dept}-{g_index}"
+            ps = sorted(group["papers"], key=lambda p: (p["year"], p["scheme"] or ""))
+            repeated, assignment, raw = cluster(group_id, ps)
+            title = Counter(p["title"] for p in ps if p["title"]).most_common(1)
+            sems = sorted({p["sem"] for p in ps if p["sem"]})
+            tested.append((raw, ps))
+            groups_out.append({
+                "id": group_id, "forecast": forecast(raw), "title": title[0][0] if title else "Untitled paper", "semesters": sems,
+                "exams": [exam(p) for p in ps], "repeated": repeated,
+                "papers": [{"exam": exam(p), "year": p["year"], "scheme": p["scheme"], "sem": p["sem"], "code": p["code"], "paper": p["paper"], "pdf": p.get("pdf"),
+                            "questions": [{"s": q["section"], "u": q["unit"], "n": q["n"], "t": q["text"], "o": q["options"],
+                                           "c": assignment.get((pi, qi))} for qi, q in enumerate(p["questions"])]}
+                           for pi, p in enumerate(ps)],
+            })
+        groups_out.sort(key=lambda g: (g["semesters"][0] if g["semesters"] else 9, g["title"]))
+        (OUT / f"{dept}.json").write_text(json.dumps({"dept": dept, "name": NAMES.get(dept, dept), "groups": groups_out},
+                                                      ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        index.append({"dept": dept, "name": NAMES.get(dept, dept), "papers": len(papers),
+                      "groups": [{"id": g["id"], "title": g["title"], "semesters": g["semesters"], "exams": g["exams"],
+                                  "repeated": len([c for c in g["repeated"] if c["kind"] == "written"])} for g in groups_out]})
+    accuracy = backtest(tested)
+    (OUT / "index.json").write_text(json.dumps({"subjects": index, "forecast": accuracy}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print("Back-test of guesses:", accuracy)
+    total = sum(g["repeated"] for d in index for g in d["groups"])
+    print(f"{len(PAPERS)} papers in {sum(len(d['groups']) for d in index)} paper groups; {total} written questions repeated across exams")
+
+
+if __name__ == "__main__":
+    main()

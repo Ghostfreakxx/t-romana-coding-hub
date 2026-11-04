@@ -139,3 +139,5 @@ summary { line-height:1.6; font-weight:700; } details { padding:15px 0; border-b
 .qb-actions { align-items:flex-end; }
 @media(max-width:640px) { .qb-stats strong { font-size:22px; } }
 .qb-pdfs { gap:8px; align-items:center; margin-top:10px; } .qb-pdfs a.tag { text-decoration:none; }
+.qb-guess { list-style:none; padding-left:0; }
+.tag.qb-high { background:#3a4a1f; color:var(--accent); } .tag.qb-medium { background:#2c3527; } .tag.qb-low { background:transparent; border:1px solid #3d463a; }

@@ -5,7 +5,7 @@ const labs = [
   ["01", "</>", "Coding Studio", "Build your own websites and browser apps. Bring code from your AI, edit, preview and export.", "/coding", "7 starters + your own projects"],
   ["02", "▤", "College Hub", "Find your department and semester. Follow your syllabus and keep study notes.", "/college", "7 subjects + VAC"],
   ["03", "✎", "Notes Library", "Read every TRC study guide online, search across all subjects, track what you have revised and test yourself.", "/notes", `${noteResources.length} guides · search + revision tracker`],
-  ["04", "?", "Question Bank", "Past MZU semester questions by subject and paper. See what repeats, then download probable questions for your semester.", "/questions", "Repeated questions + past papers"],
+  ["04", "?", "Question Bank", "Past MZU semester questions by subject and paper. See what repeats, get our guess paper for the next exam and download past papers.", "/questions", "Repeats + guess papers + PDFs"],
   ["05", "▧", "PDF Study Lab", "Extract PDF text, create summaries with page references, and keep notes and revision cards.", "/study", "PDF decoder + notebooks"],
   ["06", "◇", "Reasoning Lab", "Find patterns, follow clues and test your reasoning with clear explanations.", "/reasoning", "Practice + test mode"],
   ["07", "↗", "Driving Lab", "Explore three 3D practice courses with traffic, weather, touch controls and checkpoints.", "/driving", "Drive + reflect"],
