@@ -1521,7 +1521,7 @@ export const departments: Department[] = [
     name: "Value Added Courses",
     icon: "✦",
     description:
-      "Human values, understanding India and environmental science for every student.",
+      "Human values, understanding India, environmental science, and health and wellness for every student.",
     semesters: [
       {
         semester: 1,
@@ -1551,6 +1551,17 @@ export const departments: Department[] = [
           {
             code: "VAC 103",
             title: "Environmental Science",
+            credits: 2,
+            category: "Value Added Course",
+          },
+        ],
+      },
+      {
+        semester: 4,
+        courses: [
+          {
+            code: "VAC 104",
+            title: "Health and Wellness",
             credits: 2,
             category: "Value Added Course",
           },

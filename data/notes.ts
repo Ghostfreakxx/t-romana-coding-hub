@@ -38,6 +38,7 @@ export const noteResources: NoteResource[] = [
   { id: "vac-1", department: "vac", label: "VAC 101 Notes", semesters: "Universal Human Values", file: "/notes/vac-batch-1-vac101-universal-human-values-trc-notes.docx", format: "docx" },
   { id: "vac-2", department: "vac", label: "VAC 102 Notes", semesters: "Understanding India", file: "/notes/vac-batch-2-vac102-understanding-india-trc-notes.docx", format: "docx" },
   { id: "vac-3", department: "vac", label: "VAC 103 Notes", semesters: "Environmental Science", file: "/notes/vac-batch-3-vac103-environmental-science-trc-notes.docx", format: "docx" },
+  { id: "vac-4", department: "vac", label: "VAC 104 Notes", semesters: "Health and Wellness", file: "/notes/vac-batch-4-vac104-health-and-wellness-trc-notes.docx", format: "docx" },
 ];
 
 export const syllabusResources: SyllabusResource[] = [
