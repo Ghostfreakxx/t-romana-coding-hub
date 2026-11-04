@@ -19,3 +19,17 @@ Economics and the Value Added Courses. Add a subject in `KEEP` (scripts/extract-
 
 A question counts as repeated when the same or a very similar question (same key words) appears in two or more
 exams of the same paper. Exams are grouped by paper title, so a paper that moved between CBCS and NEP is kept together.
+
+## Guess papers (next-exam predictions)
+
+`scripts/build-question-bank.py` also writes a guess paper for every paper (`forecast` in each subject file):
+the five most likely questions and, for each unit, two long and two short guesses (MZU papers give an OR choice).
+
+Questions are ranked by how many past exams asked them, with extra weight for long answers and for questions asked
+as both short and long. Near-duplicate guesses are skipped.
+
+The method is checked every time the data is rebuilt: for each paper with exams from two or more years, the latest exam is
+hidden, guessed from the earlier ones, and the result is stored in `public/question-bank/index.json` (`forecast`).
+With the current 313 papers: about 37% of the top-5 guesses came in the hidden exam, against 21% for a random past
+question. Labels are calibrated the same way: a long answer asked 3+ times came about 62% of the time ("High chance"),
+a long answer asked twice about 41% ("Good chance"), anything else about 17% ("Possible").
