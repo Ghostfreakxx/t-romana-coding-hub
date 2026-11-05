@@ -2,10 +2,16 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { roadCenter, type DriveState } from "./driving-engine";
 
-export type DrivingScene = { render: (state: DriveState, cockpit: boolean) => void; dispose: () => void };
+export type DrivingScene = { render: (state: DriveState, cockpit: boolean) => void; dispose: () => void; reduceResolution: () => void; readonly reduced: boolean };
 export function createDrivingScene(canvas: HTMLCanvasElement, state: DriveState, highQuality: boolean): DrivingScene {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: highQuality, powerPreference: "low-power" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, highQuality ? 1.5 : 1));
+  // A scene that fails halfway (out of GPU memory, missing extension) must not keep the WebGL context alive.
+  try { return buildScene(renderer, canvas, state, highQuality); }
+  catch (error) { renderer.dispose(); renderer.forceContextLoss(); throw error; }
+}
+function buildScene(renderer: THREE.WebGLRenderer, canvas: HTMLCanvasElement, state: DriveState, highQuality: boolean): DrivingScene {
+  const basePixelRatio = Math.min(window.devicePixelRatio || 1, highQuality ? 1.5 : 1);
+  renderer.setPixelRatio(basePixelRatio);
   renderer.shadowMap.enabled = highQuality;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -86,13 +92,13 @@ export function createDrivingScene(canvas: HTMLCanvasElement, state: DriveState,
     list.forEach((object,i)=>{batch.setMatrixAt(i,object.matrixWorld);object.removeFromParent();});
     batch.castShadow=highQuality;batch.receiveShadow=highQuality;batch.computeBoundingSphere();scene.add(batch);instances.push(batch);
   }
-  let width=0,height=0;
-  return {render(s,cockpit){
+  let width=0,height=0,reduced=false;
+  return {get reduced(){return reduced;},reduceResolution(){if(reduced)return;reduced=true;renderer.setPixelRatio(Math.max(.6,basePixelRatio*.7));width=height=0;},render(s,cockpit){
     const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;if(w!==width||h!==height){width=w;height=h;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
     const px=center(s.distance)+s.position*4.8,pz=-s.distance;
     player.position.set(px,0,pz);player.rotation.y=angle(s.distance)-s.steering*.10;player.visible=!cockpit;
     wheelGroups.forEach(wheel=>{wheel.rotation.x=-s.distance/.36;});
-    cars.forEach(({id,object})=>{const car=s.traffic.find(c=>c.id===id);if(!car)return;object.visible=car.z>s.distance-25&&car.z<s.distance+280;object.position.set(center(car.z)+car.lane*4.8,0,-car.z);object.rotation.y=angle(car.z);});
+    cars.forEach(({id,object},i)=>{const car=s.traffic[i]?.id===id?s.traffic[i]:s.traffic.find(c=>c.id===id);if(!car)return;object.visible=car.z>s.distance-25&&car.z<s.distance+280;object.position.set(center(car.z)+car.lane*4.8,0,-car.z);object.rotation.y=angle(car.z);});
     if(cockpit){camera.position.set(px,1.9,pz-.25);camera.lookAt(center(s.distance+40)+s.position*3,1.4,pz-40);}else{camera.position.set(px*.6+center(s.distance)*.4,5.1,pz+10);camera.lookAt(center(s.distance+30)+s.position*1.8,1.1,pz-30);}
     sun.position.set(px+30,55,pz+25);sun.target.position.set(px,0,pz-25);headlights.position.set(px,1,pz-1.8);headlights.target.position.set(center(s.distance+30)+s.position*4.8,.1,pz-35);
     renderer.render(scene,camera);

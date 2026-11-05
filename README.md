@@ -46,6 +46,12 @@ Online note JSON is extracted from the existing DOCX guides; it does not introdu
 - Electrical: an interactive series/parallel circuit workbench, virtual voltage probes, branch readings, three experiments with verification and downloadable observations. Nine battery-appliance cases retain simulated diagnostics and locally saved completion. It does not teach mains repair.
 - PDF decoder: PDF.js extracts searchable text locally. The decoder selects key source sentences, finds terms in context and builds cloze recall cards with page numbers. Outputs can be added to existing notebooks or downloaded as text. It is extractive summarization, not generative AI, and does not perform OCR. Limits: 25 MB, 250 pages, 2 million extracted characters.
 
+- Reliability: each heavy lab (driving, coding, PDF decoder, question bank, skills, electrical) sits in its own error boundary, so a crash shows a *Try again* panel instead of blanking the page; route and root-layout failures have their own recovery screens. Errors are logged to the browser console with a lab name for debugging.
+
+Driving physics runs in fixed 1/60 s steps, so a 15 fps phone and a 60 fps laptop drive the same course; very long frames (a stalled tab) are not caught up. The interface re-renders only while the car moves. If the 3D view runs below about 22 fps for two seconds, it lowers its resolution once instead of stuttering. Keyboard: Enter starts or resumes, P pauses.
+
+The PDF decoder checks the file header before loading PDF.js, explains damaged, empty, wrong-password and engine-loading failures in plain language, and offers *Try again with this password* without re-selecting the file. After first use, the PDF.js worker and font data are kept by the offline worker, so decoding also works offline. Saved browser data is read from a small in-memory cache instead of localStorage on every render, and downloads stay available for a minute so slower phones and Safari finish saving.
+
 `predev` and `prebuild` copy PDF.js worker, character maps and font assets from the installed package to `public/pdfjs`. These generated assets are ignored by Git and ESLint and must be regenerated when the dependency changes. Run the npm scripts rather than invoking `next build` directly.
 
 ## Using a student's own AI

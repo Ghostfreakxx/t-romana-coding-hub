@@ -38,7 +38,7 @@ export default function DrivingSimulator(){
   const fallbackCanvas=useRef<HTMLCanvasElement>(null),canvas=useRef<HTMLCanvasElement>(null),stage=useRef<HTMLDivElement>(null);
   const game=useRef(newDrive()),keys=useRef(new Set<string>()),touches=useRef(new Map<number,string>()),steering=useRef(0),scene=useRef<DrivingScene|null>(null),cockpitRef=useRef(false),qualityRef=useRef("balanced");
   const [display,setDisplay]=useState(newDrive),[expanded,setExpanded]=useState(false),[weather,setWeather]=useState<Weather>("day"),[course,setCourse]=useState<Course>("hills"),[quality,setQuality]=useState("balanced"),[graphics,setGraphics]=useState("Loading 3D scene"),[cockpit,setCockpit]=useState(false);
-  const [savedRun,setSavedRun]=useState(false),best=useSaved("driving-best",EMPTY_BEST,validBest);
+  const [savedRun,setSavedRun]=useState(false),[reduced,setReduced]=useState(false),best=useSaved("driving-best",EMPTY_BEST,validBest);
   useEffect(()=>{
     let disposed=false;
     const surface=canvas.current;
@@ -46,27 +46,46 @@ export default function DrivingSimulator(){
     surface?.addEventListener("webglcontextlost",lost);
     import("@/lib/driving-scene").then(({createDrivingScene})=>{
       if(disposed||!canvas.current)return;
-      try{scene.current=createDrivingScene(canvas.current,game.current,quality==="high");setGraphics("3D active");}
-      catch{setGraphics("2D compatibility mode");}
+      try{scene.current=createDrivingScene(canvas.current,game.current,quality==="high");setReduced(false);setGraphics("3D active");}
+      catch(error){console.warn("3D driving scene unavailable; using the 2D view.",error);setGraphics("2D compatibility mode");}
     }).catch(()=>{if(!disposed)setGraphics("2D compatibility mode");});
     return()=>{disposed=true;surface?.removeEventListener("webglcontextlost",lost);scene.current?.dispose();scene.current=null;};
   },[weather,course,quality]);
   useEffect(()=>{
-    let frame=0,previous=0,lastUpdate=0,lastPaint=0;
+    let frame=0,previous=0,lastUpdate=0,lastPaint=0,wasRunning=false,slowFrames=0,sampledFrames=0;
     const clear=()=>{keys.current.clear();touches.current.clear();steering.current=0;game.current.running=false;};
+    const publish=()=>setDisplay({...game.current,checkpoints:game.current.checkpoints.map(c=>({...c}))});
     const tick=(now:number)=>{
       const held=new Set([...keys.current,...touches.current.values()]);
-      stepDrive(game.current,previous?(now-previous)/1000:0,{throttle:held.has("accelerate"),brake:held.has("brake"),steer:steering.current||Number(held.has("right"))-Number(held.has("left"))});previous=now;
-      if(now-lastPaint>=(game.current.running?(qualityRef.current==="high"?16:32):160)){
+      const elapsed=previous?(now-previous)/1000:0;previous=now;
+      stepDrive(game.current,elapsed,{throttle:held.has("accelerate"),brake:held.has("brake"),steer:steering.current||Number(held.has("right"))-Number(held.has("left"))});
+      const running=game.current.running;
+      // Paused courses repaint rarely; there is nothing moving to draw.
+      if(now-lastPaint>=(running?(qualityRef.current==="high"?16:32):400)){
       lastPaint=now;
-      if(scene.current){try{scene.current.render(game.current,cockpitRef.current);}catch{scene.current.dispose();scene.current=null;setGraphics("2D compatibility mode");}}
+      if(scene.current){
+        try{scene.current.render(game.current,cockpitRef.current);}
+        catch(error){console.warn("3D driving scene stopped; using the 2D view.",error);scene.current.dispose();scene.current=null;setGraphics("2D compatibility mode");}
+        // Slow GPU: after about two seconds of sluggish frames, draw fewer pixels instead of stuttering.
+        if(running&&scene.current&&!scene.current.reduced&&elapsed>0&&elapsed<1){sampledFrames++;if(elapsed>.045)slowFrames++;if(sampledFrames>=60){if(slowFrames>sampledFrames*.6){scene.current.reduceResolution();setReduced(true);}sampledFrames=slowFrames=0;}}
+      }
       else{const el=fallbackCanvas.current,box=stage.current;if(el&&box){const w=Math.round(box.clientWidth),h=Math.round(box.clientHeight),ratio=Math.min(window.devicePixelRatio||1,1.5);if(w&&h){if(el.width!==Math.round(w*ratio)||el.height!==Math.round(h*ratio)){el.width=Math.round(w*ratio);el.height=Math.round(h*ratio);}const ctx=el.getContext("2d");if(ctx){ctx.setTransform(ratio,0,0,ratio,0,0);paint(ctx,game.current,w,h);}}}}
       }
-      if(now-lastUpdate>100){setDisplay({...game.current,checkpoints:game.current.checkpoints.map(c=>({...c}))});lastUpdate=now;}frame=requestAnimationFrame(tick);
+      // React only re-renders while the car moves, plus once when it stops, instead of ten times a second forever.
+      if((running||wasRunning)&&now-lastUpdate>100){publish();lastUpdate=now;wasRunning=running;}
+      frame=requestAnimationFrame(tick);
     };
     const mapping:Record<string,string>={ArrowUp:"accelerate",w:"accelerate",ArrowDown:"brake",s:"brake"," ":"brake",ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right"};
-    const down=(e:KeyboardEvent)=>{if(!game.current.running||(e.target as HTMLElement).isContentEditable||e.altKey||e.ctrlKey||e.metaKey||["INPUT","TEXTAREA","SELECT"].includes((e.target as HTMLElement).tagName))return;if((e.target as HTMLElement).tagName==="BUTTON"&&e.key===" ")return;const action=mapping[e.key]??mapping[e.key.toLowerCase()];if(action){e.preventDefault();keys.current.add(action);}};
-    const up=(e:KeyboardEvent)=>{const action=mapping[e.key]??mapping[e.key.toLowerCase()];if(action)keys.current.delete(action);};const hidden=()=>{if(document.hidden)clear();};
+    const editing=(target:HTMLElement)=>target.isContentEditable||["INPUT","TEXTAREA","SELECT"].includes(target.tagName);
+    const down=(e:KeyboardEvent)=>{
+      const target=e.target as HTMLElement;if(editing(target)||e.altKey||e.ctrlKey||e.metaKey)return;
+      const key=e.key.toLowerCase();
+      // Enter starts or resumes; P pauses. Buttons and links keep their own Enter behaviour.
+      if(key==="enter"&&!game.current.running&&!["BUTTON","A"].includes(target.tagName)&&stage.current?.isConnected){e.preventDefault();if(game.current.finished){game.current=newDrive(game.current.weather,game.current.course);setSavedRun(false);}game.current.running=true;previous=0;publish();return;}
+      if(key==="p"&&!e.repeat&&!game.current.finished){game.current.running=!game.current.running;keys.current.clear();previous=0;publish();return;}
+      if(!game.current.running)return;
+      if(target.tagName==="BUTTON"&&e.key===" ")return;const action=mapping[e.key]??mapping[key];if(action){e.preventDefault();keys.current.add(action);}};
+    const up=(e:KeyboardEvent)=>{const action=mapping[e.key]??mapping[e.key.toLowerCase()];if(action)keys.current.delete(action);};const hidden=()=>{if(document.hidden){clear();previous=0;}};
     window.addEventListener("keydown",down);window.addEventListener("keyup",up);window.addEventListener("blur",clear);document.addEventListener("visibilitychange",hidden);frame=requestAnimationFrame(tick);
     return()=>{cancelAnimationFrame(frame);window.removeEventListener("keydown",down);window.removeEventListener("keyup",up);window.removeEventListener("blur",clear);document.removeEventListener("visibilitychange",hidden);};
   },[]);
@@ -81,7 +100,7 @@ export default function DrivingSimulator(){
   return <section className={`panel driving-simulator driving-v3 ${expanded?"drive-expanded":""}`} aria-label="Mobile driving simulator">
     <div className="row between"><div><p className="eyebrow">Driving / interactive course</p><h2>The road is your classroom.</h2></div><button className="btn secondary" onClick={()=>setExpanded(!expanded)}>{expanded?"Close full view":"Full view"}</button></div>
     <div className="drive-route-select">{(Object.entries(COURSES) as [Course,typeof COURSES.hills][]).map(([id,data])=><button key={id} aria-pressed={course===id} onClick={()=>{if(id!==course)setGraphics("Loading 3D scene");setCourse(id);reset(weather,id);}}><RouteArt town={id==="town"} training={id==="training"}/><strong>{data.title}</strong><small>{data.description}</small></button>)}</div>
-    <div className="row drive-settings"><label>Weather <select value={weather} onChange={e=>{const value=e.target.value as Weather;setGraphics("Loading 3D scene");setWeather(value);reset(value);}}><option value="day">Daylight</option><option value="rain">Rain</option><option value="night">Night</option></select></label><label>Graphics <select value={quality} onChange={e=>{game.current.running=false;setGraphics("Loading 3D scene");qualityRef.current=e.target.value;setQuality(e.target.value);}}><option value="balanced">Balanced / mobile</option><option value="high">Detailed / shadows</option></select></label><button className="btn secondary" disabled={graphics!=="3D active"} onClick={()=>{cockpitRef.current=!cockpit;setCockpit(!cockpit);}}>{cockpit?"Chase camera":"Driver camera"}</button><span className="small muted">{graphics}</span></div>
+    <div className="row drive-settings"><label>Weather <select value={weather} onChange={e=>{const value=e.target.value as Weather;setGraphics("Loading 3D scene");setWeather(value);reset(value);}}><option value="day">Daylight</option><option value="rain">Rain</option><option value="night">Night</option></select></label><label>Graphics <select value={quality} onChange={e=>{game.current.running=false;setGraphics("Loading 3D scene");qualityRef.current=e.target.value;setQuality(e.target.value);}}><option value="balanced">Balanced / mobile</option><option value="high">Detailed / shadows</option></select></label><button className="btn secondary" disabled={graphics!=="3D active"} onClick={()=>{cockpitRef.current=!cockpit;setCockpit(!cockpit);}}>{cockpit?"Chase camera":"Driver camera"}</button><span className="small muted">{graphics}{reduced&&graphics==="3D active"?" · lower resolution for smoother driving":""}</span></div>
     <div className="drive-stage" ref={stage}><canvas ref={fallbackCanvas} style={{visibility:graphics==="3D active"?"hidden":"visible"}} aria-label="Compatibility driving view" role="img"/><canvas key={`${quality}-${course}-${weather}`} ref={canvas} style={{visibility:graphics==="3D active"?"visible":"hidden"}} aria-label="3D road, moving traffic and your car" role="img" onContextMenu={e=>e.preventDefault()}/>
       <div className="drive-hud"><div className="speed-dial" style={{"--speed":`${Math.min(100,display.speed/90*100)}%`} as React.CSSProperties}><strong>{Math.round(display.speed)}</strong><small>km/h</small></div><div><strong>{Math.round(display.score)}</strong><small>control score</small></div><div><strong>{speedLimit(weather,display.distance,course)}</strong><small>course limit</small></div></div>
       <div className="drive-nav"><span>{next?next.kind==="stop"?"STOP":"SLOW":"FINISH"}</span><div><strong>{next?next.label:"Complete the route"}</strong><small>{next?`${gap} m ahead`:`${Math.max(0,Math.round(ROUTE_LENGTH-display.distance))} m remaining`}</small></div></div>
@@ -92,6 +111,6 @@ export default function DrivingSimulator(){
     </div>
     <div className="row between drive-footer"><span>{Math.floor(display.distance)} / {ROUTE_LENGTH} m · {display.hits} collisions</span><div className="row"><button className="btn secondary" onClick={()=>{game.current.running=!game.current.running&&!game.current.finished;keys.current.clear();touches.current.clear();steering.current=0;setDisplay({...game.current});}} disabled={display.finished}>{display.running?"Pause":"Resume"}</button><button className="btn secondary" onClick={()=>reset()}>Restart</button></div></div><progress max={ROUTE_LENGTH} value={display.distance} aria-label="Route progress"/>
     <p className="drive-coach" role="status">{hint}</p><div className="drive-debrief"><div><h3>Your checkpoints</h3>{display.checkpoints.map(c=><p key={c.id}><span className={c.success?"checkpoint-success":c.passed?"checkpoint-missed":""}>{c.passed?c.success?"✓":"!":"○"}</span> {c.label} · {c.distance} m <small>{c.passed?c.success?"completed":"missed":c.kind==="stop"?"full stop for 1 second":`≤ ${c.limit} km/h`}</small></p>)}</div><div><h3>Understand this drive</h3><p>Time above limit: <strong>{display.speeding.toFixed(1)} s</strong></p><p>Time on verge: <strong>{display.offRoad.toFixed(1)} s</strong></p><p>Last full braking distance: <strong>{display.stoppingDistance===null?"Try braking to a stop":`${display.stoppingDistance.toFixed(1)} m`}</strong></p><p>Best saved score ({course}, {weather}): <strong>{best.value[`${course}:${weather}`]??"—"}</strong></p>{display.finished&&<button className="btn" disabled={savedRun} onClick={()=>{const key=`${course}:${weather}`;best.setValue({...best.value,[key]:Math.max(best.value[key]??0,Math.round(display.score))});setSavedRun(true);}}>{savedRun?"Run saved":"Save my result"}</button>}</div></div>
-    <p className="small muted">Keyboard: arrows or W A S D; Space brakes. Weather changes reset the course. Rain reduces braking in this simplified model. Switching tabs pauses the game. This is an arcade simulation, not real vehicle physics or a driving qualification.</p>{best.error&&<p role="alert">{best.error}</p>}
+    <p className="small muted">Keyboard: Enter starts, P pauses, arrows or W A S D steer and drive; Space brakes. Weather changes reset the course. Rain reduces braking in this simplified model. Switching tabs pauses the game. This is an arcade simulation, not real vehicle physics or a driving qualification.</p>{best.error&&<p role="alert">{best.error}</p>}
   </section>;
 }

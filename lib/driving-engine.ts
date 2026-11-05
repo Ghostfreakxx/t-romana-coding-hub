@@ -18,9 +18,18 @@ export function newDrive(weather: Weather = "day", course: Course = "hills"): Dr
     checkpoints:events.map((e,i)=>({...e,id:String(i),passed:false,success:false,hold:0})),
     traffic:Array.from({length:course==="training"?5:12},(_,id)=>({id,z:110+id*105,lane:[0,.58,-.58][id%3],speed:18+id%4*5,hit:false,passed:false})) };
 }
-export function stepDrive(s:DriveState,seconds:number,input:{throttle:boolean;brake:boolean;steer:number}) {
-  if(!s.running||s.finished)return;
-  const dt=clamp(seconds,0,.05),before=s.distance;
+export type DriveInput = {throttle:boolean;brake:boolean;steer:number};
+/** Largest physics step. Longer frames are split so slow phones simulate the same course as fast ones. */
+export const MAX_STEP = 1/60;
+/** Frames longer than this (a stalled tab or debugger pause) are not caught up, so the car never jumps. */
+export const MAX_FRAME = .25;
+export function stepDrive(s:DriveState,seconds:number,input:DriveInput) {
+  if(!s.running||s.finished||!Number.isFinite(seconds))return;
+  let remaining=clamp(seconds,0,MAX_FRAME);
+  while(remaining>1e-6&&s.running&&!s.finished){const dt=Math.min(remaining,MAX_STEP);remaining-=dt;advance(s,dt,input);}
+}
+function advance(s:DriveState,dt:number,input:DriveInput) {
+  const before=s.distance;
   s.elapsed+=dt;
   s.steering+=(clamp(input.steer,-1,1)-s.steering)*Math.min(1,dt*7);
   if(input.brake&&s.speed>5&&s.brakeStart===null)s.brakeStart=s.distance;

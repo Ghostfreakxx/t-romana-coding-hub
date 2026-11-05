@@ -38,16 +38,23 @@ export function NotesSearch({ department }: { department: string }) {
     let cancelled = false;
     (async () => {
       const texts: FullText = {};
-      for (const [position, note] of noteResources.entries()) {
-        if (cancelled) return;
-        setLoadingFull(`Loading guide ${position + 1} of ${noteResources.length}…`);
-        try {
-          const response = await fetch(`/notes/read/${note.id}.json`);
-          if (!response.ok) continue;
-          const guide = await response.json() as { sections: { id: string; blocks: { type: string; text?: string; rows?: string[][] }[] }[] };
-          for (const section of guide.sections) texts[`${note.id}:${section.id}`] = section.blocks.map(block => block.text ?? block.rows?.flat().join(" ") ?? "").join(" ").toLowerCase();
-        } catch { /* Skip a guide that cannot load; the rest stay searchable. */ }
-      }
+      let next = 0, done = 0;
+      setLoadingFull(`Loading guides 0 of ${noteResources.length}…`);
+      // A few guides at a time: much faster than one by one, without flooding a phone connection.
+      const worker = async () => {
+        while (!cancelled && next < noteResources.length) {
+          const note = noteResources[next++];
+          try {
+            const response = await fetch(`/notes/read/${note.id}.json`);
+            if (response.ok) {
+              const guide = await response.json() as { sections: { id: string; blocks: { type: string; text?: string; rows?: string[][] }[] }[] };
+              for (const section of guide.sections) texts[`${note.id}:${section.id}`] = section.blocks.map(block => block.text ?? block.rows?.flat().join(" ") ?? "").join(" ").toLowerCase();
+            }
+          } catch { /* Skip a guide that cannot load; the rest stay searchable. */ }
+          if (!cancelled) setLoadingFull(`Loading guides ${++done} of ${noteResources.length}…`);
+        }
+      };
+      await Promise.all(Array.from({ length: 4 }, worker));
       if (!cancelled) { setFull(texts); setLoadingFull(""); }
     })();
     return () => { cancelled = true; };

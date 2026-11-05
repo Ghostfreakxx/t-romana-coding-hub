@@ -51,7 +51,9 @@ assert.equal(await dispatch("fetch",{request:request("/skills?_rsc=abc",{headers
 assert.equal(await dispatch("fetch",{request:request("https://other.test/script.js")}),undefined,"External traffic is untouched");
 assert.equal(await dispatch("fetch",{request:request("/api/private")}),undefined,"API responses are never cached");
 assert.equal(await dispatch("fetch",{request:request("/coding",{method:"POST"})}),undefined,"Mutations are untouched");
+await dispatch("fetch",{request:request("/pdfjs/pdf.worker.min.mjs")});
 online=false;
+assert.equal(await (await dispatch("fetch",{request:request("/pdfjs/pdf.worker.min.mjs")})).text(),html,"The PDF engine works offline after first use");
 assert.ok((await (await dispatch("fetch",{request:request("/skills",{mode:"navigate"})})).text()).includes("Loaded page"),"Visited page opens during an outage");
 assert.equal(await (await dispatch("fetch",{request:request("/electrical",{mode:"navigate"})})).text(),"Offline fallback","Unvisited page gets the offline guide");
 assert.equal(await (await dispatch("fetch",{request:request("/",{mode:"navigate"})})).text(),html,"Home is available after installation");
@@ -63,4 +65,4 @@ await dispatch("message",{data:{type:"SKIP_WAITING"}});assert.equal(skipped,1,"U
 for(const [name,size] of [["trc-192.png",192],["trc-512.png",512],["trc-maskable-512.png",512],["trc-apple-180.png",180]]){
   const meta=await sharp(new URL(`../public/icons/${name}`,import.meta.url).pathname).metadata();assert.equal(meta.width,size);assert.equal(meta.height,size);assert.equal(meta.format,"png");
 }
-console.log("PWA checks passed: offline navigation, asset caching, RSC isolation, error recovery, explicit updates and college icons.");
+console.log("PWA checks passed: offline navigation, asset caching, RSC isolation, error recovery, explicit updates, offline PDF engine and college icons.");

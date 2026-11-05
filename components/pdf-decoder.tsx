@@ -4,15 +4,31 @@ import { decodeStudy, type SourcePage } from "@/lib/study-decoder";
 import { download } from "@/lib/storage";
 import type { PDFDocumentLoadingTask } from "pdfjs-dist";
 
+/** Plain-language messages for the errors PDF.js reports by name. */
+function explain(error: unknown) {
+  const name = error instanceof Error ? error.name : "", message = error instanceof Error ? error.message : "";
+  // PDF.js uses code 2 for a wrong password and 1 when none was given.
+  if (name === "PasswordException") return { text: (error as { code?: number }).code === 2 ? "That password is not correct. Check it and try again." : "This PDF needs a password. Enter it below and press Try again.", password: true };
+  if (name === "InvalidPDFException" || name === "FormatError") return { text: "This file is damaged or is not a real PDF. Download it again or export a fresh copy.", password: false };
+  if (name === "MissingPDFException" || name === "UnexpectedResponseException") return { text: "The PDF could not be opened. Choose the file again.", password: false };
+  if (/worker|dynamically imported module|chunk/i.test(message)) return { text: "The PDF reader could not start. Reconnect to the internet and reload this page once, then try again.", password: false };
+  return { text: message || "Could not read this PDF. Try a searchable PDF or a smaller file.", password: false };
+}
+
 export default function PdfDecoder({ onNotes, onCards }: { onNotes: (notes:string)=>void; onCards:(cards:{front:string;back:string}[])=>number }) {
   const [pages,setPages]=useState<SourcePage[]>([]),[name,setName]=useState(""),[status,setStatus]=useState(""),[busy,setBusy]=useState(false),[progress,setProgress]=useState(0),[focus,setFocus]=useState(""),[length,setLength]=useState(12),[first,setFirst]=useState(1),[last,setLast]=useState(1),[page,setPage]=useState(1),[password,setPassword]=useState("");
   const [result,setResult]=useState<ReturnType<typeof decodeStudy>|null>(null);
-  const task=useRef<PDFDocumentLoadingTask|null>(null),request=useRef(0);
+  const task=useRef<PDFDocumentLoadingTask|null>(null),request=useRef(0),lastFile=useRef<File|null>(null);
+  const [needsPassword,setNeedsPassword]=useState(false);
   useEffect(()=>()=>{request.current++;void task.current?.destroy();},[]);
   async function read(file?:File){
-    if(!file)return;const id=++request.current;void task.current?.destroy();setResult(null);setPages([]);setProgress(0);setBusy(true);setName(file.name);setStatus("Opening PDF on this device…");
+    if(!file)return;const id=++request.current;void task.current?.destroy();task.current=null;lastFile.current=file;setNeedsPassword(false);setResult(null);setPages([]);setProgress(0);setBusy(true);setName(file.name);setStatus("Opening PDF on this device…");
     try{
+      if(!file.size)throw Error("This file is empty. Choose the PDF again.");
       if(file.size>25*1024*1024)throw Error("Choose a PDF smaller than 25 MB.");
+      // Reject Word files, images and renamed downloads before loading the PDF engine.
+      if(!(await file.slice(0,1024).text()).includes("%PDF-"))throw Error("This file does not look like a PDF. Choose a .pdf file, or export your document as PDF first.");
+      if(id!==request.current)return;
       const pdfjs=await import("pdfjs-dist");
       if(id!==request.current)return;
       pdfjs.GlobalWorkerOptions.workerSrc="/pdfjs/pdf.worker.min.mjs";
@@ -26,19 +42,20 @@ export default function PdfDecoder({ onNotes, onCards }: { onNotes: (notes:strin
         const pdfPage=await document.getPage(n),content=await pdfPage.getTextContent();
         const text=content.items.map(item=>"str" in item?item.str+(item.hasEOL?"\n":" "):"").join("").trim();chars+=text.length;
         if(chars>2_000_000)throw Error("This PDF contains too much text for this browser workspace. Use a smaller chapter.");
-        extracted.push({page:n,text});pdfPage.cleanup();setProgress(Math.round(n/document.numPages*100));setStatus(`Reading page ${n} of ${document.numPages}…`);
+        extracted.push({page:n,text});pdfPage.cleanup();
+      if(n===document.numPages||n%5===0){setProgress(Math.round(n/document.numPages*100));setStatus(`Reading page ${n} of ${document.numPages}…`);}
       }
       if(id!==request.current)return;
       setPages(extracted);setFirst(1);setLast(extracted.length);setPage(1);
       const blank=extracted.filter(p=>p.text.length<30).length;
       setStatus(blank===extracted.length?"No readable text found. This may be a scanned PDF. Run OCR (text recognition) first, then upload the searchable PDF.":`Extracted ${extracted.length} pages.${blank?` ${blank} pages have little or no text and may need OCR.`:""} Choose a page range and build your study notes.`);
-      await loading.destroy();task.current=null;
-    }catch(error){if(id===request.current){setStatus(error instanceof Error?(error.name==="PasswordException"?"This PDF needs a password. Enter it below and select the file again.":error.message):"Could not read this PDF. Try a searchable PDF or a smaller file.");void task.current?.destroy();task.current=null;}}
+      await loading.destroy();task.current=null;lastFile.current=null;
+    }catch(error){if(id===request.current){const problem=explain(error);if(!problem.password)console.warn("PDF decoder:",error);setStatus(problem.text);setNeedsPassword(problem.password);void task.current?.destroy();task.current=null;}}
     finally{if(id===request.current)setBusy(false);}
   }
   const summaryText=result?`${name}\nPages ${first}–${last}\n\nKEY POINTS\n${result.summary.map(s=>`• ${s.text} [p. ${s.page}]`).join("\n\n")}\n\nKEY TERMS\n${result.terms.map(t=>`${t.term}: ${t.source?.text} [p. ${t.source?.page}]`).join("\n\n")}`:"";
   return <section className="panel pdf-decoder"><div className="decoder-heading"><div><p className="eyebrow">PDF decoder</p><h2>Turn a chapter into a study pack</h2><p>Extract text, select key points, collect terms and create recall cards with page references.</p></div><span className="tag">ON YOUR DEVICE</span></div>
-    <div className="decoder-upload"><label htmlFor="decode-file">Choose a PDF · up to 25 MB / 250 pages</label><input id="decode-file" type="file" accept=".pdf,application/pdf" onChange={e=>{void read(e.target.files?.[0]);e.target.value="";}}/><details><summary>Password-protected PDF?</summary><label htmlFor="pdf-password">Document password (optional)</label><input id="pdf-password" type="password" autoComplete="off" value={password} onChange={e=>setPassword(e.target.value)}/></details></div>
+    <div className="decoder-upload"><label htmlFor="decode-file">Choose a PDF · up to 25 MB / 250 pages</label><input id="decode-file" type="file" accept=".pdf,application/pdf" onChange={e=>{void read(e.target.files?.[0]);e.target.value="";}}/><details open={needsPassword||undefined}><summary>Password-protected PDF?</summary><label htmlFor="pdf-password">Document password (optional)</label><input id="pdf-password" type="password" autoComplete="off" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&needsPassword&&password){e.preventDefault();void read(lastFile.current??undefined);}}}/>{needsPassword&&<button className="btn section-gap" disabled={busy||!password} onClick={()=>void read(lastFile.current??undefined)}>Try again with this password</button>}</details></div>
     {busy&&<div className="row"><progress value={progress} max={100} aria-label="PDF extraction progress"/><button className="btn secondary" onClick={()=>{request.current++;void task.current?.destroy();task.current=null;setBusy(false);setStatus("Extraction cancelled. Choose a PDF to start again.");}}>Cancel</button></div>}
     <p role="status" className="notice">{status||"Your PDF and password stay in this browser. Scanned images need OCR before this tool can extract their words."}</p>
     {pages.length>0&&<><div className="decoder-options"><label>From page<input type="number" min={1} max={pages.length} value={first} onChange={e=>{setFirst(Number(e.target.value));setResult(null);}}/></label><label>To page<input type="number" min={1} max={pages.length} value={last} onChange={e=>{setLast(Number(e.target.value));setResult(null);}}/></label><label>Summary length<select value={length} onChange={e=>{setLength(Number(e.target.value));setResult(null);}}><option value={6}>Brief · 6 points</option><option value={12}>Standard · 12 points</option><option value={24}>Detailed · 24 points</option></select></label></div><label htmlFor="decoder-focus">Focus on a topic (optional)</label><input id="decoder-focus" placeholder="For example: liberty or democracy" value={focus} maxLength={200} onChange={e=>{setFocus(e.target.value);setResult(null);}}/><button className="btn section-gap" disabled={busy||!Number.isInteger(first)||!Number.isInteger(last)||first<1||last<first||last>pages.length} onClick={()=>{const built=decodeStudy(pages.filter(p=>p.page>=first&&p.page<=last),length,focus);setResult(built);setStatus(built.summary.length?"Study pack ready. Review the extracted points against the source before using them.":"No suitable passages found. Try a wider page range, a different topic, or check the extracted text.");}}>Build study pack</button>
