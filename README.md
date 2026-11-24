@@ -11,6 +11,9 @@ T. Romana Skills Hub is a browser-first learning site for Govt. T. Romana Colleg
 - Official syllabus PDFs supplied for Political Science, Sociology, Public Administration, History, English, Education and VAC.
 - PDF Study Lab with local-only PDF reading, notebook saving, revision cards and backups.
 - Reasoning, Basic Skills, Driving and Electrical learning paths with practice questions and explanations.
+- Site-wide search (press `/` or Ctrl/Cmd+K, or tap Search) across labs, lessons, MZU courses, question-bank papers, guides and every note topic. Results link straight to the course, paper or note section.
+- A study streak on the home page and a 20-week study calendar on My progress. A day counts when the student saves something on the hub (a revised topic, lesson, quiz, project or note); opening pages or changing reader settings does not count.
+- A compact menu on phones instead of a sideways-scrolling link strip.
 - Browser-only progress tracking with downloadable backups. No account or server database is required.
 
 ## Run locally
