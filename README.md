@@ -9,8 +9,8 @@ T. Romana Skills Hub is a browser-first learning site for Govt. T. Romana Colleg
 - Notes Library with the prepared TRC Batch 1, Batch 2, Batch 3 and VAC DOCX guides.
 - Read all 24 guides inside the College Hub or on individual guide pages, with topic search, short/long note filters and optional downloads.
 - Official syllabus PDFs supplied for Political Science, Sociology, Public Administration, History, English, Education and VAC.
-- PDF Study Lab with local-only PDF reading, notebook saving, revision cards and backups.
-- Reasoning, Basic Skills, Driving and Electrical learning paths with practice questions and explanations.
+- PDF Study Lab with local-only PDF reading, notebook saving, revision cards with spaced-repetition review (cards return after 1, 3, 7, 14, 30 and 60 days; forgotten cards return the same day), a Pomodoro focus timer and backups.
+- Reasoning, Basic Skills, Driving and Electrical learning paths with practice questions and explanations. The Reasoning gym also generates unlimited questions across ten aptitude topics with worked answers, a timed 10-question speed round and saved per-topic accuracy.
 - Site-wide search (press `/` or Ctrl/Cmd+K, or tap Search) across labs, lessons, MZU courses, question-bank papers, guides and every note topic. Results link straight to the course, paper or note section.
 - A study streak on the home page and a 20-week study calendar on My progress. A day counts when the student saves something on the hub (a revised topic, lesson, quiz, project or note); opening pages or changing reader settings does not count.
 - A compact menu on phones instead of a sideways-scrolling link strip.

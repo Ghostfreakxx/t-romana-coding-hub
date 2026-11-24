@@ -7,7 +7,7 @@ import ts from 'typescript';
 
 const dir = await mkdtemp(join(tmpdir(), 'trc-lab-tests-'));
 try {
-  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice']) {
+  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice', 'reasoning-gen', 'spaced']) {
     const input = await readFile(new URL(`../lib/${name}.ts`, import.meta.url), 'utf8');
     const result = ts.transpileModule(input, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } });
     await writeFile(join(dir, `${name}.js`), result.outputText);
@@ -36,6 +36,19 @@ try {
   assert.equal(drive.tailgating,0,'A three-second gap is safe');
   const wet=newDrive('rain'),dry=newDrive('day');wet.running=dry.running=true;wet.speed=dry.speed=40;stepDrive(wet,.05,{...idle,brake:true});stepDrive(dry,.05,{...idle,brake:true});assert.ok(wet.speed>dry.speed,'Wet course has reduced braking');
 
+  const { generate, GEN_TOPICS, seeded } = require('./reasoning-gen');
+  for (const topic of GEN_TOPICS) { const rng = seeded(topic.length * 97); for (let i = 0; i < 2000; i++) { const g = generate(topic, rng);
+    assert.equal(g.options.length, 4, `${topic}: four options`); assert.equal(new Set(g.options).size, 4, `${topic}: distinct options ${g.options}`);
+    assert.ok(g.answer >= 0 && g.answer < 4, `${topic}: answer index`); assert.ok(!/NaN|undefined|Infinity/.test(g.prompt + g.options.join() + g.explanation), `${topic}: clean text ${g.prompt} ${g.options}`); } }
+  { const r = seeded(1); for (let i = 0; i < 300; i++) { const g = generate('Percentages', r); const m = /What is (\d+)% of (\d+)\?/.exec(g.prompt); if (m) assert.equal(Number(g.options[g.answer]), m[1] * m[2] / 100); } }
+  { const r = seeded(2); for (let i = 0; i < 300; i++) { const g = generate('Ranking', r); const [, f, b] = /(\d+)th from the front and (\d+)th/.exec(g.prompt); assert.equal(Number(g.options[g.answer]), +f + +b - 1); } }
+  const { schedule, isDue, addDays } = require('./spaced');
+  assert.equal(addDays('2026-12-31', 1), '2027-01-01'); assert.equal(addDays('2028-02-28', 1), '2028-02-29');
+  let card = { id: 'c' }; assert.ok(isDue(card, '2026-01-01'), 'New cards are due');
+  card = schedule(card, 'good', '2026-01-01'); assert.equal(card.box, 1); assert.equal(card.due, '2026-01-02'); assert.ok(!isDue(card, '2026-01-01'));
+  card = schedule(card, 'easy', '2026-01-02'); assert.equal(card.box, 3); assert.equal(card.due, '2026-01-09');
+  card = schedule(card, 'again', '2026-01-09'); assert.equal(card.box, 0); assert.ok(isDue(card, '2026-01-09'), 'Forgotten cards come back today');
+  assert.equal(schedule({ box: 6 }, 'easy', '2026-01-01').box, 6, 'Box is capped');
   const { circuitReadings } = require('./circuit-engine');
   const { resistorBands, bandsToOhms, formatOhms, predictAnswer, predictionCorrect } = require('./circuit-engine');
   assert.deepEqual(resistorBands(470),[4,7,1],'470 Ω is yellow-violet-brown');assert.deepEqual(resistorBands(10),[1,0,0]);assert.deepEqual(resistorBands(2200),[2,2,2]);
@@ -62,5 +75,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, spreadsheet formulas, typing metrics, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }
