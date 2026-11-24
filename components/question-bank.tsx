@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { download } from "@/lib/storage";
+import { PracticeTest, preparedCount, QuestionTools, SubjectSearch, useNoteEntries, usePrepared } from "./qb-extras";
 
 type GroupSummary = { id: string; title: string; semesters: number[]; exams: string[]; repeated: number };
 type DeptSummary = { dept: string; name: string; papers: number; groups: GroupSummary[] };
@@ -83,7 +84,8 @@ export default function QuestionBank() {
   const [dept, setDept] = useState<Dept | null>(null);
   const [semester, setSemester] = useState<number | "all">("all");
   const [groupId, setGroupId] = useState("");
-  const [view, setView] = useState<"guess" | "repeated" | "papers">("guess");
+  const [view, setView] = useState<"guess" | "repeated" | "papers" | "practice">("guess");
+  const prepared = usePrepared(), entries = useNoteEntries();
   const [examIndex, setExamIndex] = useState(0);
   const [showObjective, setShowObjective] = useState(false);
 
@@ -139,6 +141,7 @@ export default function QuestionBank() {
         <button className="btn secondary" disabled={!dept || dept.dept !== deptId} onClick={() => dept && download(`${dept.dept}-${semester === "all" ? "all" : `sem-${semester}`}-guess-paper-${NEXT_EXAM.replace("–", "-")}.txt`, guessText(dept, semester))}>Download guess papers {NEXT_EXAM}{semester === "all" ? "" : ` · Semester ${semester}`}</button>
       </div>
       <p className="small muted">“Probable questions” already came in two or more past exams. The “guess paper” is our own prediction for the next exam ({NEXT_EXAM}), unit by unit.{accuracy ? ` When we tested the method on ${accuracy.tests} past papers (guessing each paper's latest exam from the earlier ones), ${Math.round(accuracy.top5 * 100)}% of our top-5 guesses actually came, against ${Math.round(accuracy.random * 100)}% for a random past question.` : ""} Use it to decide what to revise first, not instead of the syllabus.</p>
+      {dept && dept.dept === deptId && <SubjectSearch groups={dept.groups} subject={summary?.name ?? "this subject"} onOpen={id => { const g = dept.groups.find(x => x.id === id); if (g) { setSemester("all"); openGroup(g, true); } }} />}
     </section>
 
     <section className="section-gap" aria-label="Papers">
@@ -155,18 +158,20 @@ export default function QuestionBank() {
     {group && paper && <section className="panel section-gap" id="qb-detail" aria-label={group.title}>
       <p className="eyebrow">{dept?.name} · Semester {group.semesters.join(" / ")}</p><h2>{group.title}</h2>
       <p className="small muted">Papers in the bank: {group.exams.map(label).join(", ")}</p>
+      {(() => { const c = preparedCount(group.id, [...(group.forecast?.top.map(q => q.t) ?? []), ...group.repeated.filter(r => r.kind === "written").map(r => r.text)], prepared.list); return c.total > 0 && <div className="qb-prepared"><div className="row between small"><span>Likely questions you can answer</span><strong>{c.done} / {c.total}</strong></div><progress max={c.total} value={c.done} aria-label="Prepared questions" /></div>; })()}
       {group.papers.some(p => p.pdf) && <div className="row qb-pdfs" aria-label="Download original papers"><span className="small muted">Original papers (PDF):</span>{group.papers.map((p, i) => p.pdf && <a key={i} className="tag" href={p.pdf} download target="_blank" rel="noreferrer">⬇ {label(p.exam)}{p.sem ? ` · Sem ${p.sem}` : ""}</a>)}</div>}
       <div className="row section-gap" role="tablist" aria-label="View">
         {group.forecast && group.forecast.top.length > 0 && <button role="tab" aria-selected={view === "guess"} className={`btn ${view === "guess" ? "" : "secondary"}`} onClick={() => setView("guess")}>Guess paper {NEXT_EXAM}</button>}
         <button role="tab" aria-selected={view === "repeated"} className={`btn ${view === "repeated" ? "" : "secondary"}`} onClick={() => setView("repeated")}>Repeated questions &amp; topics ({group.repeated.filter(r => r.kind === "written").length})</button>
         <button role="tab" aria-selected={view === "papers"} className={`btn ${view === "papers" ? "" : "secondary"}`} onClick={() => setView("papers")}>Full papers ({group.papers.length})</button>
+        <button role="tab" aria-selected={view === "practice"} className={`btn ${view === "practice" ? "" : "secondary"}`} onClick={() => setView("practice")}>⏱ Practice test</button>
       </div>
 
       {view === "guess" && group.forecast && <div className="section-gap">
         <p className="notice">Our guess for the next {group.title} exam ({NEXT_EXAM}), based on {group.papers.length} past paper{group.papers.length === 1 ? "" : "s"} ({group.exams.map(label).join(", ")}). Questions asked most often, especially as long answers, rank highest.{group.papers.length < 2 ? " Only one past paper is available, so treat these as weak guesses." : ""}</p>
         <h3 className="section-gap">Most likely questions</h3>
         {accuracy?.levels && <p className="small muted">How far to trust each label, from testing on past exams: High chance (a long answer asked 3+ times) — {inTen(accuracy.levels.high)}; Good chance (a long answer asked twice) — {inTen(accuracy.levels.medium)}; Possible — {inTen(accuracy.levels.low)}.</p>}
-        <ol className="qb-list">{group.forecast.top.map((q, i) => <li key={i} className="qb-question"><div className="row between"><span className={`tag qb-${q.level}`}>{LEVELS[q.level]}</span><span className="small muted">{q.long ? "Long answer" : "Short answer"}{q.u ? ` · Unit ${q.u}` : ""}</span></div><p>{q.t}</p><p className="small muted">{asked(q)}</p></li>)}</ol>
+        <ol className="qb-list">{group.forecast.top.map((q, i) => <li key={i} className="qb-question"><div className="row between"><span className={`tag qb-${q.level}`}>{LEVELS[q.level]}</span><span className="small muted">{q.long ? "Long answer" : "Short answer"}{q.u ? ` · Unit ${q.u}` : ""}</span></div><p>{q.t}</p><p className="small muted">{asked(q)}</p><QuestionTools groupId={group.id} text={q.t} dept={deptId} entries={entries} prepared={prepared} /></li>)}</ol>
         <h3 className="section-gap">Unit-by-unit guess paper</h3>
         <p className="small muted">MZU papers usually give one question per unit with an OR choice, so we list two long and two short guesses for each unit.</p>
         {group.forecast.units.filter(u => u.long.length || u.short.length).map((u, i) => <div key={i} className="qb-section"><p className="eyebrow">{u.unit ? `Unit ${u.unit}` : "All units"}</p><ul className="qb-list qb-guess">
@@ -181,11 +186,15 @@ export default function QuestionBank() {
           <ol className="qb-list">{group.repeated.filter(r => showObjective || r.kind === "written").map(r => <li key={r.id} className="qb-question">
             <div className="row between"><span className={`tag${r.times >= 3 ? " hot" : ""}`}>Asked {r.times}× · {r.exams.map(label).join(", ")}</span><span className="small muted">{r.kind === "objective" ? "Objective" : r.sections.includes("C") ? "Long answer" : "Short answer"}{r.unit ? ` · Unit ${r.unit}` : ""}</span></div>
             <p>{r.text}</p>
+            {r.kind === "written" && <QuestionTools groupId={group.id} text={r.text} dept={deptId} entries={entries} prepared={prepared} />}
             {r.variants.length > 0 && <details><summary className="small">Other wordings used</summary><ul className="small muted">{r.variants.map(v => <li key={v}>{v}</li>)}</ul></details>}
           </li>)}</ol>
           {group.repeated.some(r => r.kind === "objective") && <label className="check-row section-gap"><input type="checkbox" checked={showObjective} onChange={e => setShowObjective(e.target.checked)} />Also show repeated objective (multiple-choice) questions</label>}
         </>}
       </div>}
+
+      {view === "practice" && <PracticeTest key={group.id} groupId={group.id} title={group.title} dept={deptId} entries={entries} prepared={prepared}
+        pool={(() => { const items = group.forecast ? [...group.forecast.top, ...group.forecast.units.flatMap(u => [...u.long, ...u.short])].map(q => ({ t: q.t, long: q.long, times: q.times, u: q.u })) : []; const rep = group.repeated.filter(r => r.kind === "written").map(r => ({ t: r.text, long: r.sections.includes("C"), times: r.times, u: r.unit })); return items.length >= 3 ? items : [...items, ...rep]; })()} />}
 
       {view === "papers" && <div className="section-gap">
         <div className="two-col"><div><label htmlFor="qb-exam">Exam</label><select id="qb-exam" value={Math.min(examIndex, group.papers.length - 1)} onChange={e => setExamIndex(Number(e.target.value))}>{group.papers.map((p, i) => <option key={i} value={i}>{label(p.exam)}{p.sem ? ` · Semester ${p.sem}` : ""}{p.code ? ` · ${p.code}` : ""}</option>)}</select></div>
