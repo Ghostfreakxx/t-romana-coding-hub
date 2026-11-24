@@ -7,7 +7,7 @@ import ts from 'typescript';
 
 const dir = await mkdtemp(join(tmpdir(), 'trc-lab-tests-'));
 try {
-  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice', 'reasoning-gen', 'spaced']) {
+  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice', 'reasoning-gen', 'spaced', 'study-decoder', 'qbank-tools']) {
     const input = await readFile(new URL(`../lib/${name}.ts`, import.meta.url), 'utf8');
     const result = ts.transpileModule(input, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } });
     await writeFile(join(dir, `${name}.js`), result.outputText);
@@ -54,6 +54,22 @@ try {
     const home = drillText('asdfghjkl', () => .37); assert.ok(home.length > 100 && /^[asdfghjkl ]+$/.test(home), 'Home-row drill uses only home-row keys');
     const few = drillText('fj', () => .5); assert.ok(/^[fj ]+$/.test(few), 'Tiny key sets use letter groups');
     assert.deepEqual(typingMistakes('the cat', 'thx cut'), { e: 1, a: 1 }); }
+  { const { searchPages, outline, buildQuiz, readingStats } = require('./study-decoder');
+    const pages = [{ page: 1, text: "CHAPTER 1 INTRODUCTION\nDemocracy is a system of government in which citizens elect their representatives through regular elections.\nLiberty means the absence of arbitrary restraint on the choices of citizens in a political community.\n" },
+      { page: 2, text: "1.2 Forms of Government\nFederalism divides sovereign power between a central government and regional units under a written constitution.\nSovereignty refers to the supreme legal authority of the state within its territory and over its citizens.\nEquality requires that citizens receive equal treatment and equal protection of the laws of the government.\nJustice demands a fair distribution of rights, duties and resources among citizens of the political community.\n" }];
+    const hits = searchPages(pages, 'citizens'); assert.ok(hits.length >= 4 && hits.every(h => h.match.toLowerCase() === 'citizens'), 'Search finds every match');
+    assert.deepEqual(outline(pages).map(o => o.title), ['CHAPTER 1 INTRODUCTION', '1.2 Forms of Government'], 'Outline finds headings');
+    let seed = 3; const quiz = buildQuiz(pages, 4, () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; });
+    assert.ok(quiz.length >= 1, 'The quiz has questions');
+    for (const q of quiz) { assert.equal(q.options.length, 4); assert.equal(new Set(q.options).size, 4); assert.ok(q.prompt.includes('_____') && !new RegExp(`\\b${q.options[q.answer]}\\b`, 'i').test(q.prompt), 'Answer is blanked'); }
+    assert.equal(readingStats('one two three').words, 3); }
+  { const { questionKey, matchNote, mockTest, keywords } = require('./qbank-tools');
+    assert.equal(questionKey('g', 'What is Federalism?'), questionKey('g', 'what is federalism')); assert.notEqual(questionKey('g', 'Federalism'), questionKey('g', 'Liberty'));
+    assert.deepEqual(keywords('Explain the features of Federalism.'), ['federalism'], 'Question words are ignored');
+    const entries = [{ g: 'political-science-1', s: 'section-9', t: 'Federalism', c: 'x', k: 'short' }, { g: 'political-science-1', s: 'section-3', t: 'Liberty', c: 'x', k: 'short' }, { g: 'sociology-1', s: 'section-2', t: 'Federalism', c: 'x', k: 'short' }];
+    assert.equal(matchNote('Discuss the main features of Indian federalism.', entries, 'political-science').s, 'section-9'); assert.equal(matchNote('Explain the caste system.', entries, 'political-science'), null);
+    const pool = [{ t: 'a', long: true, times: 3 }, { t: 'b', long: true, times: 1 }, { t: 'c', long: true, times: 2 }, { t: 'd', long: false, times: 1 }, { t: 'e', long: false, times: 2 }];
+    const test = mockTest(pool, 2, 3, () => .5); assert.equal(test.filter(q => q.long).length, 2); assert.equal(test.filter(q => !q.long).length, 2); assert.equal(new Set(test.map(q => q.t)).size, test.length); }
   const { circuitReadings } = require('./circuit-engine');
   const { resistorBands, bandsToOhms, formatOhms, predictAnswer, predictionCorrect } = require('./circuit-engine');
   assert.deepEqual(resistorBands(470),[4,7,1],'470 Ω is yellow-violet-brown');assert.deepEqual(resistorBands(10),[1,0,0]);assert.deepEqual(resistorBands(2200),[2,2,2]);
@@ -80,5 +96,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, PDF search/outline/quiz, question-bank tools, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }
