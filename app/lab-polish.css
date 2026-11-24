@@ -118,3 +118,33 @@
 .song-notes .done { background:#2c3a24; border-color:#2c3a24; color:var(--accent); } .song-notes .next { background:var(--accent); border-color:var(--accent); color:#15210e; transform:scale(1.12); }
 .piano-key.target { box-shadow:0 0 0 3px var(--accent),0 0 22px #c6ee90aa; } .piano-key.white.target { background:linear-gradient(#e7f6cf,#fffff2 60%,#d8efb4); } .piano-key.black.target { background:linear-gradient(100deg,#2b4a1d,#5e8a3e 80%,#2b4a1d); }
 @media(prefers-reduced-motion:no-preference) { .piano-key.target { animation:key-glow 1.2s ease-in-out infinite; } @keyframes key-glow { 50% { box-shadow:0 0 0 3px var(--accent),0 0 6px #c6ee9055; } } }
+/* Electrical trainers */
+.trainer-panel .tabs { margin:14px 0; }
+.resistor-art { display:block; width:100%; max-width:420px; margin:10px auto 18px; }
+.option-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .option-grid .option { justify-content:center; font-weight:700; font-size:16px; }
+.trainer-panel .notice { margin:16px 0; }
+.trainer-target { font-size:18px; margin:6px 0 0; text-align:center; } .trainer-target strong { color:var(--accent); }
+.band-pickers { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+.colour-chart { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; margin:12px 0; } .colour-chart span { display:flex; align-items:center; gap:8px; font-size:13px; } .colour-chart i { width:22px; height:22px; border-radius:5px; border:1px solid #fff3; }
+.predict-card { padding:20px; border:1px solid #4a5444; border-radius:14px; background:#141914; margin:14px 0; } .predict-card .eyebrow { margin-bottom:8px; }
+.predict-values { display:flex; flex-wrap:wrap; gap:10px; } .predict-values span { padding:8px 12px; border-radius:9px; background:#232b20; } .predict-values strong { color:var(--accent); margin-left:4px; }
+.predict-input { flex:1; min-width:180px; margin:0; } .predict-card form { align-items:end; }
+@media(max-width:640px) { .band-pickers { grid-template-columns:1fr; } }
+/* Coding challenges */
+.challenges { display:grid; grid-template-columns:230px minmax(0,1fr); gap:18px; margin-top:18px; }
+.challenge-list { display:grid; gap:6px; align-content:start; } .challenge-list .eyebrow { margin:4px 0 8px; }
+.challenge-list button { display:grid; grid-template-columns:30px 1fr; grid-template-rows:auto auto; column-gap:10px; text-align:left; padding:10px 12px; border:1px solid #343b31; border-radius:10px; background:#161a15; color:var(--foreground); }
+.challenge-list button span { grid-row:span 2; align-self:center; width:28px; height:28px; display:grid; place-items:center; border-radius:50%; background:#283022; font-size:12px; font-weight:800; } .challenge-list button span.is-done { background:var(--accent); color:#15210e; }
+.challenge-list button small { color:var(--muted); font-size:11px; } .challenge-list button[aria-pressed=true] { border-color:var(--accent); background:#1f281b; }
+.challenge-main { min-width:0; } .challenge-brief h2 { margin-bottom:6px; } .challenge-brief ol { margin:0; padding-left:20px; line-height:1.8; color:#d6ded0; }
+.challenge-work { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:16px; margin-top:16px; }
+.check-list { list-style:none; margin:12px 0; padding:0; display:grid; gap:8px; }
+.check-list li { display:flex; gap:10px; padding:10px 12px; border:1px solid #343b31; border-radius:10px; } .check-list li > span:first-child { font-weight:800; width:18px; }
+.check-list li.is-pass { border-color:#5d7a43; background:#1c2817; } .check-list li.is-pass > span:first-child { color:var(--accent); }
+.check-list li.is-fail { border-color:#80514b; } .check-list li.is-fail > span:first-child { color:#ffb9b1; } .check-list p { margin:4px 0 0; line-height:1.5; }
+.challenge-results .notice { margin:10px 0; } .challenge-results .notice .btn { margin-left:8px; min-height:36px; padding:6px 12px; }
+.challenge-preview iframe { height:300px; } .challenge-preview .preview-empty { min-height:200px; }
+.live-toggle { margin:0 0 0 6px; padding:0; }
+@media(max-width:1000px) { .challenges { grid-template-columns:1fr; } .challenge-list { grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); } .challenge-list .eyebrow { grid-column:1/-1; } .challenge-work { grid-template-columns:1fr; } }
+@media(min-width:1001px) { .studio-tabs { grid-template-columns:repeat(5,1fr); } }
+.challenge-preview { height:auto; max-height:360px; }

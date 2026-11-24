@@ -37,6 +37,11 @@ try {
   const wet=newDrive('rain'),dry=newDrive('day');wet.running=dry.running=true;wet.speed=dry.speed=40;stepDrive(wet,.05,{...idle,brake:true});stepDrive(dry,.05,{...idle,brake:true});assert.ok(wet.speed>dry.speed,'Wet course has reduced braking');
 
   const { circuitReadings } = require('./circuit-engine');
+  const { resistorBands, bandsToOhms, formatOhms, predictAnswer, predictionCorrect } = require('./circuit-engine');
+  assert.deepEqual(resistorBands(470),[4,7,1],'470 Ω is yellow-violet-brown');assert.deepEqual(resistorBands(10),[1,0,0]);assert.deepEqual(resistorBands(2200),[2,2,2]);
+  assert.equal(bandsToOhms(resistorBands(68000)),68000);assert.equal(formatOhms(4700),'4.7 kΩ');assert.throws(()=>resistorBands(475));
+  const q={mode:'series',volts:6,r1:200,r2:100,kind:'current'};assert.equal(predictAnswer(q),20);assert.ok(predictionCorrect(q,20.3));assert.ok(!predictionCorrect(q,25));
+  assert.equal(predictAnswer({mode:'parallel',volts:6,r1:300,r2:300,kind:'resistance'}),150);
   const series=circuitReadings(6,200,100,'series',true);assert.equal(series.current,.02);assert.equal(series.nodes.B,2);assert.equal(series.power,.12);
   const parallel=circuitReadings(6,300,300,'parallel',true);assert.equal(parallel.current,.04);assert.equal(parallel.i1,.02);assert.equal(parallel.i2,.02);assert.equal(parallel.v1,6);
   const open=circuitReadings(6,100,100,'series',false);assert.equal(open.current,0);assert.equal(open.nodes.A,6);assert.equal(open.nodes.B,0);
@@ -57,5 +62,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, spreadsheet formulas, typing metrics, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, spreadsheet formulas, typing metrics, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }
