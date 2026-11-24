@@ -25,7 +25,7 @@ export function recordActivity() {
   } catch { /* Storage is unavailable; the streak simply is not kept. */ }
 }
 /** Saves that are settings or bookkeeping rather than study, so they do not count towards the streak. */
-const notStudy = new Set(["activity", "readerPrefs", "recentGuides"]);
+const notStudy = new Set(["activity", "readerPrefs", "recentGuides", "myCourse", "examDates"]);
 export function useSaved<T>(key: string, initial: T, validate: (value: unknown) => value is T) {
   const fullKey = `trc:v1:${key}`;
   const [error, setError] = useState("");

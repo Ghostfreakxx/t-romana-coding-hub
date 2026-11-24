@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { NoteResource } from "@/data/notes";
 import { emptyList, emptyRecord, isStringList, isStringRecord, useSaved } from "@/lib/storage";
+import { addNotesCard, initialNotebooks, isNotebooks, NOTES_NOTEBOOK } from "@/lib/notebooks";
 
 type Block = { type: "paragraph"; text: string } | { type: "table"; rows: string[][] };
 type Section = { id: string; title: string; context: string[]; kind: string; blocks: Block[] };
@@ -10,6 +11,10 @@ type Guide = { id: string; sections: Section[] };
 
 const SIZES = ["15", "16", "18", "20"];
 
+/** Plain text of a topic's notes, for read-aloud and revision cards. */
+function bodyText(section: Section) {
+  return section.blocks.map(block => block.type === "paragraph" ? block.text : block.rows.map(row => row.join(" — ")).join(". ")).join("\n");
+}
 function sectionText(section: Section) {
   return [section.title, ...section.context, ...section.blocks.map(block => block.type === "paragraph" ? block.text : block.rows.flat().join(" "))].join(" ");
 }
@@ -38,6 +43,12 @@ function ReaderContent({ resource }: { resource: NoteResource }) {
   const recent = useSaved("recentGuides", emptyList, isStringList);
   const prefs = useSaved("readerPrefs", emptyRecord, isStringRecord);
   const size = SIZES.includes(prefs.value.size) ? prefs.value.size : "16";
+  const books = useSaved("notebooks", initialNotebooks, isNotebooks);
+  const topicNotes = useSaved("topicNotes", emptyRecord, isStringRecord);
+  const [speaking, setSpeaking] = useState<string | null>(null), [rate, setRate] = useState(1);
+  const [editing, setEditing] = useState<string[]>([]), [flash, setFlash] = useState<Record<string, string>>({});
+  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window;
+  useEffect(() => () => { if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel(); }, []);
   const areaRef = useRef<HTMLDivElement>(null);
   const lastWritten = useRef("");
 
@@ -108,6 +119,23 @@ function ReaderContent({ resource }: { resource: NoteResource }) {
     const key = `${resource.id}:${sectionId}`;
     revised.setValue(revised.value.includes(key) ? revised.value.filter(item => item !== key) : [...revised.value, key]);
   }
+  function speak(section: Section) {
+    const synth = window.speechSynthesis;
+    synth.cancel();
+    if (speaking === section.id) { setSpeaking(null); return; }
+    const utterance = new SpeechSynthesisUtterance(`${section.title}. ${bodyText(section)}`);
+    utterance.lang = "en-IN"; utterance.rate = rate;
+    utterance.onend = utterance.onerror = () => setSpeaking(current => current === section.id ? null : current);
+    setSpeaking(section.id); synth.speak(utterance);
+  }
+  function makeCard(section: Section) {
+    const paper = section.context[1]?.split(" – ")[0];
+    const body = bodyText(section);
+    const back = `${body.length > 900 ? `${body.slice(0, 900).replace(/\s+\S*$/, "")}…` : body}\n\nSource: ${resource.label}${paper ? `, ${paper}` : ""}`;
+    const next = addNotesCard(books.value, { id: `note:${resource.id}:${section.id}`, front: `${section.title}${paper ? ` (${paper})` : ""}: explain in your own words.`, back });
+    if (next) books.setValue(next);
+    setFlash({ ...flash, [section.id]: next ? "added" : books.value.some(b => b.cards.some(c => c.id === `note:${resource.id}:${section.id}`)) ? "exists" : "full" });
+  }
   function jump(sectionId: string) {
     setQuery(""); setKind("all");
     requestAnimationFrame(() => document.getElementById(`${resource.id}-${sectionId}`)?.scrollIntoView({ block: "start" }));
@@ -125,6 +153,7 @@ function ReaderContent({ resource }: { resource: NoteResource }) {
     </div>
     <div className="row reader-tools no-print">
       <label className="check-row"><input type="checkbox" checked={recall} onChange={event => { setRecall(event.target.checked); setShown([]); }} />Recall mode: hide the notes and test yourself first</label>
+      {canSpeak && <label className="row speech-rate">Reading speed<select value={rate} onChange={event => setRate(Number(event.target.value))}><option value={0.8}>Slow</option><option value={1}>Normal</option><option value={1.2}>Fast</option></select></label>}
       <div className="row" role="group" aria-label="Text size">
         <button className="btn secondary" disabled={size === SIZES[0]} onClick={() => prefs.setValue({ ...prefs.value, size: SIZES[Math.max(0, SIZES.indexOf(size) - 1)] })} aria-label="Smaller text">A−</button>
         <button className="btn secondary" disabled={size === SIZES[SIZES.length - 1]} onClick={() => prefs.setValue({ ...prefs.value, size: SIZES[Math.min(SIZES.length - 1, SIZES.indexOf(size) + 1)] })} aria-label="Larger text">A+</button>
@@ -144,10 +173,18 @@ function ReaderContent({ resource }: { resource: NoteResource }) {
           : section.blocks.map((block, index) => block.type === "paragraph"
             ? <p className="note-paragraph" key={index}>{block.text}</p>
             : <div className="reader-table" key={index}><table><caption className="sr-only">{section.title}</caption><tbody>{block.rows.map((row, rowIndex) => <tr key={rowIndex}>{row.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}</tr>)}</tbody></table></div>)}
-        {isStudySection(section) && <button className={`btn ${isRevised ? "" : "secondary"} revise-toggle no-print`} aria-pressed={isRevised} onClick={() => toggleRevised(section.id)}>{isRevised ? "✓ Revised" : "Mark as revised"}</button>}
+        {topicNotes.value[`${resource.id}:${section.id}`] && !editing.includes(section.id) && <p className="my-topic-note"><strong>My note:</strong> {topicNotes.value[`${resource.id}:${section.id}`]}</p>}
+        {editing.includes(section.id) && <div className="no-print section-gap"><label htmlFor={`${fieldId}-${section.id}-note`}>My note on {section.title}</label><textarea id={`${fieldId}-${section.id}-note`} rows={3} maxLength={4000} value={topicNotes.value[`${resource.id}:${section.id}`] ?? ""} onChange={event => { const key = `${resource.id}:${section.id}`; const { [key]: _old, ...rest } = topicNotes.value; void _old; topicNotes.setValue(event.target.value ? { ...rest, [key]: event.target.value } : rest); }} placeholder="An example, a question for class, a memory trick…" /></div>}
+        {isStudySection(section) && <div className="row topic-tools no-print">
+          <button className={`btn ${isRevised ? "" : "secondary"} revise-toggle`} aria-pressed={isRevised} onClick={() => toggleRevised(section.id)}>{isRevised ? "✓ Revised" : "Mark as revised"}</button>
+          {canSpeak && !hidden && <button className="btn secondary" aria-pressed={speaking === section.id} onClick={() => speak(section)}>{speaking === section.id ? "■ Stop" : "🔊 Listen"}</button>}
+          <button className="btn secondary" onClick={() => makeCard(section)}>＋ Revision card</button>
+          <button className="btn secondary" aria-expanded={editing.includes(section.id)} onClick={() => setEditing(editing.includes(section.id) ? editing.filter(id => id !== section.id) : [...editing, section.id])}>{editing.includes(section.id) ? "Done" : topicNotes.value[`${resource.id}:${section.id}`] ? "✎ Edit my note" : "✎ My note"}</button>
+          {flash[section.id] && <span className="small" role="status">{flash[section.id] === "added" ? <>Card added. <a className="accent underline" href={`/study#${NOTES_NOTEBOOK}`}>Review it in the Study Lab</a></> : flash[section.id] === "exists" ? "This topic is already one of your cards." : "Your card notebook is full."}</span>}
+        </div>}
       </section>;
     })}</div>
-    {(revised.error || lastRead.error) && <p className="notice error" role="alert">{revised.error || lastRead.error}</p>}
+    {(revised.error || lastRead.error || books.error || topicNotes.error) && <p className="notice error" role="alert">{revised.error || lastRead.error || books.error || topicNotes.error}</p>}
   </div>;
 }
 

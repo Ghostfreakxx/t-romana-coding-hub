@@ -168,3 +168,18 @@
 .focus-dial strong { font:800 36px Consolas,monospace; } .focus-dial span { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
 .focus-timer .tabs { margin:0; }
 @media(max-width:640px) { .review-grades { grid-template-columns:1fr 1fr; } .focus-body { grid-template-columns:1fr; justify-items:center; } }
+/* Notes: topic tools */
+.topic-tools { margin-top:14px; gap:8px; } .topic-tools .btn { min-height:38px; padding:7px 12px; font-size:13px; } .topic-tools .revise-toggle { margin-top:0; }
+.my-topic-note { margin:12px 0 0; padding:10px 14px; border-left:3px solid #e6c78f; background:#24221a; border-radius:0 8px 8px 0; white-space:pre-wrap; font-size:14px; }
+.speech-rate { gap:8px; margin:0; font-weight:400; } .speech-rate select { width:auto; padding:7px 10px; }
+@media print { .my-topic-note { border-color:#999; background:none; } }
+/* College: paper links and exam planner */
+.paper-links { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:12px 18px; align-items:end; margin:14px 0; padding:14px; border:1px solid #343b31; border-radius:12px; background:#151915; }
+.paper-links progress { margin:6px 0; } .paper-links p { margin:0; } .paper-qb { text-decoration:none; padding:9px 12px; align-self:center; } .paper-qb:hover { color:var(--accent); }
+.paper-date { margin:0; font-size:12px; } .paper-date input { padding:7px 10px!important; color-scheme:dark; }
+.planner-rows { display:grid; gap:10px; margin-top:8px; }
+.planner-row { display:grid; grid-template-columns:76px minmax(0,1.3fr) minmax(0,1fr); gap:16px; align-items:center; padding:12px 16px; border:1px solid #343b31; border-radius:12px; } .planner-row p { margin:2px 0 0; }
+.planner-row.is-soon { border-color:#e6c78f; background:#211f17; }
+.planner-days { display:grid; text-align:center; } .planner-days strong { font-size:30px; color:var(--accent); line-height:1; } .planner-row.is-soon .planner-days strong { color:#f2c98a; } .planner-days span { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+.linkish { border:0; background:none; padding:0; color:var(--accent); text-decoration:underline; font:inherit; }
+@media(max-width:800px) { .paper-links { grid-template-columns:1fr; } .paper-qb { justify-self:start; } .planner-row { grid-template-columns:60px 1fr; } .planner-plan { grid-column:1/-1; } }
