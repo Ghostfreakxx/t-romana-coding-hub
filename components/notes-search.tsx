@@ -10,7 +10,7 @@ type FullText = Record<string, string>;
 
 const labels = Object.fromEntries(noteResources.map(note => [note.id, note.label]));
 let indexPromise: Promise<Entry[]> | null = null;
-function loadIndex() {
+export function loadIndex() {
   indexPromise ??= fetch("/notes/read/index.json").then(response => {
     if (!response.ok) throw new Error("Search is unavailable right now.");
     return response.json() as Promise<Entry[]>;

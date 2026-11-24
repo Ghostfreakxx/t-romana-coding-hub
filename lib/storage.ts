@@ -7,6 +7,25 @@ function subscribe(callback: () => void) {
   window.addEventListener(event, callback);
   return () => { window.removeEventListener("storage", callback); window.removeEventListener(event, callback); };
 }
+/** Local calendar date, e.g. "2026-11-24". */
+export function dayKey(date = new Date()) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+const activityKey = "trc:v1:activity";
+let lastRecorded = "";
+/** Marks today as a study day. Any saved change on the hub counts. Keeps about a year of days. */
+export function recordActivity() {
+  const today = dayKey();
+  if (lastRecorded === today) return;
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(activityKey) ?? "[]");
+    const days = Array.isArray(parsed) ? parsed.filter((d): d is string => typeof d === "string") : [];
+    if (!days.includes(today)) localStorage.setItem(activityKey, JSON.stringify([...days, today].sort().slice(-400)));
+    lastRecorded = today;
+  } catch { /* Storage is unavailable; the streak simply is not kept. */ }
+}
+/** Saves that are settings or bookkeeping rather than study, so they do not count towards the streak. */
+const notStudy = new Set(["activity", "readerPrefs", "recentGuides"]);
 export function useSaved<T>(key: string, initial: T, validate: (value: unknown) => value is T) {
   const fullKey = `trc:v1:${key}`;
   const [error, setError] = useState("");
@@ -19,11 +38,12 @@ export function useSaved<T>(key: string, initial: T, validate: (value: unknown) 
     catch { return initial; }
   }, [raw, initial, validate]);
   const setValue = useCallback((next: T) => {
+    if (!notStudy.has(key)) recordActivity();
     const encoded = JSON.stringify(next);
     try { localStorage.setItem(fullKey, encoded); memory.delete(fullKey); setError(""); }
     catch { memory.set(fullKey, encoded); setError("Your browser could not save this. Keep this page open and download a copy before leaving."); }
     window.dispatchEvent(new Event(event));
-  }, [fullKey]);
+  }, [fullKey, key]);
   return { value, setValue, error };
 }
 export const isString = (v: unknown): v is string => typeof v === "string";

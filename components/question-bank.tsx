@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { download } from "@/lib/storage";
 
 type GroupSummary = { id: string; title: string; semesters: number[]; exams: string[]; repeated: number };
@@ -87,7 +87,26 @@ export default function QuestionBank() {
   const [examIndex, setExamIndex] = useState(0);
   const [showObjective, setShowObjective] = useState(false);
 
-  useEffect(() => { load<{ subjects: DeptSummary[]; forecast: Accuracy }>("/question-bank/index.json").then(data => { setIndex(data.subjects); setAccuracy(data.forecast); setDeptId(data.subjects[0]?.dept ?? ""); }).catch(e => setError(e instanceof Error ? e.message : "Could not load.")); }, []);
+  // A link such as /questions#economics-1 (from site search) opens that paper once its subject has loaded.
+  const pendingGroup = useRef("");
+  function openGroup(g: Group, scroll: boolean) {
+    setGroupId(g.id); setView(g.forecast?.top.length ? "guess" : g.repeated.some(r => r.kind === "written") ? "repeated" : "papers"); setExamIndex(g.papers.length - 1);
+    if (scroll) setTimeout(() => document.getElementById("qb-detail")?.scrollIntoView({ block: "start", behavior: "smooth" }), 50);
+  }
+  useEffect(() => {
+    let subjects: DeptSummary[] = [];
+    const fromHash = () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      const owner = subjects.find(d => d.groups.some(g => g.id === id));
+      if (!owner) return false;
+      pendingGroup.current = id; setSemester("all"); setDeptId(owner.dept);
+      load<Dept>(`/question-bank/${owner.dept}.json`).then(data => { const g = data.groups.find(x => x.id === pendingGroup.current); if (g) { pendingGroup.current = ""; openGroup(g, true); } }).catch(() => {});
+      return true;
+    };
+    load<{ subjects: DeptSummary[]; forecast: Accuracy }>("/question-bank/index.json").then(data => { subjects = data.subjects; setIndex(data.subjects); setAccuracy(data.forecast); if (!fromHash()) setDeptId(data.subjects[0]?.dept ?? ""); }).catch(e => setError(e instanceof Error ? e.message : "Could not load."));
+    window.addEventListener("hashchange", fromHash);
+    return () => window.removeEventListener("hashchange", fromHash);
+  }, []);
   useEffect(() => {
     if (!deptId) return;
     let live = true;
@@ -112,7 +131,7 @@ export default function QuestionBank() {
     <section className="panel">
       <div className="qb-stats"><div><strong>{totalPapers}</strong><span>past papers</span></div><div><strong>{index.length}</strong><span>subjects</span></div><div><strong>{totalRepeated}</strong><span>repeated questions found</span></div></div>
       <div className="two-col section-gap">
-        <div><label htmlFor="qb-subject">Subject</label><select id="qb-subject" value={deptId} onChange={e => { setDeptId(e.target.value); setSemester("all"); setGroupId(""); }}>{index.map(d => <option key={d.dept} value={d.dept}>{d.name} ({d.papers} papers)</option>)}</select></div>
+        <div><label htmlFor="qb-subject">Subject</label><select id="qb-subject" value={deptId} onChange={e => { pendingGroup.current = ""; setDeptId(e.target.value); setSemester("all"); setGroupId(""); }}>{index.map(d => <option key={d.dept} value={d.dept}>{d.name} ({d.papers} papers)</option>)}</select></div>
         <div><label htmlFor="qb-semester">Semester</label><select id="qb-semester" value={semester} onChange={e => { setSemester(e.target.value === "all" ? "all" : Number(e.target.value)); setGroupId(""); }}><option value="all">All semesters</option>{semesters.map(s => <option key={s} value={s}>Semester {s}</option>)}</select></div>
       </div>
       <div className="row section-gap">
@@ -125,7 +144,7 @@ export default function QuestionBank() {
     <section className="section-gap" aria-label="Papers">
       {!dept || dept.dept !== deptId ? <p className="notice" role="status">Loading {summary?.name ?? "subject"}…</p> :
         groups.length === 0 ? <p className="notice">No papers for this semester yet.</p> :
-          <div className="grid-cards">{groups.map(g => <button key={g.id} className={`lab-card qb-card${g.id === groupId ? " is-active" : ""}`} aria-pressed={g.id === groupId} onClick={() => { setGroupId(g.id); setView(g.forecast?.top.length ? "guess" : g.repeated.some(r => r.kind === "written") ? "repeated" : "papers"); setExamIndex(g.papers.length - 1); setTimeout(() => document.getElementById("qb-detail")?.scrollIntoView({ block: "start", behavior: "smooth" }), 50); }}>
+          <div className="grid-cards">{groups.map(g => <button key={g.id} className={`lab-card qb-card${g.id === groupId ? " is-active" : ""}`} aria-pressed={g.id === groupId} onClick={() => openGroup(g, true)}>
             <div className="card-top"><span>SEMESTER {g.semesters.join(" / ") || "—"}</span><span>{g.papers.length} PAPER{g.papers.length === 1 ? "" : "S"}</span></div>
             <h2>{g.title}</h2>
             <p className="small muted">{g.exams.map(label).join(" · ")}</p>
