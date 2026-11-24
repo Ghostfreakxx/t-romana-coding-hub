@@ -2,8 +2,13 @@ export type Weather = "day" | "rain" | "night";
 export type Course = "hills" | "town" | "training";
 export type Traffic = { id: number; z: number; lane: number; speed: number; hit: boolean; passed: boolean };
 export type Checkpoint = { id: string; distance: number; kind: "stop" | "slow"; label: string; limit: number; passed: boolean; success: boolean; hold: number };
-export type DriveState = { distance: number; speed: number; position: number; steering: number; elapsed: number; hits: number; passed: number; score: number; running: boolean; finished: boolean; weather: Weather; course: Course; traffic: Traffic[]; checkpoints: Checkpoint[]; offRoad: number; speeding: number; brakeStart: number | null; stoppingDistance: number | null };
+export type DriveState = { distance: number; speed: number; position: number; steering: number; elapsed: number; hits: number; passed: number; score: number; running: boolean; finished: boolean; weather: Weather; course: Course; traffic: Traffic[]; checkpoints: Checkpoint[]; offRoad: number; speeding: number; brakeStart: number | null; stoppingDistance: number | null; indicator: Signal; lane: number; laneChanges: number; signalFaults: number; tailgating: number; followGap: number | null };
+export type Signal = -1 | 0 | 1;
 export const ROUTE_LENGTH = 1200;
+/** Lane centres across the road, left to right. */
+export const LANES = [-.58, 0, .58];
+/** Recommended minimum time gap to the vehicle ahead (the two-second rule). */
+export const SAFE_GAP = 2;
 export const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 export const COURSES: Record<Course,{title:string;description:string}> = {
   training: {title:"Control practice",description:"Light traffic, a full stop and a gentle speed check."},
@@ -14,7 +19,7 @@ export const roadCenter = (distance: number, course: Course) => course === "trai
 export const speedLimit = (weather: Weather, distance=0, course: Course="hills") => course==="town" && distance>180 && distance<440 ? 30 : weather==="rain"?40:course==="training"?50:60;
 export function newDrive(weather: Weather = "day", course: Course = "hills"): DriveState {
   const events=course==="town"?[{distance:300,kind:"slow" as const,label:"Town zone",limit:30},{distance:620,kind:"stop" as const,label:"Stop checkpoint",limit:0},{distance:950,kind:"slow" as const,label:"Pedestrian-zone approach",limit:30}]:[{distance:350,kind:"stop" as const,label:"Stop checkpoint",limit:0},{distance:760,kind:"slow" as const,label:"Controlled approach",limit:30}];
-  return { distance:0,speed:0,position:-.58,steering:0,elapsed:0,hits:0,passed:0,score:100,running:false,finished:false,weather,course,offRoad:0,speeding:0,brakeStart:null,stoppingDistance:null,
+  return { distance:0,speed:0,position:-.58,steering:0,elapsed:0,hits:0,passed:0,score:100,running:false,finished:false,weather,course,offRoad:0,speeding:0,brakeStart:null,stoppingDistance:null,indicator:0,lane:0,laneChanges:0,signalFaults:0,tailgating:0,followGap:null,
     checkpoints:events.map((e,i)=>({...e,id:String(i),passed:false,success:false,hold:0})),
     traffic:Array.from({length:course==="training"?5:12},(_,id)=>({id,z:110+id*105,lane:[0,.58,-.58][id%3],speed:18+id%4*5,hit:false,passed:false})) };
 }
@@ -29,6 +34,19 @@ export function stepDrive(s:DriveState,seconds:number,input:{throttle:boolean;br
   s.position=clamp(s.position+s.steering*dt*s.speed/55,-1.22,1.22);
   if(Math.abs(s.position)>.94){s.speed=Math.max(0,s.speed-30*dt);s.score-=dt*3;s.offRoad+=dt;}
   if(s.speed>speedLimit(s.weather,s.distance,s.course)+1){s.score-=dt*1.2;s.speeding+=dt;}
+  // Lane discipline: a lane change counts once the car is clearly past the lane line (hysteresis avoids double counting).
+  if(Math.abs(s.position)<=.94&&Math.abs(s.position-LANES[s.lane])>.36){
+    const next=LANES.reduce((best,c,i)=>Math.abs(c-s.position)<Math.abs(LANES[best]-s.position)?i:best,0);
+    if(next!==s.lane){const direction=Math.sign(next-s.lane) as Signal;s.laneChanges++;
+      if(s.speed>8&&s.indicator!==direction){s.signalFaults++;s.score-=4;}
+      else if(s.indicator===direction)s.indicator=0; // cancel the indicator after a signalled change, as a driver should
+      s.lane=next;}
+  }
+  // Following distance: the nearest vehicle ahead in the same lane, measured in seconds at the current speed.
+  let ahead=Infinity;
+  for(const car of s.traffic){const gap=car.z-s.distance-4.5;if(!car.hit&&gap>0&&gap<ahead&&Math.abs(car.lane-s.position)<.3)ahead=gap;}
+  s.followGap=ahead<Infinity&&s.speed>10?ahead/(s.speed/3.6):null;
+  if(s.followGap!==null&&s.followGap<SAFE_GAP){s.tailgating+=dt;s.score-=dt*.8;}
   s.distance+=s.speed/3.6*dt;
   if(s.speed<.2&&s.brakeStart!==null){s.stoppingDistance=s.distance-s.brakeStart;s.brakeStart=null;}
   for(const car of s.traffic){car.z+=car.speed/3.6*dt;const gap=car.z-s.distance;

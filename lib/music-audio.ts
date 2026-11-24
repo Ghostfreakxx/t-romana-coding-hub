@@ -1,20 +1,65 @@
+export const DRUM_KINDS = ["Kick", "Snare", "Hi-hat", "Clap", "Open hat", "Tom"] as const;
+
 export class MusicAudio {
   private context: AudioContext | null = null;
+  private noise: AudioBuffer | null = null;
   volume = 0.55;
   async enable() { this.context ??= new AudioContext(); if (this.context.state === "suspended") await this.context.resume(); }
+  /** Audio-clock time in seconds, for scheduling ahead of playback. */
+  get time() { return this.context?.currentTime ?? 0; }
+  private get live() { const ctx = this.context; return ctx && ctx.state === "running" && this.volume > 0 ? ctx : null; }
+  private out(ctx: AudioContext, nodes: AudioNode[], source: AudioScheduledSourceNode) {
+    nodes.reduce((a, b) => { a.connect(b); return b; }).connect(ctx.destination);
+    source.onended = () => nodes.forEach(n => n.disconnect());
+  }
   tone(frequency: number, duration = 1.5, type: OscillatorType = "triangle", when?: number) {
-    const ctx=this.context; if(!ctx || ctx.state!=="running" || this.volume<=0)return;
-    const t=when??ctx.currentTime, oscillator=ctx.createOscillator(), gain=ctx.createGain();
-    oscillator.type=type;oscillator.frequency.value=frequency;
-    gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(this.volume*.16,t+.008);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);
-    oscillator.connect(gain);gain.connect(ctx.destination);oscillator.start(t);oscillator.stop(t+duration+.02);oscillator.onended=()=>{oscillator.disconnect();gain.disconnect();};
+    const ctx = this.live; if (!ctx) return;
+    const t = when ?? ctx.currentTime, oscillator = ctx.createOscillator(), gain = ctx.createGain();
+    oscillator.type = type; oscillator.frequency.value = frequency;
+    gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(this.volume * .16, t + .008); gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
+    this.out(ctx, [oscillator, gain], oscillator); oscillator.start(t); oscillator.stop(t + duration + .02);
   }
-  drum(kind:string) {
-    const ctx=this.context;if(!ctx || ctx.state!=="running" || this.volume<=0)return;const t=ctx.currentTime;
-    if(kind==="Kick"){const osc=ctx.createOscillator(),gain=ctx.createGain();osc.frequency.setValueAtTime(150,t);osc.frequency.exponentialRampToValueAtTime(45,t+.2);gain.gain.setValueAtTime(this.volume*.6,t);gain.gain.exponentialRampToValueAtTime(.0001,t+.35);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(t+.36);osc.onended=()=>{osc.disconnect();gain.disconnect();};return;}
-    const duration=kind==="Hi-hat"?.09:.23,buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*duration),ctx.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;
-    const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;filter.type="highpass";filter.frequency.value=kind==="Hi-hat"?7000:kind==="Clap"?1800:900;gain.gain.setValueAtTime(this.volume*.35,t);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);source.connect(filter);filter.connect(gain);gain.connect(ctx.destination);source.start();source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();};
-    if(kind==="Snare")this.tone(185,.12,"sine");
+  /** A brighter, piano-like note: fundamental plus soft overtones that fade faster than the body of the note. */
+  piano(frequency: number, when?: number, duration = 1.8) {
+    const ctx = this.live; if (!ctx) return;
+    const t = when ?? ctx.currentTime, filter = ctx.createBiquadFilter(), gain = ctx.createGain();
+    filter.type = "lowpass"; filter.frequency.setValueAtTime(Math.min(9000, frequency * 9), t); filter.frequency.exponentialRampToValueAtTime(Math.max(400, frequency * 2), t + duration * .6);
+    gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(this.volume * .2, t + .005); gain.gain.exponentialRampToValueAtTime(this.volume * .06, t + .25); gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
+    filter.connect(gain); gain.connect(ctx.destination);
+    const partials: [number, OscillatorType, number][] = [[1, "triangle", 1], [2, "sine", .35], [3, "sine", .12]];
+    let remaining = partials.length;
+    for (const [mult, type, level] of partials) {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = type; osc.frequency.value = frequency * mult; osc.detune.value = mult === 1 ? 0 : 3; g.gain.value = level;
+      osc.connect(g); g.connect(filter); osc.start(t); osc.stop(t + duration + .02);
+      osc.onended = () => { osc.disconnect(); g.disconnect(); if (--remaining === 0) { filter.disconnect(); gain.disconnect(); } };
+    }
   }
-  async close(){const ctx=this.context;this.context=null;if(ctx&&ctx.state!=="closed")await ctx.close();}
+  private noiseBuffer(ctx: AudioContext) {
+    if (!this.noise || this.noise.sampleRate !== ctx.sampleRate) {
+      this.noise = ctx.createBuffer(1, Math.floor(ctx.sampleRate * .5), ctx.sampleRate);
+      const data = this.noise.getChannelData(0); for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    }
+    return this.noise;
+  }
+  drum(kind: string, when?: number, level = 1) {
+    const ctx = this.live; if (!ctx) return;
+    const t = when ?? ctx.currentTime, v = this.volume * level;
+    if (kind === "Kick" || kind === "Tom") {
+      const osc = ctx.createOscillator(), gain = ctx.createGain(), [from, to, len] = kind === "Kick" ? [150, 45, .35] : [210, 110, .32];
+      osc.frequency.setValueAtTime(from, t); osc.frequency.exponentialRampToValueAtTime(to, t + len * .6);
+      gain.gain.setValueAtTime(v * (kind === "Kick" ? .6 : .4), t); gain.gain.exponentialRampToValueAtTime(.0001, t + len);
+      this.out(ctx, [osc, gain], osc); osc.start(t); osc.stop(t + len + .01); return;
+    }
+    const duration = kind === "Hi-hat" ? .09 : kind === "Open hat" ? .38 : .23;
+    const source = ctx.createBufferSource(), filter = ctx.createBiquadFilter(), gain = ctx.createGain();
+    source.buffer = this.noiseBuffer(ctx); filter.type = "highpass"; filter.frequency.value = kind === "Hi-hat" ? 7000 : kind === "Open hat" ? 6000 : kind === "Clap" ? 1800 : 900;
+    gain.gain.setValueAtTime(v * (kind === "Open hat" ? .22 : .35), t);
+    // A clap is several hands a few milliseconds apart: re-trigger the level twice before the decay.
+    if (kind === "Clap") { gain.gain.setValueAtTime(v * .08, t + .01); gain.gain.setValueAtTime(v * .35, t + .012); gain.gain.setValueAtTime(v * .08, t + .022); gain.gain.setValueAtTime(v * .3, t + .024); }
+    gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
+    this.out(ctx, [source, filter, gain], source); source.start(t, Math.random() * .1, duration + .02);
+    if (kind === "Snare") this.tone(185, .12, "sine", t);
+  }
+  async close() { const ctx = this.context; this.context = null; if (ctx && ctx.state !== "closed") await ctx.close(); }
 }
