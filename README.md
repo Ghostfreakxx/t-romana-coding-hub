@@ -5,9 +5,9 @@ T. Romana Skills Hub is a browser-first learning site for Govt. T. Romana Colleg
 ## What is included
 
 - Coding Studio with seven starters, eight auto-checked coding challenges (HTML, CSS and JavaScript, each with hints and tests that click and type in the sandboxed preview), live preview and Ctrl/Cmd+Enter to run, a CodeMirror editor, up to 16 locally saved projects, responsive preview sizes, a console, image embedding, project backups and HTML exports. Previous Coding Lab drafts remain recoverable.
-- College Hub with the supplied MZU course catalogue for Political Science, Sociology, Public Administration, History, English, Education, Economics and Value Added Courses.
+- College Hub with the supplied MZU course catalogue for Political Science, Sociology, Public Administration, History, English, Education, Economics and Value Added Courses. Save your own semester so the hub opens there; each paper shows how many of its note topics you have revised (matched by paper code), links to the next topic and to its past questions, and takes an exam date. The exam planner counts down and works out how many topics to revise per day.
 - Notes Library with the prepared TRC Batch 1, Batch 2, Batch 3 and VAC DOCX guides.
-- Read all 24 guides inside the College Hub or on individual guide pages, with topic search, short/long note filters and optional downloads.
+- Read all the guides inside the College Hub or on individual guide pages, with topic search, short/long note filters and optional downloads. Each topic can be read aloud (browser speech, adjustable speed), given your own note, or turned into a spaced-repetition revision card in the Study Lab’s “From the Notes library” notebook.
 - Official syllabus PDFs supplied for Political Science, Sociology, Public Administration, History, English, Education and VAC.
 - PDF Study Lab with local-only PDF reading, notebook saving, revision cards with spaced-repetition review (cards return after 1, 3, 7, 14, 30 and 60 days; forgotten cards return the same day), a Pomodoro focus timer and backups.
 - Reasoning, Basic Skills, Driving and Electrical learning paths with practice questions and explanations. The Reasoning gym also generates unlimited questions across ten aptitude topics with worked answers, a timed 10-question speed round and saved per-topic accuracy.

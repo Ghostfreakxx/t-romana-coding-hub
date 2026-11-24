@@ -1,15 +1,13 @@
 "use client";
-import {useEffect,useState} from 'react';
+import {useEffect,useState,useSyncExternalStore} from 'react';
 import Shell from '@/components/shell';
 import PdfDecoder from '@/components/pdf-decoder';
 import {CardReview,FocusTimer} from '@/components/study-tools';
 import {download,useSaved} from '@/lib/storage';
-type Card={id:string;front:string;back:string;box?:number;due?:string};
-type Notebook={id:string;title:string;notes:string;cards:Card[]};
-const initial:Notebook[]=[{id:'first',title:'My first notebook',notes:'',cards:[]}];
-function isNotebooks(v:unknown):v is Notebook[]{return Array.isArray(v)&&v.length>0&&v.length<=100&&new Set(v.map(n=>n?.id)).size===v.length&&v.every(n=>n&&typeof n.id==='string'&&typeof n.title==='string'&&typeof n.notes==='string'&&Array.isArray(n.cards)&&n.cards.length<=500&&n.cards.every((c:Card)=>c&&typeof c.id==='string'&&typeof c.front==='string'&&typeof c.back==='string'&&(c.box===undefined||(Number.isInteger(c.box)&&c.box>=0&&c.box<=6))&&(c.due===undefined||/^\d{4}-\d{2}-\d{2}$/.test(c.due))));}
+import {initialNotebooks as initial,isNotebooks,type Notebook} from '@/lib/notebooks';
+const onHash=(fn:()=>void)=>{window.addEventListener('hashchange',fn);return()=>window.removeEventListener('hashchange',fn);};
 export default function Study(){
- const books=useSaved('notebooks',initial,isNotebooks);const [selected,setSelected]=useState('first');const book=books.value.find(n=>n.id===selected)??books.value[0];
+ const books=useSaved('notebooks',initial,isNotebooks);const [chosen,setSelected]=useState<string|null>(null);const hash=useSyncExternalStore(onHash,()=>decodeURIComponent(location.hash.slice(1)),()=>'');const selected=chosen??(hash||'first');const book=books.value.find(n=>n.id===selected)??books.value[0];
  const [pdf,setPdf]=useState<File|null>(null);const [url,setUrl]=useState('');const [message,setMessage]=useState('');const [front,setFront]=useState('');const [back,setBack]=useState('');const [flipped,setFlipped]=useState<string[]>([]);
  useEffect(()=>()=>{if(url)URL.revokeObjectURL(url);},[url]); // Release local PDF URLs when replaced or unmounted.
  function update(patch:Partial<Notebook>){books.setValue(books.value.map(n=>n.id===book.id?{...n,...patch}:n));}
