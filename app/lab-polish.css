@@ -89,3 +89,32 @@
 @media(max-height:520px) and (orientation:landscape) { .drive-expanded .route-mini { display:none; }.driving-v3.drive-expanded .drive-nav { top:72px; }.driving-v3.drive-expanded .drive-hud .speed-dial { width:64px;height:64px;padding-top:11px;border-width:3px; }.driving-v3.drive-expanded .drive-hud .speed-dial strong { font-size:22px; } }
 @media(display-mode:standalone) { body { padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom); }.college-masthead { padding-top:18px; }.pwa-bar { margin-bottom:max(24px,env(safe-area-inset-bottom)); } }
 @media(prefers-reduced-motion:reduce) { .guitar-showcase .vibrating,.music-studio .guitar-string.is-plucked::before,.appliance-scene.is-working .appliance-blades { animation:none; } }
+/* Driving: indicators, following gap and signal buttons */
+.drive-hud .follow-gap.is-close { border-color:#ef9c87; background:#4a1d17e6; }
+.drive-hud .follow-gap.is-close strong { color:#ffc2b5; }
+.drive-indicators { position:absolute; top:96px; left:50%; transform:translateX(-50%); display:flex; gap:70px; pointer-events:none; font-size:30px; color:#ffffff26; text-shadow:0 2px 6px #0006; }
+.drive-indicators .is-on { color:#ffb340; animation:drive-blink .8s steps(1) infinite; }
+@keyframes drive-blink { 50% { color:#ffffff26; } }
+.drive-signals { display:flex; gap:8px; align-self:end; margin-bottom:4px; pointer-events:auto; }
+.drive-signals button { min-width:52px; min-height:46px; padding:6px 10px; border:1px solid #bdd9d766; border-radius:12px; background:#0c1c28dc; color:#e5f5d5; font:700 15px Arial,sans-serif; touch-action:manipulation; }
+.drive-signals button[aria-label=Horn] { font-size:10px; letter-spacing:1px; }
+.drive-signals button[aria-pressed=true] { background:#ffb340; border-color:#ffb340; color:#2b1a00; }
+@media(max-width:640px) { .drive-indicators { display:none; } .drive-signals { position:absolute; left:0; bottom:150px; gap:6px; } .drive-signals button { min-width:40px; min-height:38px; padding:4px 8px; } .drive-signals button[aria-pressed=true] { animation:signal-blink .8s steps(1) infinite; } }
+@keyframes signal-blink { 50% { background:#0c1c28dc; color:#ffb340; } }
+@media(prefers-reduced-motion:reduce) { .drive-indicators .is-on, .drive-signals button[aria-pressed=true] { animation:none; } }
+/* Beat maker: presets, track names, mutes, swing */
+.beat-presets { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 4px; } .beat-presets .tag { border:1px solid #485544; cursor:pointer; font-size:12px; padding:8px 12px; } .beat-presets .tag:hover { border-color:var(--accent); color:var(--accent); }
+.beat-maker .sequencer-grid { grid-template-columns:112px repeat(16,minmax(27px,1fr)); min-width:680px; }
+.sequence-track { display:flex; align-items:center; gap:6px; }
+.track-name { flex:1; text-align:left; padding:6px 4px; border:0; background:transparent; color:#dbe7e5; font:700 12px Arial,sans-serif; border-radius:6px; } .track-name:hover { color:var(--accent); }
+.track-mute { width:26px; height:26px; border:1px solid #536070; border-radius:6px; background:#18242e; color:#9eacb6; font:700 11px Arial,sans-serif; } .track-mute[aria-pressed=true] { background:#ef9c87; border-color:#ef9c87; color:#2a0f0a; }
+.sequence-row.is-muted .sequence-step { opacity:.35; } .sequence-row.is-muted .track-name { text-decoration:line-through; color:#8a9698; }
+.sequence-count.current { color:var(--accent); font-weight:800; }
+.beat-controls label:not(.check-row) { min-width:180px; flex:1; } .beat-controls .check-row { padding:0; }
+/* Piano: song and ear trainers */
+.piano-trainer { margin-bottom:16px; } .piano-trainer .tabs { margin-top:0; }
+.trainer-body { display:grid; gap:12px; margin-bottom:12px; } .trainer-body p { margin:0; } .trainer-body label { max-width:360px; }
+.song-notes { display:flex; flex-wrap:wrap; gap:5px; } .song-notes span { min-width:30px; padding:5px 6px; text-align:center; border:1px solid #3d463a; border-radius:6px; font:700 12px Arial,sans-serif; color:#a9b2a8; }
+.song-notes .done { background:#2c3a24; border-color:#2c3a24; color:var(--accent); } .song-notes .next { background:var(--accent); border-color:var(--accent); color:#15210e; transform:scale(1.12); }
+.piano-key.target { box-shadow:0 0 0 3px var(--accent),0 0 22px #c6ee90aa; } .piano-key.white.target { background:linear-gradient(#e7f6cf,#fffff2 60%,#d8efb4); } .piano-key.black.target { background:linear-gradient(100deg,#2b4a1d,#5e8a3e 80%,#2b4a1d); }
+@media(prefers-reduced-motion:no-preference) { .piano-key.target { animation:key-glow 1.2s ease-in-out infinite; } @keyframes key-glow { 50% { box-shadow:0 0 0 3px var(--accent),0 0 6px #c6ee9055; } } }

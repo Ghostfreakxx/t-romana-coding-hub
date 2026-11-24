@@ -26,6 +26,14 @@ try {
   drive = newDrive(); drive.running=true; drive.traffic[0].z=0; drive.traffic[0].lane=drive.position;
   stepDrive(drive,.05,idle); stepDrive(drive,.05,idle); assert.equal(drive.hits,1,'A traffic impact is counted once');
   drive = newDrive(); drive.running=true; drive.distance=ROUTE_LENGTH-.1; drive.speed=60; stepDrive(drive,.05,idle); assert.equal(drive.finished,true);assert.equal(drive.speed,0);
+  drive=newDrive();drive.running=true;drive.traffic=[];drive.speed=40;for(let i=0;i<40&&drive.lane===0;i++)stepDrive(drive,.05,{...idle,throttle:true,steer:1});
+  assert.equal(drive.lane,1);assert.equal(drive.signalFaults,1,'An unsignalled lane change is a fault');assert.equal(drive.laneChanges,1);
+  drive=newDrive();drive.running=true;drive.traffic=[];drive.speed=40;drive.indicator=1;for(let i=0;i<40&&drive.lane===0;i++)stepDrive(drive,.05,{...idle,throttle:true,steer:1});
+  assert.equal(drive.signalFaults,0,'A signalled lane change is not a fault');assert.equal(drive.indicator,0,'The indicator cancels after the change');
+  drive=newDrive();drive.running=true;drive.speed=72;drive.traffic=[{id:0,z:drive.distance+4.5+20,lane:drive.position,speed:72,hit:false,passed:false}];stepDrive(drive,.05,{...idle,throttle:true});
+  assert.ok(drive.followGap!==null&&drive.followGap<2&&drive.tailgating>0,'A one-second gap is too close');
+  drive=newDrive();drive.running=true;drive.speed=72;drive.traffic=[{id:0,z:drive.distance+4.5+60,lane:drive.position,speed:72,hit:false,passed:false}];stepDrive(drive,.05,{...idle,throttle:true});
+  assert.equal(drive.tailgating,0,'A three-second gap is safe');
   const wet=newDrive('rain'),dry=newDrive('day');wet.running=dry.running=true;wet.speed=dry.speed=40;stepDrive(wet,.05,{...idle,brake:true});stepDrive(dry,.05,{...idle,brake:true});assert.ok(wet.speed>dry.speed,'Wet course has reduced braking');
 
   const { circuitReadings } = require('./circuit-engine');
@@ -49,5 +57,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, circuit math, spreadsheet formulas, typing metrics, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, spreadsheet formulas, typing metrics, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }
