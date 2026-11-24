@@ -16,3 +16,32 @@ export function cellValue(id: string, cells: Sheet, seen = new Set<string>()): n
   if(/^[A-D][1-9]$/.test(formula))return resolve(formula);
   return "#FORMULA";
 }
+
+/** Touch-typing finger for each key: 0–3 left little→index, 4–7 right index→little, 8 thumbs. */
+export const KEY_ROWS = ["1234567890", "qwertyuiop", "asdfghjkl;", "zxcvbnm,./"];
+const COLUMN_FINGER = [0, 1, 2, 3, 3, 4, 4, 5, 6, 7];
+export const FINGER_NAMES = ["left little", "left ring", "left middle", "left index", "right index", "right middle", "right ring", "right little", "thumb"];
+export function fingerFor(char: string) {
+  if (char === " ") return 8;
+  const c = char.toLowerCase(), shifted: Record<string, string> = { "!": "1", "@": "2", "#": "3", "$": "4", "%": "5", "^": "6", "&": "7", "*": "8", "(": "9", ")": "0", ":": ";", "<": ",", ">": ".", "?": "/", "'": ";", '"': ";", "-": "0", "—": "0" };
+  const k = shifted[c] ?? c;
+  for (const row of KEY_ROWS) { const i = row.indexOf(k); if (i >= 0) return COLUMN_FINGER[i]; }
+  return null;
+}
+const WORDS = "a all and as ask add dad fall flask glad had has hall jak lad lag lass salad sad sash shall flash gash half dash ash alas jags kale lake leak sea seal seed self sell she shed sled deal desk fed feed feel fees fleas glee heal held jade led less lead safe sage sake sea tree tea trip true type quit quiet power poet pour pure your wire write water were rope ripe tire tour route equip pretty report tower outer require eat ate rate tree wet yet you your out top pot put rut try toy tip wit bar bat can cab man men van zinc mix box next cave name map navy bench crumb vex lamb climb exam band bank calm comb fix zoo buzz maze vivid exams college study notes lesson market friend people mizoram aizawl hills river music guitar student teacher library science history english culture language computer number rain cloud".split(" ");
+/** A drill that only uses the given keys: real words when enough exist, otherwise short letter groups. */
+export function drillText(keys: string, rng: () => number = Math.random, length = 160) {
+  const allowed = new Set(keys.toLowerCase()), usable = WORDS.filter(w => [...w].every(c => allowed.has(c)));
+  const letters = [...allowed].filter(c => /[a-z;,./]/.test(c)), out: string[] = [];
+  while (out.join(" ").length < length) {
+    if (usable.length >= 8) out.push(usable[Math.floor(rng() * usable.length)]);
+    else out.push(Array.from({ length: 3 + Math.floor(rng() * 3) }, () => letters[Math.floor(rng() * letters.length)]).join(""));
+  }
+  return out.join(" ").slice(0, length).trim();
+}
+/** Which expected characters were typed wrongly, counted per character. */
+export function typingMistakes(target: string, typed: string) {
+  const misses: Record<string, number> = {};
+  [...typed].forEach((c, i) => { const want = target[i]; if (want !== undefined && c !== want && want !== " ") misses[want.toLowerCase()] = (misses[want.toLowerCase()] ?? 0) + 1; });
+  return misses;
+}

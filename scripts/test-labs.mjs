@@ -49,6 +49,11 @@ try {
   card = schedule(card, 'easy', '2026-01-02'); assert.equal(card.box, 3); assert.equal(card.due, '2026-01-09');
   card = schedule(card, 'again', '2026-01-09'); assert.equal(card.box, 0); assert.ok(isDue(card, '2026-01-09'), 'Forgotten cards come back today');
   assert.equal(schedule({ box: 6 }, 'easy', '2026-01-01').box, 6, 'Box is capped');
+  { const { fingerFor, drillText, typingMistakes } = require('./skills-practice');
+    assert.equal(fingerFor('a'), 0); assert.equal(fingerFor('f'), 3); assert.equal(fingerFor('j'), 4); assert.equal(fingerFor(';'), 7); assert.equal(fingerFor(' '), 8); assert.equal(fingerFor('G'), 3); assert.equal(fingerFor('?'), 7);
+    const home = drillText('asdfghjkl', () => .37); assert.ok(home.length > 100 && /^[asdfghjkl ]+$/.test(home), 'Home-row drill uses only home-row keys');
+    const few = drillText('fj', () => .5); assert.ok(/^[fj ]+$/.test(few), 'Tiny key sets use letter groups');
+    assert.deepEqual(typingMistakes('the cat', 'thx cut'), { e: 1, a: 1 }); }
   const { circuitReadings } = require('./circuit-engine');
   const { resistorBands, bandsToOhms, formatOhms, predictAnswer, predictionCorrect } = require('./circuit-engine');
   assert.deepEqual(resistorBands(470),[4,7,1],'470 Ω is yellow-violet-brown');assert.deepEqual(resistorBands(10),[1,0,0]);assert.deepEqual(resistorBands(2200),[2,2,2]);
@@ -75,5 +80,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }
