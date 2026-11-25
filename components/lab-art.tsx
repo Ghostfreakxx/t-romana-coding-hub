@@ -1,15 +1,17 @@
 import { useId } from "react";
 
 /** Small, local vector scenes stay crisp on phones and need no image downloads. */
-export function RouteArt({ town = false, training = false }: { town?: boolean; training?: boolean }) {
+export function RouteArt({ town = false, training = false, pass = false, school = false }: { town?: boolean; training?: boolean; pass?: boolean; school?: boolean }) {
   const id = useId();
   return <svg className="route-art" viewBox="0 0 300 100" aria-hidden="true">
     <defs><linearGradient id={id} x2="0" y2="1"><stop stopColor="#93cad1"/><stop offset="1" stopColor="#e6d9ae"/></linearGradient></defs>
     <rect width="300" height="100" fill={`url(#${id})`}/><circle cx="237" cy="24" r="14" fill="#fff2c3"/>
     <path d="M0 72 45 27 88 62 145 18 210 68 267 30 300 65V100H0Z" fill="#638b80"/><path d="m0 86 65-38 82 40 92-43 61 40v15H0Z" fill="#335f59"/>
-    <path d={training ? "M133 55H167L236 100H61Z" : "M150 55C210 70 110 80 229 100H58C163 76 131 73 145 55Z"} fill="#405057"/>
-    <path d={training ? "M150 58V100" : "M148 57C177 71 137 79 144 100"} fill="none" stroke="#f2ddb3" strokeWidth="2" strokeDasharray="7 6"/>
-    {town ? [18,62,219,260].map((x,i)=><g key={x}><path d={`M${x} 82V${40+i%2*14}h27V82Z`} fill={i%2?"#c79c77":"#d0c7ae"}/><path d={`M${x+5} 60h5m7 0h5m-17 10h5m7 0h5`} stroke="#315258" strokeWidth="6"/></g>) : [26,59,226,269].map((x,i)=><g key={x}><path d={`M${x} 90v-30`} stroke="#604b3b" strokeWidth="4"/><path d={`m${x} ${31+i%2*12} -18 43h36Z`} fill="#214d44"/></g>)}
+    {pass ? <><path d="M120 30C190 36 210 48 120 58S40 80 150 100" fill="none" stroke="#405057" strokeWidth="22"/><path d="M120 30C190 36 210 48 120 58S40 80 150 100" fill="none" stroke="#f2ddb3" strokeWidth="2" strokeDasharray="7 6"/><path d="M196 40l9 6-9 6" fill="none" stroke="#f2c94c" strokeWidth="4"/></> : <>
+    <path d={training || school ? "M133 55H167L236 100H61Z" : "M150 55C210 70 110 80 229 100H58C163 76 131 73 145 55Z"} fill="#405057"/>
+    <path d={training || school ? "M150 58V100" : "M148 57C177 71 137 79 144 100"} fill="none" stroke="#f2ddb3" strokeWidth="2" strokeDasharray="7 6"/></>}
+    {school && <>{[0,1,2,3,4,5].map(i=><rect key={i} x={98+i*18} y="80" width="10" height="9" fill="#f4f1e6"/>)}<circle cx="128" cy="70" r="3.5" fill="#f2c94c"/><path d="M128 74v8m-4-5h8" stroke="#f2c94c" strokeWidth="2.5"/><circle cx="170" cy="72" r="3" fill="#e98b6f"/><path d="M170 75v7" stroke="#e98b6f" strokeWidth="2.5"/></>}
+    {town || school ? [18,62,219,260].map((x,i)=><g key={x}><path d={`M${x} 82V${40+i%2*14}h27V82Z`} fill={i%2?"#c79c77":"#d0c7ae"}/><path d={`M${x+5} 60h5m7 0h5m-17 10h5m7 0h5`} stroke="#315258" strokeWidth="6"/></g>) : [26,59,226,269].map((x,i)=><g key={x}><path d={`M${x} 90v-30`} stroke="#604b3b" strokeWidth="4"/><path d={`m${x} ${31+i%2*12} -18 43h36Z`} fill="#214d44"/></g>)}
   </svg>;
 }
 

@@ -223,3 +223,13 @@
 .pdf-hits { list-style:none; padding:0; margin:0; display:grid; gap:8px; max-height:460px; overflow:auto; } .pdf-hits li { padding:10px 12px; border:1px solid #343b31; border-radius:10px; font-size:14px; line-height:1.6; overflow-wrap:anywhere; } .pdf-hits mark { background:#c6ee90; color:#15210e; border-radius:3px; padding:0 2px; } .pdf-hits .source-page { margin-right:6px; }
 .pdf-outline { display:grid; gap:6px; padding-left:22px; margin:0; } .pdf-outline li { display:flex; justify-content:space-between; gap:12px; align-items:center; } .pdf-outline .linkish { text-align:left; }
 .pdf-quiz { display:grid; gap:18px; padding-left:22px; margin:6px 0 0; } .pdf-quiz p { line-height:1.7; }
+/* Driving: five route cards */
+@media(min-width:1001px) { .driving-v3 .drive-route-select { grid-template-columns:repeat(5,minmax(0,1fr)); } }
+/* Beat maker: melody and bass piano rolls */
+.tune-head { margin-top:26px; align-items:end; } .tune-head h3 { margin:0; } .tune-settings { align-items:end; } .tune-settings label { margin:0; min-width:120px; }
+.piano-roll { margin:12px 0; } .piano-roll .sequencer-grid { gap:3px 6px; }
+.roll-cell { height:24px!important; border-radius:5px!important; } .roll-row.is-root .roll-cell { background:#2d3c4a; }
+.roll-cell.on { background:#f2c98a!important; border-color:#ffe2b5!important; box-shadow:0 0 10px #f2c98a40; }
+.roll-note { font:700 11px Consolas,monospace; color:#9eacb6; text-align:right; padding-right:6px; } .roll-row.is-root .roll-note { color:#dbe7e5; }
+.roll-row.is-muted .roll-cell { opacity:.35; }
+.driving-v3 .drive-route-select button { justify-content:flex-start; }
