@@ -57,3 +57,24 @@ export function download(name: string, content: string, type = "text/plain") {
   const a = document.createElement("a"); a.href = url; a.download = name; a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
+const PREFIX = "trc:v1:";
+/** Every value the hub has saved in this browser, as raw JSON strings keyed without the prefix. */
+export function exportAll(): Record<string, string> {
+  const out: Record<string, string> = {};
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k?.startsWith(PREFIX)) out[k.slice(PREFIX.length)] = localStorage.getItem(k) ?? ""; } } catch { /* Storage unavailable. */ }
+  return out;
+}
+/** Writes a full backup back. Each value must be valid JSON; each page re-validates its own data when it reads it. */
+export function importAll(data: Record<string, string>) {
+  const entries = Object.entries(data).filter(([k, v]) => /^[\w:.-]{1,120}$/.test(k) && typeof v === "string");
+  for (const [, v] of entries) JSON.parse(v);
+  for (const [k, v] of entries) localStorage.setItem(PREFIX + k, v);
+  window.dispatchEvent(new Event(event));
+  return entries.length;
+}
+/** A string snapshot of every saved value, for hooks that summarise the whole hub. */
+let snapshotCache: string | null = null;
+export function snapshotKey() { if (snapshotCache === null) { try { snapshotCache = JSON.stringify(exportAll()); } catch { snapshotCache = "{}"; } } return snapshotCache; }
+/** Rebuilds the snapshot only after something is saved, not on every render. */
+export function subscribeAll(callback: () => void) { return subscribe(() => { snapshotCache = null; callback(); }); }

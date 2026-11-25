@@ -7,7 +7,7 @@ import ts from 'typescript';
 
 const dir = await mkdtemp(join(tmpdir(), 'trc-lab-tests-'));
 try {
-  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice', 'reasoning-gen', 'spaced', 'study-decoder', 'qbank-tools', 'wav']) {
+  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice', 'reasoning-gen', 'spaced', 'study-decoder', 'qbank-tools', 'wav', 'hub-summary']) {
     const input = await readFile(new URL(`../lib/${name}.ts`, import.meta.url), 'utf8');
     const result = ts.transpileModule(input, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } });
     await writeFile(join(dir, `${name}.js`), result.outputText);
@@ -86,6 +86,15 @@ try {
   { const { checkEmail, EMAIL_SCENARIOS } = require('./skills-practice');
     for (const [id, sc] of Object.entries(EMAIL_SCENARIOS)) { const r = checkEmail(id, { to: sc.to, subject: sc.model.subject, body: sc.model.body, attachment: sc.needsAttachment }); assert.deepEqual(r.filter(c => !c.ok).map(c => c.label), [], `The model ${id} email passes every check`); }
     const bad = checkEmail('leave', { to: 'x', subject: 'hi', body: 'plz give leave tmrw!!', attachment: false }); assert.ok(bad.filter(c => !c.ok).length >= 6, 'A careless draft fails most checks'); }
+  { const { stats, dailyPlan, badges, labProgress, streaks } = require('./hub-summary');
+    assert.deepEqual(streaks(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-24'], '2026-11-25'), { current: 1, best: 3, studiedToday: false, total: 4 });
+    const empty = stats({}, '2026-11-25'); assert.equal(dailyPlan(empty, '2026-11-25').length, 3, 'New students get starter suggestions'); assert.equal(badges(empty).filter(x => x.earned).length, 0);
+    const snap = { activity: ['2026-11-23', '2026-11-24'], notebooks: [{ cards: [{ due: '2026-11-20', box: 1 }, { due: '2026-12-30', box: 4 }, {}] }], examDates: { 'political-science:1:POLS 100': '2026-12-05' },
+      'reasoning-stats': { Clocks: [1, 4], Ratio: [3, 3] }, 'challenges-done': ['hello', 'style'], 'appliance-cases': ['a', 'b', 'c', 'd', 'e'], revised: Array(30).fill('x'), results: [{ lab: 'reasoning', mode: 'speed round', score: 9, total: 10 }] };
+    const st = stats(snap, '2026-11-25'); assert.equal(st.cardsDue, 2); assert.equal(st.nextExam.days, 10); assert.equal(st.reasoning.weakest.topic, 'Clocks');
+    const plan = dailyPlan(st, '2026-11-25'); assert.deepEqual(plan.map(p => p.id), ['streak', 'exam', 'cards', 'reasoning'], 'Most urgent first, four at most');
+    const earned = badges(st).filter(x => x.earned).map(x => x.id); for (const id of ['first', 'revise25', 'fix5', 'speed']) assert.ok(earned.includes(id), `badge ${id}`); assert.ok(!earned.includes('streak3'));
+    assert.equal(labProgress(st)['/coding'], '2 / 8 challenges'); }
   const { circuitReadings } = require('./circuit-engine');
   const { resistorBands, bandsToOhms, formatOhms, predictAnswer, predictionCorrect } = require('./circuit-engine');
   assert.deepEqual(resistorBands(470),[4,7,1],'470 Ω is yellow-violet-brown');assert.deepEqual(resistorBands(10),[1,0,0]);assert.deepEqual(resistorBands(2200),[2,2,2]);
@@ -112,5 +121,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, lane signals, following distance, mountain bends, school crossing, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, PDF search/outline/quiz, question-bank tools, WAV export, email checks, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, mountain bends, school crossing, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, PDF search/outline/quiz, question-bank tools, WAV export, email checks, daily plan and badges, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }
