@@ -83,6 +83,9 @@ try {
   { const { encodeWav } = require('./wav'); const buf = encodeWav([new Float32Array([0, 1, -1, .5])], 8000), v = new DataView(buf);
     assert.equal(buf.byteLength, 44 + 8); assert.equal(String.fromCharCode(...new Uint8Array(buf, 0, 4)), 'RIFF'); assert.equal(v.getUint32(24, true), 8000);
     assert.equal(v.getInt16(46, true), 32767); assert.equal(v.getInt16(48, true), -32768); }
+  { const { checkEmail, EMAIL_SCENARIOS } = require('./skills-practice');
+    for (const [id, sc] of Object.entries(EMAIL_SCENARIOS)) { const r = checkEmail(id, { to: sc.to, subject: sc.model.subject, body: sc.model.body, attachment: sc.needsAttachment }); assert.deepEqual(r.filter(c => !c.ok).map(c => c.label), [], `The model ${id} email passes every check`); }
+    const bad = checkEmail('leave', { to: 'x', subject: 'hi', body: 'plz give leave tmrw!!', attachment: false }); assert.ok(bad.filter(c => !c.ok).length >= 6, 'A careless draft fails most checks'); }
   const { circuitReadings } = require('./circuit-engine');
   const { resistorBands, bandsToOhms, formatOhms, predictAnswer, predictionCorrect } = require('./circuit-engine');
   assert.deepEqual(resistorBands(470),[4,7,1],'470 Ω is yellow-violet-brown');assert.deepEqual(resistorBands(10),[1,0,0]);assert.deepEqual(resistorBands(2200),[2,2,2]);
@@ -109,5 +112,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, lane signals, following distance, mountain bends, school crossing, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, PDF search/outline/quiz, question-bank tools, WAV export, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, mountain bends, school crossing, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, PDF search/outline/quiz, question-bank tools, WAV export, email checks, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }
