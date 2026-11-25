@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { roadCenter, type DriveState } from "./driving-engine";
+import { curvature, roadCenter, ZEBRA, type DriveState } from "./driving-engine";
 
 export type DrivingScene = { render: (state: DriveState, cockpit: boolean) => void; dispose: () => void };
 export function createDrivingScene(canvas: HTMLCanvasElement, state: DriveState, highQuality: boolean): DrivingScene {
@@ -49,10 +49,18 @@ export function createDrivingScene(canvas: HTMLCanvasElement, state: DriveState,
   for(let d=0;d<1700;d+=12){for(const side of [-1,1]){const curb=mesh(box,shoulder,scene,center(d)+side*6.55,.03,-d,.85,.12,12.2);curb.rotation.y=angle(d);}}
   for(let d=-20;d<1650;d+=24){for(const side of [-1,1]){
     const x=center(d)+side*(12+(Math.sin(d)*.5+.5)*9);
-    if(state.course==="town"&&d%72!==4){const house=new THREE.Group();scene.add(house);house.position.set(x,0,-d);const height=4+(Math.abs(d)%3)*1.5;mesh(box,wallColors[Math.abs(d)%3],house,0,height/2,0,7,height,8);mesh(cone,roof,house,0,height+1,0,5.6,2.2,6);for(const wx of [-2,1.5])for(const wy of [1.8,height-1])mesh(box,night?headLight:glass,house,wx,wy,side===1?4.02:-4.02,1.2,1.25,.06);}
+    if((state.course==="town"||state.course==="school")&&d%72!==4&&!(state.course==="school"&&Math.abs(d-650)<40)){const house=new THREE.Group();scene.add(house);house.position.set(x,0,-d);const height=4+(Math.abs(d)%3)*1.5;mesh(box,wallColors[Math.abs(d)%3],house,0,height/2,0,7,height,8);mesh(cone,roof,house,0,height+1,0,5.6,2.2,6);for(const wx of [-2,1.5])for(const wy of [1.8,height-1])mesh(box,night?headLight:glass,house,wx,wy,side===1?4.02:-4.02,1.2,1.25,.06);}
     else{const tree=new THREE.Group();tree.position.set(x,0,-d);tree.scale.setScalar(.8+(Math.abs(d)%7)/15);scene.add(tree);mesh(cylinder,bark,tree,0,1.5,0,.3,3,.3);mesh(cone,leaves,tree,0,4.5,0,3.3,7,3.3);mesh(cone,darkLeaf,tree,0,7,0,2.3,4,2.3);mesh(rock,darkLeaf,scene,x+side*4,.6,-d+8,1.5,1.1,1.8);}
-    if(state.course==="hills"){const rail=mesh(box,railMat,scene,center(d)+side*7,.85,-d,.16,.27,24.2);rail.rotation.y=angle(d);mesh(box,railMat,scene,center(d)+side*7,.45,-d,.16,.9,.16);}
+    if(state.course==="hills"||state.course==="pass"){const rail=mesh(box,railMat,scene,center(d)+side*7,.85,-d,.16,.27,24.2);rail.rotation.y=angle(d);mesh(box,railMat,scene,center(d)+side*7,.45,-d,.16,.9,.16);}
   }}
+  // Mountain pass: yellow chevron boards on the outside of sharp bends.
+  if(state.course==="pass"){const chevron=material("#f2c94c"),chevronDark=material("#1d2a2f");for(let d=20;d<1650;d+=18){const c=curvature(d,state.course);if(Math.abs(c)<.0016)continue;const side=c>0?-1:1,x=center(d)+side*7.6;const g=new THREE.Group();g.position.set(x,0,-d);g.rotation.y=angle(d);scene.add(g);mesh(cylinder,railMat,g,0,.8,0,.07,1.6,.07);mesh(box,chevron,g,0,1.9,0,1.1,.8,.06);mesh(box,chevronDark,g,side*.12,1.9,.04,.18,.6,.02);}}
+  // School route: zebra crossing, a school building by the gate and children crossing.
+  const walkers:THREE.Group[]=[];
+  if(state.course==="school"){const stripe=material("#f4f1e6");for(let x=-5;x<=5;x+=1.4){const z=mesh(box,stripe,scene,center(ZEBRA)+x,.05,-ZEBRA-3,.8,.03,4);z.rotation.y=angle(ZEBRA);}
+    const school=new THREE.Group();school.position.set(center(650)-20,0,-650);scene.add(school);mesh(box,material("#e3c48f"),school,0,4,0,10,8,26);mesh(box,material("#9b4b3f"),school,0,8.4,0,11,.8,27);for(let z=-10;z<=10;z+=4)for(const y of [2.5,5.8])mesh(box,night?headLight:glass,school,5.02,y,z,.06,1.3,1.8);mesh(box,material("#2f5c8a"),school,5.05,7.2,0,.06,1,6);
+    const shirts=["#e98b6f","#6fa8e9","#f2c94c"].map(c=>material(c)),skin=material("#c99a72"),trousers=material("#2d3a4a");
+    for(let i=0;i<3;i++){const w=new THREE.Group();w.userData.dynamic=true;scene.add(w);mesh(cylinder,trousers,w,0,.45,0,.16,.9,.16);mesh(rounded,shirts[i],w,0,1.15,0,.42,.6,.28);mesh(rounded,skin,w,0,1.62,0,.26,.28,.26);walkers.push(w);}}
   const mountainNear=material("#58766e"),mountainFar=material("#75958c");
   for(let d=0;d<1700;d+=170){for(const side of [-1,1]){mesh(rock,d%340?mountainNear:mountainFar,scene,side*(100+d%60),21,-d,90,65,100);if(!rain)mesh(rock,cloud,scene,side*80,65,-d-100,32,5,13);}}
   if(state.course==="town")for(let d=15;d<1550;d+=48){for(const side of [-1,1]){const x=center(d)+side*8;mesh(cylinder,railMat,scene,x,3.3,-d,.08,6.6,.08);mesh(box,railMat,scene,x-side*.6,6.6,-d,1.3,.09,.12);mesh(box,headLight,scene,x-side*1.1,6.5,-d,.7,.12,.35);}}
@@ -95,6 +103,7 @@ export function createDrivingScene(canvas: HTMLCanvasElement, state: DriveState,
     cars.forEach(({id,object})=>{const car=s.traffic.find(c=>c.id===id);if(!car)return;object.visible=car.z>s.distance-25&&car.z<s.distance+280;object.position.set(center(car.z)+car.lane*4.8,0,-car.z);object.rotation.y=angle(car.z);});
     if(cockpit){camera.position.set(px,1.9,pz-.25);camera.lookAt(center(s.distance+40)+s.position*3,1.4,pz-40);}else{camera.position.set(px*.6+center(s.distance)*.4,5.1,pz+10);camera.lookAt(center(s.distance+30)+s.position*1.8,1.1,pz-30);}
     sun.position.set(px+30,55,pz+25);sun.target.position.set(px,0,pz-25);headlights.position.set(px,1,pz-1.8);headlights.target.position.set(center(s.distance+30)+s.position*4.8,.1,pz-35);
+    walkers.forEach((w,i)=>{const t=(s.elapsed*.9+i*5.5)%22,x=t<11?t-5.5:16.5-t;w.position.set(center(ZEBRA)+x,0,-ZEBRA-3+(i-1)*1.1);w.rotation.y=t<11?-Math.PI/2:Math.PI/2;w.position.y=Math.abs(Math.sin(s.elapsed*7+i))*.05;});
     renderer.render(scene,camera);
   },dispose(){instances.forEach(instance=>instance.dispose());materials.forEach(m=>m.dispose());geometries.forEach(g=>g.dispose());textures.forEach(t=>t.dispose());renderer.dispose();renderer.forceContextLoss();}};
 }

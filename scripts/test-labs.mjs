@@ -7,7 +7,7 @@ import ts from 'typescript';
 
 const dir = await mkdtemp(join(tmpdir(), 'trc-lab-tests-'));
 try {
-  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice', 'reasoning-gen', 'spaced', 'study-decoder', 'qbank-tools']) {
+  for (const name of ['code', 'coding-studio', 'driving-engine', 'circuit-engine', 'skills-practice', 'reasoning-gen', 'spaced', 'study-decoder', 'qbank-tools', 'wav']) {
     const input = await readFile(new URL(`../lib/${name}.ts`, import.meta.url), 'utf8');
     const result = ts.transpileModule(input, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } });
     await writeFile(join(dir, `${name}.js`), result.outputText);
@@ -34,6 +34,16 @@ try {
   assert.ok(drive.followGap!==null&&drive.followGap<2&&drive.tailgating>0,'A one-second gap is too close');
   drive=newDrive();drive.running=true;drive.speed=72;drive.traffic=[{id:0,z:drive.distance+4.5+60,lane:drive.position,speed:72,hit:false,passed:false}];stepDrive(drive,.05,{...idle,throttle:true});
   assert.equal(drive.tailgating,0,'A three-second gap is safe');
+  { const { curvature, sharpBendAhead, speedLimit } = require('./driving-engine');
+    const pass = newDrive('day', 'pass'); assert.equal(pass.checkpoints.length, 4); assert.equal(speedLimit('day', 100, 'pass'), 45); assert.equal(speedLimit('day', 500, 'school'), 30);
+    let bend = 0; for (let d = 0; d < 1200; d += 5) if (Math.abs(curvature(d, 'pass')) > Math.abs(curvature(bend, 'pass'))) bend = d;
+    const fast = newDrive('day', 'pass'), slow = newDrive('day', 'pass'); fast.running = slow.running = true; fast.traffic = slow.traffic = [];
+    for (const d of [fast, slow]) { d.distance = bend - 20; d.position = 0; d.speed = d === fast ? 80 : 25; }
+    for (let i = 0; i < 20; i++) { stepDrive(fast, .05, { ...idle, throttle: true }); stepDrive(slow, .05, idle); }
+    assert.ok(Math.abs(fast.position) > Math.abs(slow.position) * 4, 'Speed in a bend pushes the car wide'); assert.ok(sharpBendAhead(bend - 30, 'pass'), 'Sharp bends are announced'); assert.ok(!sharpBendAhead(bend, 'hills'));
+    const school = newDrive('day', 'school'); school.running = true; school.distance = 462; school.traffic = [];
+    for (let i = 0; i < 22; i++) stepDrive(school, .05, { ...idle, brake: true }); assert.equal(school.checkpoints[1].success, true, 'Stopping at the zebra crossing completes it');
+    const hills = newDrive(); hills.running = true; hills.traffic = []; hills.speed = 80; hills.position = 0; for (let i = 0; i < 20; i++) stepDrive(hills, .05, { ...idle, throttle: true }); assert.equal(hills.position, 0, 'Other routes are unchanged'); }
   const wet=newDrive('rain'),dry=newDrive('day');wet.running=dry.running=true;wet.speed=dry.speed=40;stepDrive(wet,.05,{...idle,brake:true});stepDrive(dry,.05,{...idle,brake:true});assert.ok(wet.speed>dry.speed,'Wet course has reduced braking');
 
   const { generate, GEN_TOPICS, seeded } = require('./reasoning-gen');
@@ -70,6 +80,9 @@ try {
     assert.equal(matchNote('Discuss the main features of Indian federalism.', entries, 'political-science').s, 'section-9'); assert.equal(matchNote('Explain the caste system.', entries, 'political-science'), null);
     const pool = [{ t: 'a', long: true, times: 3 }, { t: 'b', long: true, times: 1 }, { t: 'c', long: true, times: 2 }, { t: 'd', long: false, times: 1 }, { t: 'e', long: false, times: 2 }];
     const test = mockTest(pool, 2, 3, () => .5); assert.equal(test.filter(q => q.long).length, 2); assert.equal(test.filter(q => !q.long).length, 2); assert.equal(new Set(test.map(q => q.t)).size, test.length); }
+  { const { encodeWav } = require('./wav'); const buf = encodeWav([new Float32Array([0, 1, -1, .5])], 8000), v = new DataView(buf);
+    assert.equal(buf.byteLength, 44 + 8); assert.equal(String.fromCharCode(...new Uint8Array(buf, 0, 4)), 'RIFF'); assert.equal(v.getUint32(24, true), 8000);
+    assert.equal(v.getInt16(46, true), 32767); assert.equal(v.getInt16(48, true), -32768); }
   const { circuitReadings } = require('./circuit-engine');
   const { resistorBands, bandsToOhms, formatOhms, predictAnswer, predictionCorrect } = require('./circuit-engine');
   assert.deepEqual(resistorBands(470),[4,7,1],'470 Ω is yellow-violet-brown');assert.deepEqual(resistorBands(10),[1,0,0]);assert.deepEqual(resistorBands(2200),[2,2,2]);
@@ -96,5 +109,5 @@ try {
   const p={id:'one',name:'A',updated:'',code:sample};assert.equal(isProjectList([p,p]),false,'Duplicate project IDs rejected');
   assert.ok(!buildCodingPrompt('Portfolio','Create').includes(sample.js),'Code is excluded unless explicitly supplied');
   const { makeDocument }=require('./code');const html=makeDocument(sample,true,'test-channel');assert.ok(html.includes("connect-src 'none'"));assert.ok(html.includes('test-channel'));assert.ok(html.includes("parent.postMessage"));assert.ok(!makeDocument(sample).includes('Content-Security-Policy'));
-  console.log('Lab checks passed: driving missions, lane signals, following distance, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, PDF search/outline/quiz, question-bank tools, project validation and AI response parsing.');
+  console.log('Lab checks passed: driving missions, lane signals, following distance, mountain bends, school crossing, circuit math, colour codes, predictions, generated reasoning questions, spaced repetition, spreadsheet formulas, typing metrics, finger guide, typing drills, PDF search/outline/quiz, question-bank tools, WAV export, project validation and AI response parsing.');
 } finally { await rm(dir,{recursive:true,force:true}); }

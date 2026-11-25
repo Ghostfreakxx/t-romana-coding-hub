@@ -1,14 +1,17 @@
 export const DRUM_KINDS = ["Kick", "Snare", "Hi-hat", "Clap", "Open hat", "Tom"] as const;
 
 export class MusicAudio {
-  private context: AudioContext | null = null;
+  private context: BaseAudioContext | null = null;
+  private offline = false;
+  /** Renders into an OfflineAudioContext (for exporting audio) instead of the speakers. */
+  static offlineFor(ctx: OfflineAudioContext, volume = .55) { const a = new MusicAudio(); a.context = ctx; a.offline = true; a.volume = volume; return a; }
   private noise: AudioBuffer | null = null;
   volume = 0.55;
-  async enable() { this.context ??= new AudioContext(); if (this.context.state === "suspended") await this.context.resume(); }
+  async enable() { this.context ??= new AudioContext(); if (this.context.state === "suspended" && this.context instanceof AudioContext) await this.context.resume(); }
   /** Audio-clock time in seconds, for scheduling ahead of playback. */
   get time() { return this.context?.currentTime ?? 0; }
-  private get live() { const ctx = this.context; return ctx && ctx.state === "running" && this.volume > 0 ? ctx : null; }
-  private out(ctx: AudioContext, nodes: AudioNode[], source: AudioScheduledSourceNode) {
+  private get live() { const ctx = this.context; return ctx && (this.offline || ctx.state === "running") && this.volume > 0 ? ctx : null; }
+  private out(ctx: BaseAudioContext, nodes: AudioNode[], source: AudioScheduledSourceNode) {
     nodes.reduce((a, b) => { a.connect(b); return b; }).connect(ctx.destination);
     source.onended = () => nodes.forEach(n => n.disconnect());
   }
@@ -35,7 +38,16 @@ export class MusicAudio {
       osc.onended = () => { osc.disconnect(); g.disconnect(); if (--remaining === 0) { filter.disconnect(); gain.disconnect(); } };
     }
   }
-  private noiseBuffer(ctx: AudioContext) {
+  /** A round bass note: sawtooth through a closing low-pass filter. */
+  bass(frequency: number, when?: number, duration = .42) {
+    const ctx = this.live; if (!ctx) return;
+    const t = when ?? ctx.currentTime, osc = ctx.createOscillator(), filter = ctx.createBiquadFilter(), gain = ctx.createGain();
+    osc.type = "sawtooth"; osc.frequency.value = frequency;
+    filter.type = "lowpass"; filter.Q.value = 4; filter.frequency.setValueAtTime(900, t); filter.frequency.exponentialRampToValueAtTime(180, t + duration);
+    gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(this.volume * .32, t + .01); gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
+    this.out(ctx, [osc, filter, gain], osc); osc.start(t); osc.stop(t + duration + .02);
+  }
+  private noiseBuffer(ctx: BaseAudioContext) {
     if (!this.noise || this.noise.sampleRate !== ctx.sampleRate) {
       this.noise = ctx.createBuffer(1, Math.floor(ctx.sampleRate * .5), ctx.sampleRate);
       const data = this.noise.getChannelData(0); for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
@@ -61,5 +73,5 @@ export class MusicAudio {
     this.out(ctx, [source, filter, gain], source); source.start(t, Math.random() * .1, duration + .02);
     if (kind === "Snare") this.tone(185, .12, "sine", t);
   }
-  async close() { const ctx = this.context; this.context = null; if (ctx && ctx.state !== "closed") await ctx.close(); }
+  async close() { const ctx = this.context; this.context = null; if (ctx instanceof AudioContext && ctx.state !== "closed") await ctx.close(); }
 }
