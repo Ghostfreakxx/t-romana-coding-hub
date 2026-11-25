@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { ContinueReading } from "@/components/notes-search";
-import { noteResources } from "@/data/notes";
-import { labs } from "@/data/site";
 import { StudyStreak } from "@/components/study-streak";
+import { LabGrid, TodayPanel } from "@/components/hub-dashboard";
 export default function Home() { return <main id="main-content" className="page">
   <section className="hero"><div><p className="eyebrow">Made for curious minds</p><h1>Learn something.<br/><span className="accent">Make it yours.</span></h1><p className="intro">Practical skills, college learning and room to experiment. Start small. Understand what you do. Build from there.</p><div className="row section-gap"><a href="#labs" className="btn">Explore the labs ↗</a><Link href="/progress" className="btn secondary">My progress</Link></div><p className="small muted section-gap">Free to use. No account. At your own pace. Press <kbd>/</kbd> to search everything.</p></div><div className="hero-art" aria-label="Learn, try, understand, build"><p className="eyebrow">The way we learn</p><div className="big">LEARN.<br/>TRY.<br/>BUILD.</div><p>You do not have to know everything.<br/>Start with one thing you want to understand.</p><div className="row between"><span className="tag">T. ROMANA</span><span className="accent">↗</span></div></div></section>
+  <TodayPanel />
   <StudyStreak />
   <ContinueReading />
-  <section id="labs" className="section-gap"><div className="row between" style={{marginBottom:22}}><h2>Find your starting point</h2><span className="muted small">Nine ways to learn</span></div><div className="grid-cards">{labs.map(({n,icon,title,desc,href,tag})=><Link href={href} key={href} className="lab-card"><div className="card-top"><span className="card-icon" aria-hidden="true">{icon}</span><span>{n} / LAB</span></div><h2>{title}</h2><p>{desc}</p><div className="row between card-link"><span>{href==="/notes"?`${noteResources.length} guides · search + revision tracker`:tag}</span><span aria-hidden="true">↗</span></div></Link>)}</div></section>
+  <section id="labs" className="section-gap"><div className="row between" style={{marginBottom:22}}><h2>Find your starting point</h2><span className="muted small">Nine ways to learn</span></div><LabGrid /></section>
   <section className="roots"><div><p className="eyebrow">Know your own</p><h2>MIZO.</h2></div><div><p className="intro">Technology can help us learn about the world. But we should never become strangers to our own.</p><p className="muted">Study the Mizo language. Read Mizo literature. Know our history, culture and society. Some knowledge prepares you for an examination. Some knowledge tells you who you are.</p></div></section>
 </main>; }
